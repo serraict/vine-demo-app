@@ -1,21 +1,15 @@
-from nicegui import ui
-from nicegui.events import ValueChangeEventArguments
+from . import article_router
+from . import theme
+
+from nicegui import app, ui
 
 
-def show(event: ValueChangeEventArguments):
-    name = type(event.sender).__name__
-    ui.notify(f"{name}: {event.value}")
+@ui.page("/")
+def index_page() -> None:
+    with theme.frame("Homepage"):
+        ui.label("This is the homepage.")
 
 
-ui.button("Button", on_click=lambda: ui.notify("Click"))
-with ui.row():
-    ui.checkbox("Checkbox", on_change=show)
-    ui.switch("Switch", on_change=show)
-ui.radio(["A", "B", "C"], value="A", on_change=show).props("inline")
-with ui.row():
-    ui.input("Text input", on_change=show)
-    ui.select(["One", "Two"], value="One", on_change=show)
+app.include_router(article_router.router)
 
-ui.link("Serra Vine...", "https://vine.serraict.com").classes("mt-8")
-
-ui.run()
+ui.run(title="Modularization Example")
