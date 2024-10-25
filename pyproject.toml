@@ -17,8 +17,14 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 webapp = "vineapp:__web__"
+cliapp = "vineapp.__cli__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
