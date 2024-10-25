@@ -17,7 +17,7 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 webapp = "vineapp:__web__"
-cliapp = "vineapp.__cli__:main"
+cliapp = "vineapp.__cli__:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]
