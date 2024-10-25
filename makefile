@@ -18,6 +18,8 @@ update:
 	python -m pip install -r requirements-dev.txt
 	pip install -e .
 console:
+format:
+	black src tests
 test:
 	pytest --cov=src/vineapp --cov-report=term -m "not integration"
 test-integration:

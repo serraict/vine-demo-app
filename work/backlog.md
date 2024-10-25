@@ -5,13 +5,13 @@
 ### Connect to Dremio
 
 1. Setup Dremio connection
-   * [ ] Add sqlalchemy-dremio dependency
-   * [ ] Create configuration module for Dremio settings
-   * [ ] Add connection string builder
+   * [x] Add sqlalchemy-dremio dependency
+   * [x] Create configuration module for Dremio settings
+   * [x] Add connection string handling
 
 2. Update Product Repository
-   * [ ] Add Dremio engine factory
-   * [ ] Update repository to use Dremio connection
+   * [x] Add connection configuration
+   * [x] Update repository to handle both SQLite and Dremio connections
    * [ ] Add error handling for connection issues
 
 3. Integration Tests

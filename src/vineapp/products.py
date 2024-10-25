@@ -1,13 +1,16 @@
 """Product data access layer."""
+import os
 from typing import List, Optional, Union
+from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-from sqlmodel import Field, Session, SQLModel, create_engine, select
-
-from vineapp.config import DatabaseConfig
+from sqlmodel import Field, Session, SQLModel, select
 
 
 class Product(SQLModel, table=True):
     """View model for products we make."""
+
+    __tablename__ = "products"
+    __table_args__ = {"schema": "Vines"}
 
     id: int = Field(primary_key=True)
     name: str
@@ -23,16 +26,18 @@ class ProductRepository:
         if isinstance(connection, Engine):
             self.engine = connection
         else:
-            config = DatabaseConfig.from_env()
-            self.engine = create_engine(
-                connection or config.connection_string,
-                echo=config.echo_sql
+            conn_str = os.getenv(
+                "VINEAPP_DB_CONNECTION",
+                "dremio+flight://localhost:32010/dremio"
             )
-        SQLModel.metadata.create_all(self.engine)
+            self.engine = create_engine(conn_str)
 
     def get_all(self) -> List[Product]:
         """Get all products from the data source."""
         with Session(self.engine) as session:
-            statement = select(Product).order_by(Product.product_group_name, Product.name)
-            products = session.exec(statement).all()
-            return products
+            statement = (
+                select(Product)
+                .order_by(Product.product_group_name, Product.name)
+            )
+            result = session.execute(statement)
+            return [row[0] for row in result]

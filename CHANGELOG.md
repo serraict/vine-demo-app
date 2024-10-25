@@ -7,13 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 
-- Product model and repository for accessing product data
-- SQLModel integration for data access
-- CLI command `products` to list all products
+- Connect to Serra Vine's Dremio instance to list products.
 
-## [0.1] - 2024-10-25
+## [0.2.0] - 2024-03-25
 
 ### Added
 

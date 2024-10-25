@@ -12,7 +12,9 @@ dependencies = [
     "typer",
     "sqlmodel",
     "rich",
-    "sqlalchemy-dremio"
+    "sqlalchemy-dremio",
+    "pyarrow",
+    "pandas",
 ]
 dynamic = ["version"]
 license.file = "LICENCE"
