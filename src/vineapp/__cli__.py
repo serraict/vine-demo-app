@@ -13,12 +13,12 @@ console = Console()
 
 @app.callback()
 def callback():
-    """Serra Vine CLI application."""
+    """Serra Vine CLI application for managing and viewing product data."""
 
 
 @app.command()
 def about():
-    """Display information about vineapp."""
+    """Display application information and version."""
     pkg_metadata = metadata("vineapp")
     app_version = version("vineapp")
 
@@ -31,7 +31,7 @@ def about():
 
 @app.command()
 def products():
-    """List all products."""
+    """Display a table of all products with their groups."""
     repository = ProductRepository()
     products_list = repository.get_all()
 

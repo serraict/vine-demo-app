@@ -16,6 +16,20 @@ Fork the repository and then [detach it](https://docs.github.com/en/pull-request
 
 Rename your app.
 
+## CLI Usage
+
+The application provides a command-line interface. To see available commands:
+
+```bash
+cliapp --help
+```
+
+Example - display application information:
+
+```bash
+cliapp about
+```
+
 ## Stack
 
 Python application built on FastAPI, Typer and NiceGUI,
