@@ -28,7 +28,7 @@ build:
 	python -m build
 printversion:
 	@python -m setuptools_scm
-release: documentation
+release:
 	@if [ -n "$$(git status --porcelain)" ]; then \
 		echo "There are uncommitted changes or untracked files"; \
 		exit 1; \
