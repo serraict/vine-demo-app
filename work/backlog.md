@@ -2,26 +2,22 @@
 
 ## Doing
 
-### Display products on command line
-
-1. ✓ Create products data access
-   * [x] Create products.py module with SQLModel
-   * [x] Add tests for data access
-
-2. ✓ Add CLI command
-   * [x] Add `products list` command to CLI
-   * [x] Format products as a table using rich
-   * [x] Add tests for CLI command
-
-3. Documentation
-   * [x] Update changelog
-   * [ ] Add command documentation
-
 ### Connect to Dremio
 
-* [ ] Setup integration tests
-* [ ] Implement Dremio connection
-* [ ] Add error handling for connection issues
+1. Setup Dremio connection
+   * [ ] Add sqlalchemy-dremio dependency
+   * [ ] Create configuration module for Dremio settings
+   * [ ] Add connection string builder
+
+2. Update Product Repository
+   * [ ] Add Dremio engine factory
+   * [ ] Update repository to use Dremio connection
+   * [ ] Add error handling for connection issues
+
+3. Integration Tests
+   * [ ] Setup test configuration for Dremio credentials
+   * [ ] Add integration tests for Dremio connection
+   * [ ] Add tests for error cases
 
 ## Next
 
@@ -35,6 +31,7 @@
   * [x] Display version number
 * [x] Display a table with all products.
   * [x] list them on the command line
+  * [x] Add CLI command documentation
 * [ ] Display a public chart.
 
 ## Later

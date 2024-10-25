@@ -11,7 +11,8 @@ dependencies = [
     "nicegui",
     "typer",
     "sqlmodel",
-    "rich"
+    "rich",
+    "sqlalchemy-dremio"
 ]
 dynamic = ["version"]
 license.file = "LICENCE"
@@ -33,3 +34,6 @@ where = ["src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
