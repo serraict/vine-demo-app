@@ -1,7 +1,10 @@
 """Product data access layer."""
 
-from typing import List
+from typing import List, Optional, Union
+from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, create_engine, select
+
+from vineapp.config import DatabaseConfig
 
 
 class Product(SQLModel, table=True):
@@ -16,9 +19,15 @@ class Product(SQLModel, table=True):
 class ProductRepository:
     """Read-only repository for product data access."""
 
-    def __init__(self, engine=None):
-        """Initialize repository with optional engine."""
-        self.engine = engine or create_engine("sqlite://", echo=False)
+    def __init__(self, connection: Optional[Union[str, Engine]] = None):
+        """Initialize repository with optional connection string or engine."""
+        if isinstance(connection, Engine):
+            self.engine = connection
+        else:
+            config = DatabaseConfig.from_env()
+            self.engine = create_engine(
+                connection or config.connection_string, echo=False
+            )
         SQLModel.metadata.create_all(self.engine)
 
     def get_all(self) -> List[Product]:
