@@ -21,3 +21,11 @@ Make atomic commits that represent a single, logical change. For example, when i
 - Split large changes into smaller, focused commits that are easier to review
 
 This helps maintain a clean git history and makes it easier to understand, review, and if needed, revert changes.
+
+## Versioning
+
+We follow [Semantic Versioning](https://semver.org/) (SemVer) for version numbers.
+
+## Changelog
+
+We maintain a changelog following the [Keep a Changelog](https://keepachangelog.com/) format.
