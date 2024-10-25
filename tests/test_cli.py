@@ -16,4 +16,5 @@ def test_about_command():
     assert f"Name: {pkg_metadata['Name']}" in result.stdout
     assert f"Version: {version('vineapp')}" in result.stdout
     assert f"Description: {pkg_metadata['Summary']}" in result.stdout
-    assert f"Author: {pkg_metadata['Author']}" in result.stdout
+    assert f"Author-email: {pkg_metadata['Author-email']}" in result.stdout
+    assert f"Project URL: {pkg_metadata['Project-URL'].split(',')[1].strip()}" in result.stdout
