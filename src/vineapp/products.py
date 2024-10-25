@@ -1,5 +1,4 @@
 """Product data access layer."""
-
 from typing import List, Optional, Union
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, create_engine, select
@@ -26,15 +25,14 @@ class ProductRepository:
         else:
             config = DatabaseConfig.from_env()
             self.engine = create_engine(
-                connection or config.connection_string, echo=False
+                connection or config.connection_string,
+                echo=config.echo_sql
             )
         SQLModel.metadata.create_all(self.engine)
 
     def get_all(self) -> List[Product]:
         """Get all products from the data source."""
         with Session(self.engine) as session:
-            statement = select(Product).order_by(
-                Product.product_group_name, Product.name
-            )
+            statement = select(Product).order_by(Product.product_group_name, Product.name)
             products = session.exec(statement).all()
             return products

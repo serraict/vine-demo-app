@@ -1,5 +1,4 @@
 """Configuration management for vineapp."""
-
 import os
 from dataclasses import dataclass
 
@@ -9,6 +8,7 @@ class DatabaseConfig:
     """Database configuration."""
 
     connection_string: str
+    echo_sql: bool = False
 
     @classmethod
     def from_env(cls) -> "DatabaseConfig":
@@ -16,6 +16,7 @@ class DatabaseConfig:
         return cls(
             connection_string=os.getenv(
                 "VINEAPP_DB_CONNECTION",
-                "sqlite://",  # Default to in-memory SQLite for testing
-            )
+                "sqlite://"  # Default to in-memory SQLite for testing
+            ),
+            echo_sql=os.getenv("VINEAPP_SQL_ECHO", "false").lower() == "true"
         )
