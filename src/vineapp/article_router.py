@@ -3,7 +3,6 @@ from .message import message
 
 from nicegui import APIRouter, ui
 
-# NOTE: the APIRouter does not yet work with NiceGUI On Air (see https://github.com/zauberzeug/nicegui/discussions/2792)
 router = APIRouter(prefix="/articles")
 
 

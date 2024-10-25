@@ -11,5 +11,4 @@ def index_page() -> None:
 
 
 app.include_router(article_router.router)
-
 ui.run(title="Modularization Example")

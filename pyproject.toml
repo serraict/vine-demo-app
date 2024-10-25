@@ -7,7 +7,7 @@ authors = [
 ]
 requires-python = ">=3.10"
 urls = { "project" = "https://github.com/serraict/vine-demo-app", "docs" = "https://github.com/serraict/vine-demo-app/blob/main/README.md" }
-dependencies = ["nicegui"]
+dependencies = ["nicegui", "typer"]
 dynamic = ["version"]
 license.file = "LICENCE"
 
@@ -16,7 +16,7 @@ requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-app = "vineapp:__main__.main"
+webapp = "vineapp:__web__"
 
 [tool.setuptools.packages.find]
 where = ["src"]
