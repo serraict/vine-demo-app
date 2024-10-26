@@ -15,9 +15,10 @@
    * [ ] Add error handling for connection issues
 
 3. Integration Tests
-   * [ ] Setup test configuration for Dremio credentials
-   * [ ] Add integration tests for Dremio connection
-   * [ ] Add tests for error cases
+   * [x] Setup test configuration for Dremio credentials
+   * [x] Add integration tests for Dremio connection
+   * [x] Add tests for error cases
+   * [x] Add test for retrieving products
 
 ## Next
 
