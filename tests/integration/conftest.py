@@ -1,7 +1,7 @@
 """Pytest fixtures for integration tests."""
 import os
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from vineapp.products import ProductRepository
 
@@ -19,7 +19,7 @@ def dremio_engine() -> Engine:
     try:
         # Verify connection
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
         yield engine
     finally:
         engine.dispose()
