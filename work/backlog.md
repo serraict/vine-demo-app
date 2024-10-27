@@ -18,6 +18,13 @@
 
 ## Later
 
+### Data Visualization
+
+* [ ] Integrate with Serra Vine's Superset
+  * [ ] Add Superset dashboard embedding
+  * [ ] Configure product analytics views
+  * [ ] Setup dashboard linking from product pages
+
 ### Documentation
 
 * [ ] Setup documentation build pipeline
@@ -42,13 +49,6 @@
   * [ ] Create production Docker container
   * [ ] Create development Docker container
   * [ ] Add container documentation and examples
-
-### Data Visualization
-
-* [ ] Add interactive data visualization capabilities
-  * [ ] Implement charting library integration
-  * [ ] Create product analytics dashboard
-  * [ ] Add export capabilities for charts and data
 
 ### Plugin System
 
