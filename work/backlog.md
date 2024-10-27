@@ -25,12 +25,20 @@
   * [ ] Configure product analytics views
   * [ ] Setup dashboard linking from product pages
 
+### Deployment
+
+* [ ] Create deployable packages
+  * [ ] Configure PyPI package setup
+  * [ ] Create production Docker container
+  * [ ] Create development Docker container
+  * [ ] Add container documentation and examples
+
 ### Documentation
 
 * [ ] Setup documentation build pipeline
   * [ ] Configure documentation generator for GitHub Pages
   * [ ] Setup automatic documentation deployment
-* [ ] Write comprehensive documentation
+* [ ] Write concise documentation that allow players to make the next move in their game:
   * [ ] Installation and setup guides
   * [ ] API documentation
   * [ ] Usage examples
@@ -41,14 +49,6 @@
   * [ ] Setup Robot Framework
   * [ ] Write acceptance tests as living documentation
   * [ ] Integrate with existing test suite
-
-### Deployment
-
-* [ ] Create deployable packages
-  * [ ] Configure PyPI package setup
-  * [ ] Create production Docker container
-  * [ ] Create development Docker container
-  * [ ] Add container documentation and examples
 
 ### Plugin System
 
