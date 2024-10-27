@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Integration tests for Dremio connection and product retrieval
 
+### Changed
+
+- Restructured product management into dedicated package
+- Extracted application metadata into standalone app_info module
+- Refactored CLI to use new module structure
+
 ## [0.2] - 2024-10-25
 
 ### Changed

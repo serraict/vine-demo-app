@@ -3,7 +3,7 @@
 from unittest.mock import create_autospec, patch, MagicMock
 from sqlalchemy.engine import Engine
 from sqlmodel import Session
-from vineapp.products import Product, ProductRepository
+from vineapp.products.models import Product, ProductRepository
 
 
 def test_get_products():
@@ -41,7 +41,7 @@ def test_get_products():
     ]  # SQLModel returns tuples
     mock_session.execute.return_value = mock_result
 
-    with patch("vineapp.products.Session") as mock_session_class:
+    with patch("vineapp.products.models.Session") as mock_session_class:
         mock_session_class.return_value.__enter__.return_value = mock_session
 
         # When
