@@ -5,6 +5,11 @@ from typing import List, Optional, Union
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
+from sqlalchemy_dremio.flight import DremioDialect_flight
+
+
+# Configure Dremio dialect to disable statement caching warning
+DremioDialect_flight.supports_statement_cache = False
 
 
 class Product(SQLModel, table=True):
