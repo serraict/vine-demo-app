@@ -3,6 +3,7 @@
 import pytest
 from unittest.mock import Mock, patch
 from nicegui.testing import User
+from nicegui import ui
 from vineapp.products.models import Product
 from vineapp import __web__
 
@@ -41,4 +42,21 @@ async def test_products_page_shows_table(user: User) -> None:
             ),
         ]
 
+        # When
         await user.open("/products")
+
+        # Then
+        table = user.find(ui.table).elements.pop()
+        assert table.columns == [
+            {"name": "name", "label": "Name", "field": "name", "sortable": True},
+            {
+                "name": "group",
+                "label": "Product Group",
+                "field": "product_group_name",
+                "sortable": True,
+            },
+        ]
+        assert table.rows == [
+            {"name": "T. Bee 13", "product_group_name": "13 aziaat"},
+            {"name": "S. Okinawa 19", "product_group_name": "19 oriëntal"},
+        ]
