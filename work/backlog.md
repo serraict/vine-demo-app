@@ -17,3 +17,28 @@
      * [ ] Match CLI about command information
 
 ## Later
+
+### Documentation
+
+* [ ] Setup documentation build pipeline
+  * [ ] Configure documentation generator for GitHub Pages
+  * [ ] Setup automatic documentation deployment
+* [ ] Write comprehensive documentation
+  * [ ] Installation and setup guides
+  * [ ] API documentation
+  * [ ] Usage examples
+
+### Automated Specifications
+
+* [ ] Implement specifications by example
+  * [ ] Setup Robot Framework
+  * [ ] Write acceptance tests as living documentation
+  * [ ] Integrate with existing test suite
+
+### Deployment
+
+* [ ] Create deployable packages
+  * [ ] Configure PyPI package setup
+  * [ ] Create production Docker container
+  * [ ] Create development Docker container
+  * [ ] Add container documentation and examples
