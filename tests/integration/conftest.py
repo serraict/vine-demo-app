@@ -1,4 +1,5 @@
 """Pytest fixtures for integration tests."""
+
 import os
 import pytest
 from sqlalchemy import create_engine, text
@@ -10,12 +11,12 @@ from vineapp.products import ProductRepository
 def dremio_engine() -> Engine:
     """Create a test database engine."""
     connection_string = os.getenv("VINEAPP_DB_CONNECTION")
-    
+
     if not connection_string:
         pytest.skip("Database connection string not configured")
-    
+
     engine = create_engine(connection_string)
-    
+
     try:
         # Verify connection
         with engine.connect() as conn:

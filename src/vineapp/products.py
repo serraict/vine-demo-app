@@ -1,4 +1,5 @@
 """Product data access layer."""
+
 import os
 from typing import List, Optional, Union
 from sqlalchemy import create_engine
@@ -27,17 +28,15 @@ class ProductRepository:
             self.engine = connection
         else:
             conn_str = os.getenv(
-                "VINEAPP_DB_CONNECTION",
-                "dremio+flight://localhost:32010/dremio"
+                "VINEAPP_DB_CONNECTION", "dremio+flight://localhost:32010/dremio"
             )
             self.engine = create_engine(conn_str)
 
     def get_all(self) -> List[Product]:
         """Get all products from the data source."""
         with Session(self.engine) as session:
-            statement = (
-                select(Product)
-                .order_by(Product.product_group_name, Product.name)
+            statement = select(Product).order_by(
+                Product.product_group_name, Product.name
             )
             result = session.execute(statement)
             return [row[0] for row in result]
