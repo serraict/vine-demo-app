@@ -91,3 +91,31 @@ Before completing task:
    - [ ] Changes are atomic
    - [ ] Commit messages follow convention
    - [ ] Changes are properly scoped
+
+## Framework-Specific Guidelines
+
+### NiceGUI Testing
+
+When testing NiceGUI components:
+
+1. Use the `@pytest.mark.module_under_test(__web__)` decorator to register pages for testing
+
+2. For tables, use the elements property to verify content:
+   ```python
+   table = user.find(ui.table).elements.pop()
+   assert table.columns == [...]  # Verify column structure
+   assert table.rows == [...]     # Verify row data
+   ```
+
+3. For text content, use should_see:
+   ```python
+   await user.should_see("Some Text")  # Check visible text
+   ```
+
+4. For links and interactions:
+   ```python
+   await user.should_see("Link Text")
+   user.find("Link Text").click()
+   ```
+
+Remember that NiceGUI's testing module provides specific ways to verify UI elements. Don't try to access internal properties directly, but use the provided testing utilities.
