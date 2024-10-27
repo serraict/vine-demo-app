@@ -21,10 +21,5 @@
    * [ ] Create about page
      * [ ] Show version and app information
      * [ ] Match CLI about command information
-   
-2. Testing
-   * [ ] Add web app unit tests
-   * [ ] Add integration tests for pages
-   * [ ] Verify shared code works in both CLI and web contexts
 
 ## Later
