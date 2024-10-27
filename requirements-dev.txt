@@ -3,6 +3,7 @@ GitPython
 setuptools_scm>=8
 pytest
 pytest-cov
+pytest-asyncio
 pre-commit
 black
 flake8

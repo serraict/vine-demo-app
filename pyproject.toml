@@ -38,4 +38,7 @@ python_files = ["test_*.py"]
 python_functions = ["test_*"]
 markers = [
     "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+    "asyncio: mark test as async",
 ]
+asyncio_mode = "auto"
+pytest_plugins = ["nicegui.testing.user_plugin"]

@@ -63,3 +63,6 @@ quality:
 	@echo "Running tests with coverage..."
 	pytest --cov=src/vineapp --cov-report=term --cov-report=xml  -m "not integration"
 	@echo "Code quality checks completed."
+server:
+	@echo "Starting web server..."
+	python -m vineapp.__web__
