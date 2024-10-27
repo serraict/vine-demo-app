@@ -6,10 +6,22 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
+from sqlalchemy.dialects import registry
 
 
-# Configure Dremio dialect to disable statement caching warning
-DremioDialect_flight.supports_statement_cache = False
+class CustomDremioDialect(DremioDialect_flight):
+    """Custom Dremio dialect that implements import_dbapi."""
+
+    supports_statement_cache = False
+
+    @classmethod
+    def import_dbapi(cls):
+        """Import DBAPI module for Dremio."""
+        return DremioDialect_flight.dbapi()
+
+
+# Register our custom dialect
+registry.register("dremio.flight", "vineapp.products.models", "CustomDremioDialect")
 
 
 class Product(SQLModel, table=True):
