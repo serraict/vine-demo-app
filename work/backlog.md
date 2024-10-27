@@ -17,6 +17,7 @@
      * [ ] Refactor about/version information
    * [ ] Create product listing page
      * [ ] Display products in a table/grid
+     * [ ] Implement server-side pagination
      * [ ] Add sorting and filtering capabilities
    * [ ] Create about page
      * [ ] Show version and app information
