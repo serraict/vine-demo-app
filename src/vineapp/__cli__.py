@@ -1,11 +1,11 @@
 """Command line interface for vineapp."""
 
 import typer
-from importlib.metadata import metadata, version
 from rich.console import Console
 from rich.table import Table
 
-from vineapp.products import ProductRepository
+from vineapp.app_info import get_application_info
+from vineapp.products import ProductRepository, ProductService
 
 app = typer.Typer()
 console = Console()
@@ -19,21 +19,21 @@ def callback():
 @app.command()
 def about():
     """Display application information and version."""
-    pkg_metadata = metadata("vineapp")
-    app_version = version("vineapp")
+    info = get_application_info()
 
-    typer.echo(f"Name: {pkg_metadata['Name']}")
-    typer.echo(f"Version: {app_version}")
-    typer.echo(f"Description: {pkg_metadata['Summary']}")
-    typer.echo(f"Author-email: {pkg_metadata['Author-email']}")
-    typer.echo(f"Project URL: {pkg_metadata['Project-URL'].split(',')[1].strip()}")
+    typer.echo(f"Name: {info.name}")
+    typer.echo(f"Version: {info.version}")
+    typer.echo(f"Description: {info.description}")
+    typer.echo(f"Author-email: {info.author_email}")
+    typer.echo(f"Project URL: {info.project_url}")
 
 
 @app.command()
 def products():
     """Display a table of all products with their groups."""
     repository = ProductRepository()
-    products_list = repository.get_all()
+    service = ProductService(repository)
+    products_list = service.get_all()
 
     table = Table(title="Products")
     table.add_column("ID", justify="right", style="cyan")
