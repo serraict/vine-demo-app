@@ -5,9 +5,9 @@
 ### Goal: Create Web Application with NiceGUI
 
 1. Implement Core Features
-   * [ ] Create shared code module for CLI and web app
-     * [ ] Refactor product listing logic
-     * [ ] Refactor about/version information
+   * [x] Create shared code module for CLI and web app
+     * [x] Refactor product listing logic into dedicated package
+     * [x] Extract about/version information into standalone module
    * [ ] Create product listing page
      * [ ] Display products in a table/grid
      * [ ] Implement server-side pagination
