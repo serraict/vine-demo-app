@@ -47,5 +47,10 @@ def products_page() -> None:
 
 app.include_router(article_router.router)
 
-if __name__ in {"__main__", "__mp_main__"}:
+
+def main():
     ui.run(title="Serra Vine App")
+
+
+if __name__ in {"__main__", "__mp_main__"}:
+    main()
