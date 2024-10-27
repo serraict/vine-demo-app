@@ -1,12 +1,5 @@
 # Backlog
 
-## Doing
-
-### Connect to Dremio
-
-1. Update Product Repository
-   * [ ] Add error handling for connection issues
-
 ## Next
 
 ### Goal: Create Web Application with NiceGUI
