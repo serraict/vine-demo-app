@@ -3,8 +3,6 @@
 import pytest
 from nicegui.testing import User
 
-pytest_plugins = ["nicegui.testing.user_plugin"]
-
 
 @pytest.mark.asyncio
 async def test_homepage_links_to_products(user: User) -> None:

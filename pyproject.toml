@@ -41,4 +41,5 @@ markers = [
     "asyncio: mark test as async",
 ]
 asyncio_mode = "auto"
-pytest_plugins = ["nicegui.testing.user_plugin"]
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-p nicegui.testing.user_plugin"
