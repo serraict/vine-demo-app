@@ -9,8 +9,22 @@
 
 ## Next
 
-### Goal: Connect to Serra Vine
+### Goal: Create Web Application with NiceGUI
 
-* [ ] Display a public chart.
+1. Implement Core Features
+   * [ ] Create shared code module for CLI and web app
+     * [ ] Refactor product listing logic
+     * [ ] Refactor about/version information
+   * [ ] Create product listing page
+     * [ ] Display products in a table/grid
+     * [ ] Add sorting and filtering capabilities
+   * [ ] Create about page
+     * [ ] Show version and app information
+     * [ ] Match CLI about command information
+   
+2. Testing
+   * [ ] Add web app unit tests
+   * [ ] Add integration tests for pages
+   * [ ] Verify shared code works in both CLI and web contexts
 
 ## Later
