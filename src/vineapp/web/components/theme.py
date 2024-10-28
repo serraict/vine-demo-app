@@ -24,7 +24,6 @@ def frame(navigation_title: str):
     )
 
     with ui.header().classes("items-center"):
-        print("frame: Creating header")
         ui.label("Modularization Example").classes("font-bold")
         ui.space()
         ui.label(navigation_title)
