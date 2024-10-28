@@ -2,7 +2,6 @@
 
 from typing import Generator
 import pytest
-from vineapp.web.startup import startup
 from nicegui.testing import User
 
 pytest_plugins = ["nicegui.testing.user_plugin"]
@@ -10,6 +9,7 @@ pytest_plugins = ["nicegui.testing.user_plugin"]
 
 @pytest.fixture
 def user(user: User) -> Generator[User, None, None]:
-    print("Starting app ...")
+    """Initialize NiceGUI for testing."""
+    from vineapp.web.startup import startup
     startup()
     yield user
