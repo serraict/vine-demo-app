@@ -112,28 +112,70 @@ Before completing task:
 
 When testing NiceGUI components:
 
-1. Use the `@pytest.mark.module_under_test(__web__)` decorator to register pages for testing
+1. Test File Organization:
+   - Create separate test files for distinct features (e.g., test_web_about.py for about page)
+   - Use descriptive test names that explain the behavior being tested
+   - Follow the Given/When/Then pattern in test comments
 
-1. For tables, use the elements property to verify content:
-
+2. Required Test Decorators:
    ```python
-   table = user.find(ui.table).elements.pop()
-   assert table.columns == [...]  # Verify column structure
-   assert table.rows == [...]     # Verify row data
+   @pytest.mark.module_under_test(__web__)
+   async def test_example(user: User) -> None:
    ```
 
-1. For text content, use should_see:
-
+3. Page Navigation and Content Verification:
    ```python
-   await user.should_see("Some Text")  # Check visible text
-   ```
-
-1. For links and interactions:
-
-   ```python
-   await user.should_see("Link Text")
+   # Navigate to a page
+   await user.open("/some-route")
+   
+   # Verify visible text content
+   await user.should_see("Expected Text")
+   
+   # Click links or buttons
    user.find("Link Text").click()
    ```
+
+4. Table Testing:
+   ```python
+   # Get table component
+   table = user.find(ui.table).elements.pop()
+   
+   # Verify table structure
+   assert table.columns == [
+       {"name": "col1", "label": "Column 1", "field": "field1"},
+   ]
+   
+   # Verify table data
+   assert table.rows == [
+       {"field1": "value1"},
+   ]
+   ```
+
+5. Form Testing:
+   ```python
+   # Input text
+   await user.type("input text")
+   
+   # Select options
+   await user.select("option label")
+   
+   # Submit forms
+   await user.click("Submit")
+   ```
+
+6. Common Patterns:
+   - Use `user.should_see()` for text content verification
+   - Use `user.find()` for element interaction
+   - Use `user.open()` for page navigation
+   - Mock external dependencies (repositories, services)
+   - Test both success and error scenarios
+
+7. Best Practices:
+   - Test one behavior per test function
+   - Use clear, descriptive test names
+   - Follow the project's existing test patterns
+   - Keep assertions focused and minimal
+   - Mock external dependencies consistently
 
 Remember that NiceGUI's testing module provides specific ways to verify UI elements.
 Don't try to access internal properties directly, but use the provided testing utilities.
