@@ -6,11 +6,12 @@ from ...app_info import get_application_info
 from ..components import frame
 
 
-router = APIRouter(prefix="/home")
+# Root router without parameters
+root_router = APIRouter()
 
 
-@router.page("/")
-def index_page():
+@root_router.page("/")
+def index_page() -> None:
     """Render the homepage."""
     with frame("Homepage"):
         # Create content
@@ -19,11 +20,11 @@ def index_page():
             ui.label("This is the homepage").classes("text-xl")
             with ui.row().classes("gap-4 mt-4"):
                 ui.link("View Products", "/products").classes("text-lg")
-                ui.link("About", "/home/about").classes("text-lg")
+                ui.link("About", "/about").classes("text-lg")
 
 
-@router.page("/about")
-def about_page():
+@root_router.page("/about")
+def about_page() -> None:
     """Render the about page with application information."""
     info = get_application_info()
 

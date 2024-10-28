@@ -11,7 +11,7 @@ async def test_about_page_shows_app_info(user: User) -> None:
     info = get_application_info()
 
     # When
-    await user.open("/home/about")
+    await user.open("/about")
 
     # Then
     await user.should_see(info.name)
