@@ -20,6 +20,7 @@ update:
 console:
 format:
 	black src tests
+	mdformat .
 test:
 	pytest --cov=src/vineapp --cov-report=term -m "not integration"
 test-integration:

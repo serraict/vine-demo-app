@@ -47,3 +47,11 @@ filterwarnings = [
     # Ignore HTTPX deprecation warning from NiceGUI testing plugin
     "ignore:The 'app' shortcut is now deprecated:DeprecationWarning:httpx",
 ]
+
+[tool.mdformat]
+wrap = 80
+number = false
+end_of_line = "lf"
+
+[tool.mdformat.plugins]
+gfm = { task_list_item = true }

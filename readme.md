@@ -4,9 +4,9 @@ Opinionated application that demonstrates how to quickly build applications on t
 
 A Serra Vine application:
 
-* grows on what is already there
-* gives back and supports growth of other applications
-* is easy to cultivate
+- grows on what is already there
+- gives back and supports growth of other applications
+- is easy to cultivate
 
 ## Getting started
 
