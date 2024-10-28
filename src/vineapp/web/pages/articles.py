@@ -1,14 +1,17 @@
-from . import theme
-from .message import message
+"""Article pages and routing."""
 
 from nicegui import APIRouter, ui
+
+from ..components import frame, message
+
 
 router = APIRouter(prefix="/articles")
 
 
 @router.page("/")
-def example_page():
-    with theme.frame("Articles"):
+def index():
+    """Render the articles overview page."""
+    with frame("Articles"):
         message("Articles")
         ui.label("This page and its subpages are created using an APIRouter.")
         ui.link("Item 1", "/articles/items/1").classes("text-xl text-grey-8")
@@ -18,6 +21,11 @@ def example_page():
 
 @router.page("/items/{item_id}", dark=True)
 def item(item_id: str):
-    with theme.frame(f"Article -{item_id}-"):
+    """Render an individual article page.
+
+    Args:
+        item_id: The ID of the article to display
+    """
+    with frame(f"Article -{item_id}-"):
         message(f"Item  #{item_id}")
         ui.link("go back", router.prefix)

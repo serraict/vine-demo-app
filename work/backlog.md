@@ -8,13 +8,21 @@
    - [x] Create shared code module for CLI and web app
      - [x] Refactor product listing logic into dedicated package
      - [x] Extract about/version information into standalone module
-   - [ ] Create product listing page
-     - [ ] Display products in a table/grid
-     - [ ] Implement server-side pagination
-     - [ ] Add sorting and filtering capabilities
-   - [ ] Create about page
-     - [ ] Show version and app information
-     - [ ] Match CLI about command information
+   - [x] Create about page
+     - [x] Show version and app information
+     - [x] Match CLI about command information
+     - [x] Add links to documentation and GitHub
+   - [ ] Review nicegui testing strategy
+   - [ ] Enhance product listing page
+     - [x] Display products in a table
+     - [ ] Implement basic server-side pagination
+     - [ ] Add basic sorting
+     - [ ] Add filtering capabilities
+       - [ ] Add search box for filtering by name
+       - [ ] Add dropdown for filtering by product group
+     - [ ] Add product details view
+       - [ ] Create product detail route (/products/<id>)
+       - [ ] Show detailed product information
 
 ## Later
 
@@ -73,3 +81,5 @@
   - [ ] Implement role-based access control
   - [ ] Add audit logging
   - [ ] Implement secure configuration management
+
+### Logging

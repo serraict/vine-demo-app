@@ -1,12 +1,17 @@
+"""Theme and layout components."""
+
 from contextlib import contextmanager
-
 from .menu import menu
-
 from nicegui import ui
 
 
 @contextmanager
 def frame(navigation_title: str):
+    """Create a themed frame with header and navigation.
+
+    Args:
+        navigation_title: The title to display in the navigation bar
+    """
     ui.colors(
         brand="#009279",
         primary="#009279",
@@ -17,7 +22,9 @@ def frame(navigation_title: str):
         info="#c5b4ff",
         warning="#d38334",
     )
-    with ui.header():
+
+    with ui.header().classes("items-center"):
+        print("frame: Creating header")
         ui.label("Modularization Example").classes("font-bold")
         ui.space()
         ui.label(navigation_title)

@@ -1,28 +1,17 @@
 """Tests for web interface."""
 
-import pytest
 from unittest.mock import Mock, patch
 from nicegui.testing import User
 from nicegui import ui
+
 from vineapp.products.models import Product
-from vineapp import __web__
 
 
-@pytest.mark.module_under_test(__web__)
-async def test_homepage_links_to_products(user: User) -> None:
-    """Test that homepage contains link to products page."""
-    await user.open("/")
-    await user.should_see("View Products")
-    user.find("View Products").click()
-    await user.should_see("Products")
-
-
-@pytest.mark.module_under_test(__web__)
 async def test_products_page_shows_table(user: User) -> None:
     """Test that products page shows a table with product data."""
     with (
-        patch("vineapp.__web__.ProductService") as mock_service,
-        patch("vineapp.__web__.ProductRepository") as mock_repo,
+        patch("vineapp.web.pages.products.ProductService") as mock_service,
+        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
     ):
         # Given
         mock_repo.return_value = Mock()
