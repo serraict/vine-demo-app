@@ -12,19 +12,24 @@
      - [x] Show version and app information
      - [x] Match CLI about command information
      - [x] Add links to documentation and GitHub
-   - [ ] Review nicegui testing strategy
+   - [x] Review nicegui testing strategy
    - [ ] Enhance product listing page
      - [x] Display products in a table
-     - [ ] Implement basic server-side pagination
      - [ ] Add basic sorting
      - [ ] Add filtering capabilities
        - [ ] Add search box for filtering by name
        - [ ] Add dropdown for filtering by product group
+     - [ ] Implement basic server-side pagination
      - [ ] Add product details view
        - [ ] Create product detail route (/products/<id>)
        - [ ] Show detailed product information
 
 ## Later
+
+### tech stack
+
+- [ ] Remove unused pages.
+- [ ] Use Pydantic instead of data class
 
 ### Data Visualization
 
