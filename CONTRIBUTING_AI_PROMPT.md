@@ -181,3 +181,62 @@ When testing NiceGUI components:
 
 Remember that NiceGUI's testing module provides specific ways to verify UI elements.
 Don't try to access internal properties directly, but use the provided testing utilities.
+
+### Exploratory Testing with Browser Actions
+
+After implementing UI changes, perform exploratory testing using the browser_action tool:
+
+1. Setup:
+
+   - Start the development server in a separate terminal using `make server`
+   - Keep the server terminal visible to monitor logs and errors
+   - Use browser_action tools in the main terminal for testing
+
+2. Testing Flow:
+
+   ```python
+   # Launch browser at specific URL
+   <browser_action>
+   <action>launch</action>
+   <url>http://localhost:8080/your-page</url>
+   </browser_action>
+
+   # Interact with elements (after analyzing screenshot)
+   <browser_action>
+   <action>click</action>
+   <coordinate>450,300</coordinate>
+   </browser_action>
+
+   # Always close browser when done
+   <browser_action>
+   <action>close</action>
+   </browser_action>
+   ```
+
+3. Key Aspects to Test:
+
+   - Visual appearance and layout
+   - Interactive elements (buttons, links, forms)
+   - Sorting and filtering functionality
+   - Error states and edge cases
+   - Responsive behavior
+   - Console errors or warnings
+
+4. Best Practices:
+
+   - Always analyze screenshots after each action
+   - Monitor console logs for errors
+   - Test both happy path and edge cases
+   - Close browser before using other tools
+   - Document any issues found
+   - Verify fixes with both automated tests and browser actions
+
+5. Common Patterns:
+
+   - Launch browser to verify initial state
+   - Click elements to test interactivity
+   - Type text to test input fields
+   - Scroll to test pagination/infinite scroll
+   - Close browser when exploration complete
+
+Remember that browser actions complement automated tests by allowing manual verification of the user experience. Use both approaches to ensure comprehensive testing coverage.
