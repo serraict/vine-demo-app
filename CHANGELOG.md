@@ -14,12 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - About page showing application information and links to documentation
 - Navigation link to About page from homepage
 - Sorting functionality for products table (by name and product group)
+- Server-side pagination for products table with configurable page size
 
 ### Changed
 
 - Restructured product management into dedicated package
 - Extracted application metadata into standalone app_info module
 - Refactored CLI to use new module structure
+- Enhanced product repository to support paginated queries
 
 ## [0.2] - 2024-10-25
 
