@@ -13,12 +13,13 @@ router = APIRouter(prefix="/products")
 
 # Shared table state
 table_data = {
-    "rows": [],
     "pagination": {
         "rowsPerPage": 10,
         "page": 1,
         "rowsNumber": 0,  # This will actually signal the Quasar component to use server side pagination
-    },
+        "sortBy": None,
+        "descending": False,
+    }
 }
 
 
@@ -32,7 +33,7 @@ def products_page() -> None:
         columns: List[Dict[str, Any]] = [
             {"name": "name", "label": "Name", "field": "name", "sortable": True},
             {
-                "name": "group",
+                "name": "product_group_name",  # name is used as sort key, so preferably the same as field
                 "label": "Product Group",
                 "field": "product_group_name",
                 "sortable": True,
@@ -44,27 +45,33 @@ def products_page() -> None:
             """Create a refreshable table component."""
             table = ui.table(
                 columns=columns,
-                rows=table_data["rows"],
+                rows=table_data["rows"] if "rows" in table_data else [],
                 row_key="name",
                 pagination=table_data["pagination"],
             )
-            table.on("request", handle_pagination)
+            table.on("request", handle_table_request)
             return table
 
-        def handle_pagination(event: Dict[str, Any]) -> None:
-            """Handle pagination events from the table."""
+        def handle_table_request(event: Dict[str, Any]) -> None:
+            """Handle table request events (pagination and sorting)."""
             # Update pagination state from request
             new_pagination = event.args["pagination"]
             table_data["pagination"].update(new_pagination)
 
-            # Get new page of data
+            # Get new page of data with sorting
             page = new_pagination.get("page", 1)
             rows_per_page = new_pagination.get("rowsPerPage", 10)
+            sort_by = new_pagination.get("sortBy")
+            descending = new_pagination.get("descending", False)
 
             print(f"Fetching page {page} with {rows_per_page} rows per page")
+            print(f"Sorting by {sort_by} {'descending' if descending else 'ascending'}")
 
             products, total = service.get_paginated(
-                page=page, items_per_page=rows_per_page
+                page=page,
+                items_per_page=rows_per_page,
+                sort_by=sort_by,
+                descending=descending,
             )
 
             # Update table data

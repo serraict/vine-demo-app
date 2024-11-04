@@ -2,7 +2,7 @@
 
 import os
 from typing import List, Optional, Union, Tuple
-from sqlalchemy import create_engine, func, Integer, bindparam
+from sqlalchemy import create_engine, func, Integer, bindparam, desc
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
@@ -58,13 +58,21 @@ class ProductRepository:
             result = session.execute(statement)
             return [row[0] for row in result]
 
-    def get_paginated(self, page: int = 1, items_per_page: int = 10) -> Tuple[List[Product], int]:
+    def get_paginated(
+        self,
+        page: int = 1,
+        items_per_page: int = 10,
+        sort_by: Optional[str] = None,
+        descending: bool = False,
+    ) -> Tuple[List[Product], int]:
         """Get paginated products from the data source.
-        
+
         Args:
             page: The page number (1-based)
             items_per_page: Number of items per page
-            
+            sort_by: Column name to sort by
+            descending: Sort in descending order if True
+
         Returns:
             Tuple containing list of products for the requested page and total count
         """
@@ -72,26 +80,38 @@ class ProductRepository:
             # Get total count using COUNT
             count_stmt = select(func.count(Product.id))
             total = session.exec(count_stmt).one()
-            
+
             # Calculate offset
             offset = (page - 1) * items_per_page
-            
-            # Create base query with typed literal values
-            stmt = (
-                select(Product)
-                .order_by(Product.product_group_name, Product.name)
-                .limit(bindparam('limit', type_=Integer, literal_execute=True))
-                .offset(bindparam('offset', type_=Integer, literal_execute=True))
-            )
-            
+
+            # Create base query
+            stmt = select(Product)
+
+            # Apply sorting
+            if sort_by:
+                column = getattr(Product, sort_by, None)
+                if column is not None:
+                    if descending:
+                        stmt = stmt.order_by(desc(column))
+                    else:
+                        stmt = stmt.order_by(column)
+            else:
+                # Default sorting
+                stmt = stmt.order_by(Product.product_group_name, Product.name)
+
+            # Apply pagination
+            stmt = stmt.limit(
+                bindparam("limit", type_=Integer, literal_execute=True)
+            ).offset(bindparam("offset", type_=Integer, literal_execute=True))
+
             # Execute with bound parameters
             result = session.exec(
                 stmt,
                 params={
-                    'limit': items_per_page,
-                    'offset': offset,
-                }
+                    "limit": items_per_page,
+                    "offset": offset,
+                },
             )
             products = list(result)
-            
+
             return products, total

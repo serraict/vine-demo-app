@@ -1,5 +1,7 @@
 # Backlog
 
+## Doing
+
 ## Next
 
 ### Goal: Create Web Application with NiceGUI
@@ -15,11 +17,11 @@
    - [x] Review nicegui testing strategy
    - [ ] Enhance product listing page
      - [x] Display products in a table
-     - [ ] Add basic sorting
+     - [x] Add basic sorting
      - [ ] Add filtering capabilities
        - [ ] Add search box for filtering by name
        - [ ] Add dropdown for filtering by product group
-     - [ ] Implement basic server-side pagination
+     - [x] Implement basic server-side pagination
      - [ ] Add product details view
        - [ ] Create product detail route (/products/<id>)
        - [ ] Show detailed product information
