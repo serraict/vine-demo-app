@@ -2,7 +2,7 @@
 
 import os
 from typing import List, Optional, Union, Tuple
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, func, Integer, bindparam
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
@@ -69,29 +69,29 @@ class ProductRepository:
             Tuple containing list of products for the requested page and total count
         """
         with Session(self.engine) as session:
-            # First get total count
-            count_stmt = select(Product)
-            total = len(session.execute(count_stmt).all())
+            # Get total count using COUNT
+            count_stmt = select(func.count(Product.id))
+            total = session.exec(count_stmt).one()
             
-            # Then get paginated results
+            # Calculate offset
             offset = (page - 1) * items_per_page
-            stmt = text(f"""
-                SELECT "Vines".products.id, "Vines".products.name, 
-                       "Vines".products.product_group_id, "Vines".products.product_group_name 
-                FROM "Vines"."products" 
-                ORDER BY "Vines".products.product_group_name, "Vines".products.name
-                LIMIT {items_per_page} OFFSET {offset}
-            """)
             
-            result = session.execute(stmt)
-            products = [
-                Product(
-                    id=row.id,
-                    name=row.name,
-                    product_group_id=row.product_group_id,
-                    product_group_name=row.product_group_name,
-                )
-                for row in result
-            ]
+            # Create base query with typed literal values
+            stmt = (
+                select(Product)
+                .order_by(Product.product_group_name, Product.name)
+                .limit(bindparam('limit', type_=Integer, literal_execute=True))
+                .offset(bindparam('offset', type_=Integer, literal_execute=True))
+            )
+            
+            # Execute with bound parameters
+            result = session.exec(
+                stmt,
+                params={
+                    'limit': items_per_page,
+                    'offset': offset,
+                }
+            )
+            products = list(result)
             
             return products, total
