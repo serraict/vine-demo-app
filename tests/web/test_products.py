@@ -16,20 +16,23 @@ async def test_products_page_shows_table(user: User) -> None:
         # Given
         mock_repo.return_value = Mock()
         mock_service.return_value = Mock()
-        mock_service.return_value.get_all.return_value = [
-            Product(
-                id=12,
-                name="T. Bee 13",
-                product_group_id=113,
-                product_group_name="13 aziaat",
-            ),
-            Product(
-                id=99,
-                name="S. Okinawa 19",
-                product_group_id=219,
-                product_group_name="19 oriëntal",
-            ),
-        ]
+        mock_service.return_value.get_paginated.return_value = (
+            [
+                Product(
+                    id=12,
+                    name="T. Bee 13",
+                    product_group_id=113,
+                    product_group_name="13 aziaat",
+                ),
+                Product(
+                    id=99,
+                    name="S. Okinawa 19",
+                    product_group_id=219,
+                    product_group_name="19 oriëntal",
+                ),
+            ],
+            2,  # total count
+        )
 
         # When
         await user.open("/products")
@@ -60,33 +63,36 @@ async def test_products_page_supports_sorting(user: User) -> None:
         # Given
         mock_repo.return_value = Mock()
         mock_service.return_value = Mock()
-        mock_service.return_value.get_all.return_value = [
-            Product(
-                id=12,
-                name="T. Bee 13",
-                product_group_id=113,
-                product_group_name="13 aziaat",
-            ),
-            Product(
-                id=99,
-                name="S. Okinawa 19",
-                product_group_id=219,
-                product_group_name="19 oriëntal",
-            ),
-            Product(
-                id=45,
-                name="A. Sumatra 15",
-                product_group_id=115,
-                product_group_name="15 sumatra",
-            ),
-        ]
+        mock_service.return_value.get_paginated.return_value = (
+            [
+                Product(
+                    id=12,
+                    name="T. Bee 13",
+                    product_group_id=113,
+                    product_group_name="13 aziaat",
+                ),
+                Product(
+                    id=99,
+                    name="S. Okinawa 19",
+                    product_group_id=219,
+                    product_group_name="19 oriëntal",
+                ),
+                Product(
+                    id=45,
+                    name="A. Sumatra 15",
+                    product_group_id=115,
+                    product_group_name="15 sumatra",
+                ),
+            ],
+            3,  # total count
+        )
 
         # When
         await user.open("/products")
 
         # Then
         table = user.find(ui.table).elements.pop()
-        
+
         # Verify rows can be sorted by name
         sorted_by_name = sorted(table.rows, key=lambda x: x["name"])
         assert [row["name"] for row in sorted_by_name] == [
@@ -99,6 +105,6 @@ async def test_products_page_supports_sorting(user: User) -> None:
         sorted_by_group = sorted(table.rows, key=lambda x: x["product_group_name"])
         assert [row["product_group_name"] for row in sorted_by_group] == [
             "13 aziaat",
-            "15 sumatra", 
+            "15 sumatra",
             "19 oriëntal",
         ]
