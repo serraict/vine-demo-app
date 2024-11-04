@@ -11,6 +11,17 @@ from ..components import frame
 
 router = APIRouter(prefix="/products")
 
+# Shared table state
+table_data = {
+    'rows': [],
+    'pagination': {
+        'rowsPerPage': 10,
+        'page': 1,
+        'rowsPerPageOptions': [10, 25, 50],
+        'rowsNumber': 0,  # Will be set after initial load
+    },
+}
+
 
 @router.page("/")
 def products_page() -> None:
@@ -29,50 +40,58 @@ def products_page() -> None:
             },
         ]
 
-        # Get initial page of data
-        products, total = service.get_paginated(page=1, items_per_page=10)
-        rows = [
-            {"name": p.name, "product_group_name": p.product_group_name}
-            for p in products
-        ]
+        @ui.refreshable
+        def products_table() -> ui.table:
+            """Create a refreshable table component."""
+            table = ui.table(
+                columns=columns,
+                rows=table_data['rows'],
+                row_key="name",
+                pagination=table_data['pagination'],
+            )
+            table.on('request', handle_pagination)
+            return table
 
-        # Create table with pagination
-        table = ui.table(
-            columns=columns,
-            rows=rows,
-            row_key="name",
-            pagination={
-                "page": 1,
-                "rowsPerPage": 10,
-                "rowsPerPageOptions": [10, 25, 50],
-                "rowsNumber": total,
-            },
-        )
-
-        # Define handler function
         def handle_pagination(event: Dict[str, Any]) -> None:
             """Handle pagination events from the table."""
-            page = event.value.get("page", 1)
-            rows_per_page = event.value.get("rowsPerPage", 10)
-
-            print(f"Fetching page {page} with {rows_per_page} rows per page")
-
+            # Update pagination state from request
+            new_pagination = event.args['pagination']
+            table_data['pagination'].update(new_pagination)
+            
             # Get new page of data
+            page = new_pagination.get('page', 1)
+            rows_per_page = new_pagination.get('rowsPerPage', 10)
+            
+            print(f"Fetching page {page} with {rows_per_page} rows per page")
+            
             products, total = service.get_paginated(
-                page=page, items_per_page=rows_per_page
+                page=page,
+                items_per_page=rows_per_page
             )
-
-            # Update table with new data
-            table.rows = [
+            
+            # Update table data
+            table_data['rows'] = [
                 {"name": p.name, "product_group_name": p.product_group_name}
                 for p in products
             ]
-            table.update()
+            table_data['pagination']['rowsNumber'] = total
+            
+            # Refresh the table UI
+            products_table.refresh()
 
-        # Store handler for testing
-        table.handle_pagination = handle_pagination  # type: ignore
+        # Initial data load
+        def load_initial_data() -> None:
+            """Load initial data and set total count."""
+            products, total = service.get_paginated(page=1, items_per_page=10)
+            table_data['rows'] = [
+                {"name": p.name, "product_group_name": p.product_group_name}
+                for p in products
+            ]
+            table_data['pagination']['rowsNumber'] = total
+            products_table.refresh()
 
-        # Bind handler to table
-        table.on_pagination_change(handle_pagination)
+        # Create table and load data
+        table = products_table()
+        load_initial_data()
 
         return table
