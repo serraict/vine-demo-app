@@ -1,8 +1,8 @@
 """Product data models."""
 
 import os
-from typing import List, Optional, Union
-from sqlalchemy import create_engine
+from typing import List, Optional, Union, Tuple
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
@@ -57,3 +57,41 @@ class ProductRepository:
             )
             result = session.execute(statement)
             return [row[0] for row in result]
+
+    def get_paginated(self, page: int = 1, items_per_page: int = 10) -> Tuple[List[Product], int]:
+        """Get paginated products from the data source.
+        
+        Args:
+            page: The page number (1-based)
+            items_per_page: Number of items per page
+            
+        Returns:
+            Tuple containing list of products for the requested page and total count
+        """
+        with Session(self.engine) as session:
+            # First get total count
+            count_stmt = select(Product)
+            total = len(session.execute(count_stmt).all())
+            
+            # Then get paginated results
+            offset = (page - 1) * items_per_page
+            stmt = text(f"""
+                SELECT "Vines".products.id, "Vines".products.name, 
+                       "Vines".products.product_group_id, "Vines".products.product_group_name 
+                FROM "Vines"."products" 
+                ORDER BY "Vines".products.product_group_name, "Vines".products.name
+                LIMIT {items_per_page} OFFSET {offset}
+            """)
+            
+            result = session.execute(stmt)
+            products = [
+                Product(
+                    id=row.id,
+                    name=row.name,
+                    product_group_id=row.product_group_id,
+                    product_group_name=row.product_group_name,
+                )
+                for row in result
+            ]
+            
+            return products, total
