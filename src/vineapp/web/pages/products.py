@@ -45,6 +45,7 @@ def products_page() -> None:
                 "field": "product_group_name",
                 "sortable": True,
             },
+            {"name": "actions", "label": "Actions", "field": "actions"},
         ]
 
         @ui.refreshable
@@ -56,8 +57,24 @@ def products_page() -> None:
                 row_key="id",
                 pagination=table_data["pagination"],
             )
+            table.add_slot(
+                "body-cell-actions",
+                """
+                <q-td :props="props">
+                    <q-btn @click="$parent.$emit('view', props)" icon="visibility" flat dense color='primary'/>
+                </q-td>
+            """,
+            )
             table.on("request", handle_table_request)
+            table.on("view", handle_view_click)
             return table
+
+        def handle_view_click(e: Any) -> None:
+            """Handle click on view button."""
+            product_id = e.args.get("key")
+            if product_id:
+                print(f"Navigating to /products/{product_id}")  # Debug log
+                ui.navigate.to(f"/products/{product_id}")
 
         async def handle_filter(e: Any) -> None:
             """Handle changes to the search filter with debounce."""
@@ -96,6 +113,7 @@ def products_page() -> None:
             # Update table data
             table_data["rows"] = [
                 {
+                    "id": p.id,
                     "name": p.name,
                     "product_group_name": p.product_group_name,
                 }
@@ -116,6 +134,7 @@ def products_page() -> None:
             products, total = service.get_paginated(page=1, items_per_page=10)
             table_data["rows"] = [
                 {
+                    "id": p.id,
                     "name": p.name,
                     "product_group_name": p.product_group_name,
                 }

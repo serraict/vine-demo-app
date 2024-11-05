@@ -48,13 +48,16 @@ async def test_products_page_shows_table(user: User) -> None:
                 "field": "product_group_name",
                 "sortable": True,
             },
+            {"name": "actions", "label": "Actions", "field": "actions"},
         ]
         assert table.rows == [
             {
+                "id": 12,
                 "name": "T. Bee 13",
                 "product_group_name": "13 aziaat",
             },
             {
+                "id": 99,
                 "name": "S. Okinawa 19",
                 "product_group_name": "19 oriëntal",
             },
@@ -125,7 +128,6 @@ async def test_product_detail_page_shows_product(user: User) -> None:
         await user.open("/products/12")
 
         # Then
-        # Check if product details are displayed
         await user.should_see("T. Bee 13")
         await user.should_see("13 aziaat")
 
@@ -145,5 +147,4 @@ async def test_product_detail_page_handles_invalid_id(user: User) -> None:
         await user.open("/products/999")
 
         # Then
-        # Check if error message is displayed
         await user.should_see("Product not found")
