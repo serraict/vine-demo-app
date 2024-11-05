@@ -73,8 +73,8 @@ def test_get_product_by_id():
     )
 
     # Configure mocks
-    mock_result.first.return_value = (test_product,)  # SQLModel returns tuples
-    mock_session.execute.return_value = mock_result
+    mock_result.first.return_value = test_product
+    mock_session.exec.return_value = mock_result
 
     with patch("vineapp.products.models.Session") as mock_session_class:
         mock_session_class.return_value.__enter__.return_value = mock_session

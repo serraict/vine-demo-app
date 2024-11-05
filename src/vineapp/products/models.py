@@ -68,10 +68,14 @@ class ProductRepository:
             The product if found, None otherwise
         """
         with Session(self.engine) as session:
-            statement = select(Product).where(Product.id == product_id)
-            result = session.execute(statement)
-            row = result.first()
-            return row[0] if row else None
+            # Create base query
+            base_query = select(Product)
+            # Add where clause using text() for direct SQL
+            filter_expr = text(f"id = {product_id}")
+            query = base_query.where(filter_expr)
+            # Execute query
+            result = session.exec(query)
+            return result.first()
 
     def get_paginated(
         self,
