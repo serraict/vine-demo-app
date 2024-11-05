@@ -30,5 +30,5 @@ def frame(navigation_title: str):
         ui.space()
         with ui.row():
             menu()
-    with ui.column().classes("absolute-center items-center"):
+    with ui.column().classes("w-full items-center p-4"):
         yield
