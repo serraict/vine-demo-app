@@ -51,9 +51,6 @@ class InvalidParameterError(RepositoryError):
 class ProductRepository:
     """Read-only repository for product data access."""
 
-    # Valid columns for sorting
-    SORTABLE_COLUMNS = {"name", "product_group_name"}
-
     def __init__(self, connection: Optional[Union[str, Engine]] = None):
         """Initialize repository with optional connection string or engine."""
         if isinstance(connection, Engine):
@@ -120,12 +117,6 @@ class ProductRepository:
             raise InvalidParameterError("Page number must be greater than 0")
         if items_per_page < 1:
             raise InvalidParameterError("Items per page must be greater than 0")
-
-        # Validate sort column if provided
-        if sort_by and sort_by not in self.SORTABLE_COLUMNS:
-            raise InvalidParameterError(
-                f"Invalid sort column. Must be one of: {', '.join(self.SORTABLE_COLUMNS)}"
-            )
 
         with Session(self.engine) as session:
             # Create base query

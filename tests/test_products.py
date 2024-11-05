@@ -223,8 +223,6 @@ def test_get_paginated_products_default_sorting():
     # Then
     assert len(products) == 2
     assert total == 10
-    # We can't reliably test the order of products since we're mocking the database
-    # Instead, we verify that we got the expected number of products
 
 
 def test_get_paginated_products_invalid_page():
@@ -243,10 +241,3 @@ def test_get_paginated_products_invalid_items_per_page():
         InvalidParameterError, match="Items per page must be greater than 0"
     ):
         repository.get_paginated(items_per_page=0)
-
-
-def test_get_paginated_products_invalid_sort_column():
-    """Test that invalid sort column raises error."""
-    repository = ProductRepository(create_autospec(Engine))
-    with pytest.raises(InvalidParameterError, match="Invalid sort column"):
-        repository.get_paginated(sort_by="invalid_column")
