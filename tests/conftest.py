@@ -11,5 +11,6 @@ pytest_plugins = ["nicegui.testing.user_plugin"]
 def user(user: User) -> Generator[User, None, None]:
     """Initialize NiceGUI for testing."""
     from vineapp.web.startup import startup
+
     startup()
     yield user

@@ -192,7 +192,7 @@ After implementing UI changes, perform exploratory testing using the browser_act
    - Keep the server terminal visible to monitor logs and errors
    - Use browser_action tools in the main terminal for testing
 
-2. Testing Flow:
+1. Testing Flow:
 
    ```python
    # Launch browser at specific URL
@@ -213,7 +213,7 @@ After implementing UI changes, perform exploratory testing using the browser_act
    </browser_action>
    ```
 
-3. Key Aspects to Test:
+1. Key Aspects to Test:
 
    - Visual appearance and layout
    - Interactive elements (buttons, links, forms)
@@ -222,7 +222,7 @@ After implementing UI changes, perform exploratory testing using the browser_act
    - Responsive behavior
    - Console errors or warnings
 
-4. Best Practices:
+1. Best Practices:
 
    - Always analyze screenshots after each action
    - Monitor console logs for errors
@@ -231,7 +231,7 @@ After implementing UI changes, perform exploratory testing using the browser_act
    - Document any issues found
    - Verify fixes with both automated tests and browser actions
 
-5. Common Patterns:
+1. Common Patterns:
 
    - Launch browser to verify initial state
    - Click elements to test interactivity

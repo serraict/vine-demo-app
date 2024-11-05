@@ -71,14 +71,16 @@ def test_handles_last_page_with_partial_results(product_repository: ProductRepos
     """Test that last page returns correct number of remaining items."""
     # Get total count from first page
     _, total = product_repository.get_paginated(page=1, items_per_page=10)
-    
+
     # Calculate last page
     last_page = (total + 9) // 10  # Round up division
     remaining_items = total % 10 or 10  # If divisible by 10, last page is full
-    
+
     # Get last page
-    products, total2 = product_repository.get_paginated(page=last_page, items_per_page=10)
-    
+    products, total2 = product_repository.get_paginated(
+        page=last_page, items_per_page=10
+    )
+
     # Verify we got the right number of products
     assert len(products) == remaining_items
     assert total == total2
