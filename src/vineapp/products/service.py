@@ -21,6 +21,7 @@ class ProductService:
         items_per_page: int = 10,
         sort_by: Optional[str] = None,
         descending: bool = False,
+        filter_text: Optional[str] = None,
     ) -> Tuple[List[Product], int]:
         """Get paginated products from the repository.
 
@@ -29,6 +30,7 @@ class ProductService:
             items_per_page: Number of items per page
             sort_by: Column name to sort by
             descending: Sort in descending order if True
+            filter_text: Optional text to filter products by (case-insensitive)
 
         Returns:
             Tuple containing list of products for the requested page and total count
@@ -38,4 +40,5 @@ class ProductService:
             items_per_page=items_per_page,
             sort_by=sort_by,
             descending=descending,
+            filter_text=filter_text,
         )

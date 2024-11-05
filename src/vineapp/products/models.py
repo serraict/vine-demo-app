@@ -2,7 +2,7 @@
 
 import os
 from typing import List, Optional, Union, Tuple
-from sqlalchemy import create_engine, func, Integer, bindparam, desc
+from sqlalchemy import create_engine, func, Integer, bindparam, desc, text
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
@@ -64,6 +64,7 @@ class ProductRepository:
         items_per_page: int = 10,
         sort_by: Optional[str] = None,
         descending: bool = False,
+        filter_text: Optional[str] = None,
     ) -> Tuple[List[Product], int]:
         """Get paginated products from the data source.
 
@@ -72,41 +73,56 @@ class ProductRepository:
             items_per_page: Number of items per page
             sort_by: Column name to sort by
             descending: Sort in descending order if True
+            filter_text: Optional text to filter products by (case-insensitive)
 
         Returns:
             Tuple containing list of products for the requested page and total count
         """
         with Session(self.engine) as session:
-            # Get total count using COUNT
-            count_stmt = select(func.count(Product.id))
+            # Create base query
+            base_query = select(Product)
+
+            # Apply filter if provided
+            if filter_text:
+                # Create filter expression with direct string interpolation
+                pattern = f"%{filter_text}%"
+                filter_expr = text(
+                    f"lower(name) LIKE lower('{pattern}') OR "
+                    f"lower(product_group_name) LIKE lower('{pattern}')"
+                )
+                base_query = base_query.where(filter_expr)
+
+            # Get total count using COUNT with filters applied
+            count_stmt = select(func.count(Product.id)).select_from(
+                base_query.subquery()
+            )
             total = session.exec(count_stmt).one()
 
             # Calculate offset
             offset = (page - 1) * items_per_page
-
-            # Create base query
-            stmt = select(Product)
 
             # Apply sorting
             if sort_by:
                 column = getattr(Product, sort_by, None)
                 if column is not None:
                     if descending:
-                        stmt = stmt.order_by(desc(column))
+                        base_query = base_query.order_by(desc(column))
                     else:
-                        stmt = stmt.order_by(column)
+                        base_query = base_query.order_by(column)
             else:
                 # Default sorting
-                stmt = stmt.order_by(Product.product_group_name, Product.name)
+                base_query = base_query.order_by(
+                    Product.product_group_name, Product.name
+                )
 
             # Apply pagination
-            stmt = stmt.limit(
+            query = base_query.limit(
                 bindparam("limit", type_=Integer, literal_execute=True)
             ).offset(bindparam("offset", type_=Integer, literal_execute=True))
 
             # Execute with bound parameters
             result = session.exec(
-                stmt,
+                query,
                 params={
                     "limit": items_per_page,
                     "offset": offset,
