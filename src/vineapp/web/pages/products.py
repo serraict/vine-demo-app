@@ -1,6 +1,5 @@
 """Products page implementation."""
 
-import asyncio
 from typing import List, Dict, Any
 
 from nicegui import APIRouter, ui
@@ -34,8 +33,9 @@ def products_page() -> None:
     with frame("Products"):
         # Add search input with debounce
         ui.input(
-            placeholder="Search products...", on_change=lambda e: handle_filter(e)
-        ).classes("w-full mb-4")
+            placeholder="Search products...",
+            on_change=lambda e: handle_filter(e),
+        ).mark("search")
 
         columns: List[Dict[str, Any]] = [
             {"name": "name", "label": "Name", "field": "name", "sortable": True},
@@ -63,10 +63,6 @@ def products_page() -> None:
             """Handle changes to the search filter with debounce."""
             table_data["filter"] = e.value if e.value else ""
             table_data["pagination"]["page"] = 1  # Reset to first page
-
-            # Add a small delay to prevent too many requests while typing
-            await asyncio.sleep(0.3)
-
             load_filtered_data()
 
         def handle_table_request(event: Dict[str, Any]) -> None:

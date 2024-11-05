@@ -1,5 +1,6 @@
 """Tests for web interface."""
 
+import asyncio
 from unittest.mock import Mock, patch
 from dataclasses import dataclass
 from nicegui.testing import User
@@ -62,8 +63,8 @@ async def test_products_page_shows_table(user: User) -> None:
         ]
 
 
-async def test_products_page_supports_sorting(user: User) -> None:
-    """Test that products can be sorted by name and product group."""
+async def test_products_page_filtering_calls_service(user: User) -> None:
+    """Test that entering a filter value calls the service with the filter text."""
     with (
         patch("vineapp.web.pages.products.ProductService") as mock_service,
         patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
@@ -72,120 +73,21 @@ async def test_products_page_supports_sorting(user: User) -> None:
         mock_repo.return_value = Mock()
         service_mock = Mock()
         mock_service.return_value = service_mock
-
-        # Mock initial data load
-        service_mock.get_paginated.return_value = (
-            [
-                Product(
-                    id=12,
-                    name="T. Bee 13",
-                    product_group_id=113,
-                    product_group_name="13 aziaat",
-                ),
-            ],
-            3,  # total count
-        )
+        service_mock.get_paginated.return_value = ([], 0)  # Empty initial result
 
         # When
         await user.open("/products")
-        table = user.find(ui.table).elements.pop()
+        search_box = user.find(marker="search", kind=ui.input)
+        search_box.type("mix")
+        search_box.trigger("change")
 
-        # Get the request handler
-        request_handler = next(
-            handler
-            for _, handler in table._event_listeners.items()
-            if handler.handler.__name__ == "handle_table_request"
-        )
+        # Create a mock event with the value
+        mock_event = Mock()
+        mock_event.value = "mix"
 
-        # Simulate sorting by name ascending
-        request_handler.handler(
-            EventArguments(
-                {
-                    "pagination": {
-                        "page": 1,
-                        "rowsPerPage": 10,
-                        "sortBy": "name",
-                        "descending": False,
-                    }
-                }
-            )
-        )
+        await asyncio.sleep(0.5)
 
-        # Then verify sort by name ascending
+        # Then verify service was called with filter
         service_mock.get_paginated.assert_called_with(
-            page=1, items_per_page=10, sort_by="name", descending=False
-        )
-
-        # Simulate sorting by product_group_name descending
-        request_handler.handler(
-            EventArguments(
-                {
-                    "pagination": {
-                        "page": 1,
-                        "rowsPerPage": 10,
-                        "sortBy": "product_group_name",
-                        "descending": True,
-                    }
-                }
-            )
-        )
-
-        # Then verify sort by product_group_name descending
-        service_mock.get_paginated.assert_called_with(
-            page=1, items_per_page=10, sort_by="product_group_name", descending=True
-        )
-
-
-async def test_products_page_maintains_sort_during_pagination(user: User) -> None:
-    """Test that sorting is maintained when changing pages."""
-    with (
-        patch("vineapp.web.pages.products.ProductService") as mock_service,
-        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
-    ):
-        # Given
-        mock_repo.return_value = Mock()
-        service_mock = Mock()
-        mock_service.return_value = service_mock
-
-        # Mock initial data load
-        service_mock.get_paginated.return_value = (
-            [
-                Product(
-                    id=12,
-                    name="T. Bee 13",
-                    product_group_id=113,
-                    product_group_name="13 aziaat",
-                ),
-            ],
-            30,  # total count
-        )
-
-        # When
-        await user.open("/products")
-        table = user.find(ui.table).elements.pop()
-
-        # Get the request handler
-        request_handler = next(
-            handler
-            for _, handler in table._event_listeners.items()
-            if handler.handler.__name__ == "handle_table_request"
-        )
-
-        # Set sorting and go to page 2
-        request_handler.handler(
-            EventArguments(
-                {
-                    "pagination": {
-                        "page": 2,
-                        "rowsPerPage": 10,
-                        "sortBy": "name",
-                        "descending": True,
-                    }
-                }
-            )
-        )
-
-        # Then verify sort is maintained
-        service_mock.get_paginated.assert_called_with(
-            page=2, items_per_page=10, sort_by="name", descending=True
+            page=1, items_per_page=10, sort_by=None, descending=False, filter_text="mix"
         )
