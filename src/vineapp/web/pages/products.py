@@ -53,7 +53,7 @@ def products_page() -> None:
             table = ui.table(
                 columns=columns,
                 rows=table_data["rows"] if "rows" in table_data else [],
-                row_key="name",
+                row_key="id",
                 pagination=table_data["pagination"],
             )
             table.on("request", handle_table_request)
@@ -95,7 +95,10 @@ def products_page() -> None:
 
             # Update table data
             table_data["rows"] = [
-                {"name": p.name, "product_group_name": p.product_group_name}
+                {
+                    "name": p.name,
+                    "product_group_name": p.product_group_name,
+                }
                 for p in products
             ]
             table_data["pagination"]["rowsNumber"] = total
@@ -112,7 +115,10 @@ def products_page() -> None:
             """Load initial data and set total count."""
             products, total = service.get_paginated(page=1, items_per_page=10)
             table_data["rows"] = [
-                {"name": p.name, "product_group_name": p.product_group_name}
+                {
+                    "name": p.name,
+                    "product_group_name": p.product_group_name,
+                }
                 for p in products
             ]
             table_data["pagination"]["rowsNumber"] = total
@@ -123,3 +129,26 @@ def products_page() -> None:
         load_initial_data()
 
         return table
+
+
+@router.page("/{product_id:int}")
+def product_detail(product_id: int) -> None:
+    """Render the product detail page."""
+    repository = ProductRepository()
+    service = ProductService(repository)
+
+    with frame("Product Details"):
+        product = service.get_by_id(product_id)
+
+        if product:
+            with ui.card().classes("w-full").mark("product-details"):
+                ui.label(f"Product ID: {product.id}").classes("text-h6")
+                ui.label(f"Name: {product.name}").classes("text-h4")
+                ui.label(f"Product Group: {product.product_group_name}").classes(
+                    "text-h5"
+                )
+                ui.link("Back to Products", "/products").classes("mt-4")
+        else:
+            with ui.card().classes("w-full").mark("product-not-found"):
+                ui.label("Product not found").classes("text-h4 text-negative")
+                ui.link("Back to Products", "/products").classes("mt-4")

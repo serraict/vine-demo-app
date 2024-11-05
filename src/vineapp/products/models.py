@@ -58,6 +58,21 @@ class ProductRepository:
             result = session.execute(statement)
             return [row[0] for row in result]
 
+    def get_by_id(self, product_id: int) -> Optional[Product]:
+        """Get a product by its ID.
+
+        Args:
+            product_id: The ID of the product to retrieve
+
+        Returns:
+            The product if found, None otherwise
+        """
+        with Session(self.engine) as session:
+            statement = select(Product).where(Product.id == product_id)
+            result = session.execute(statement)
+            row = result.first()
+            return row[0] if row else None
+
     def get_paginated(
         self,
         page: int = 1,

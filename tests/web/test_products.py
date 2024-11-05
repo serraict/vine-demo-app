@@ -50,8 +50,14 @@ async def test_products_page_shows_table(user: User) -> None:
             },
         ]
         assert table.rows == [
-            {"name": "T. Bee 13", "product_group_name": "13 aziaat"},
-            {"name": "S. Okinawa 19", "product_group_name": "19 oriëntal"},
+            {
+                "name": "T. Bee 13",
+                "product_group_name": "13 aziaat",
+            },
+            {
+                "name": "S. Okinawa 19",
+                "product_group_name": "19 oriëntal",
+            },
         ]
 
 
@@ -96,3 +102,48 @@ async def test_products_page_filtering_calls_service(user) -> None:
         service_mock.get_paginated.assert_called_with(
             page=1, items_per_page=10, sort_by=None, descending=False, filter_text="mix"
         )
+
+
+async def test_product_detail_page_shows_product(user: User) -> None:
+    """Test that product detail page shows product information."""
+    with (
+        patch("vineapp.web.pages.products.ProductService") as mock_service,
+        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
+    ):
+        # Given
+        mock_repo.return_value = Mock()
+        mock_service.return_value = Mock()
+        test_product = Product(
+            id=12,
+            name="T. Bee 13",
+            product_group_id=113,
+            product_group_name="13 aziaat",
+        )
+        mock_service.return_value.get_by_id.return_value = test_product
+
+        # When
+        await user.open("/products/12")
+
+        # Then
+        # Check if product details are displayed
+        await user.should_see("T. Bee 13")
+        await user.should_see("13 aziaat")
+
+
+async def test_product_detail_page_handles_invalid_id(user: User) -> None:
+    """Test that product detail page handles invalid product ID."""
+    with (
+        patch("vineapp.web.pages.products.ProductService") as mock_service,
+        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
+    ):
+        # Given
+        mock_repo.return_value = Mock()
+        mock_service.return_value = Mock()
+        mock_service.return_value.get_by_id.return_value = None
+
+        # When
+        await user.open("/products/999")
+
+        # Then
+        # Check if error message is displayed
+        await user.should_see("Product not found")

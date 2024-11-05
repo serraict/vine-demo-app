@@ -15,6 +15,17 @@ class ProductService:
         """Get all products from the repository."""
         return self._repository.get_all()
 
+    def get_by_id(self, product_id: int) -> Optional[Product]:
+        """Get a product by its ID.
+
+        Args:
+            product_id: The ID of the product to retrieve
+
+        Returns:
+            The product if found, None otherwise
+        """
+        return self._repository.get_by_id(product_id)
+
     def get_paginated(
         self,
         page: int = 1,
