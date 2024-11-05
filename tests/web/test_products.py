@@ -2,18 +2,10 @@
 
 import asyncio
 from unittest.mock import Mock, patch
-from dataclasses import dataclass
 from nicegui.testing import User
 from nicegui import ui
 
 from vineapp.products.models import Product
-
-
-@dataclass
-class EventArguments:
-    """Mock event arguments for testing."""
-
-    args: dict
 
 
 async def test_products_page_shows_table(user: User) -> None:
