@@ -11,6 +11,11 @@ Review the code and write down guidelines on how to ...
 
 ## Next
 
+### Tech questions
+
+Does using an ODBC connection allow us to use parameterized queries?
+That would make SQLModel repositories more straightforward.
+
 ### Deployment
 
 - [ ] Create deployable packages

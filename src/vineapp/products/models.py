@@ -36,8 +36,23 @@ class Product(SQLModel, table=True):
     product_group_name: str
 
 
+class RepositoryError(Exception):
+    """Base exception for repository errors."""
+
+    pass
+
+
+class InvalidParameterError(RepositoryError):
+    """Exception raised for invalid parameter values."""
+
+    pass
+
+
 class ProductRepository:
     """Read-only repository for product data access."""
+
+    # Valid columns for sorting
+    SORTABLE_COLUMNS = {"name", "product_group_name"}
 
     def __init__(self, connection: Optional[Union[str, Engine]] = None):
         """Initialize repository with optional connection string or engine."""
@@ -96,7 +111,22 @@ class ProductRepository:
 
         Returns:
             Tuple containing list of products for the requested page and total count
+
+        Raises:
+            InvalidParameterError: If pagination parameters are invalid
         """
+        # Validate pagination parameters
+        if page < 1:
+            raise InvalidParameterError("Page number must be greater than 0")
+        if items_per_page < 1:
+            raise InvalidParameterError("Items per page must be greater than 0")
+
+        # Validate sort column if provided
+        if sort_by and sort_by not in self.SORTABLE_COLUMNS:
+            raise InvalidParameterError(
+                f"Invalid sort column. Must be one of: {', '.join(self.SORTABLE_COLUMNS)}"
+            )
+
         with Session(self.engine) as session:
             # Create base query
             base_query = select(Product)
@@ -122,12 +152,11 @@ class ProductRepository:
 
             # Apply sorting
             if sort_by:
-                column = getattr(Product, sort_by, None)
-                if column is not None:
-                    if descending:
-                        base_query = base_query.order_by(desc(column))
-                    else:
-                        base_query = base_query.order_by(column)
+                column = getattr(Product, sort_by)
+                if descending:
+                    base_query = base_query.order_by(desc(column))
+                else:
+                    base_query = base_query.order_by(column)
             else:
                 # Default sorting
                 base_query = base_query.order_by(
