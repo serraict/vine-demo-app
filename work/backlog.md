@@ -2,6 +2,16 @@
 
 ## Doing
 
+### Goal: Create Web Application with NiceGUI
+
+1. Implement Core Features
+   - Fix product listing issues
+     - Fix incorrect total records display in product list
+   - Enhance product listing page
+     - Add product details view
+       - Create product detail route (/products/<id>)
+       - Show detailed product information
+
 ## Next
 
 ### Goal: Create Web Application with NiceGUI
@@ -18,10 +28,11 @@
    - [ ] Enhance product listing page
      - [x] Display products in a table
      - [x] Add basic sorting
-     - [ ] Add filtering capabilities
-       - [ ] Add search box for filtering by name
-       - [ ] Add dropdown for filtering by product group
+     - [x] Add filtering capabilities
+       - [x] Add search box for filtering by name
+       - [x] Add dropdown for filtering by product group
      - [x] Implement basic server-side pagination
+     - [ ] Fix incorrect total records display in product list
      - [ ] Add product details view
        - [ ] Create product detail route (/products/<id>)
        - [ ] Show detailed product information
