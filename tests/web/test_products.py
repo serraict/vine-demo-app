@@ -63,8 +63,9 @@ async def test_products_page_shows_table(user: User) -> None:
         ]
 
 
-async def test_products_page_filtering_calls_service(user: User) -> None:
+async def test_products_page_filtering_calls_service(user) -> None:
     """Test that entering a filter value calls the service with the filter text."""
+
     with (
         patch("vineapp.web.pages.products.ProductService") as mock_service,
         patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
@@ -75,17 +76,29 @@ async def test_products_page_filtering_calls_service(user: User) -> None:
         mock_service.return_value = service_mock
         service_mock.get_paginated.return_value = ([], 0)  # Empty initial result
 
+        # An asyncio.Event to signal when the product service is called
+        done_event = asyncio.Event()
+
+        def on_get_paginated(
+            page=1, items_per_page=10, sort_by=None, descending=False, filter_text=""
+        ):
+            if filter_text == "mix":
+                done_event.set()  # Set the event when desired call is made
+            return [], 0
+
+        service_mock.get_paginated.side_effect = on_get_paginated
+
         # When
         await user.open("/products")
         search_box = user.find(marker="search", kind=ui.input)
         search_box.type("mix")
         search_box.trigger("change")
 
-        # Create a mock event with the value
-        mock_event = Mock()
-        mock_event.value = "mix"
-
-        await asyncio.sleep(0.5)
+        # Await until the event is set, or timeout if necessary
+        try:
+            await asyncio.wait_for(done_event.wait(), timeout=2.0)
+        except asyncio.TimeoutError:
+            raise RuntimeError("Timeout while waiting for service call.")
 
         # Then verify service was called with filter
         service_mock.get_paginated.assert_called_with(
