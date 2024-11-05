@@ -2,7 +2,7 @@
 
 import os
 from typing import List, Optional, Union, Tuple
-from sqlalchemy import create_engine, func, Integer, bindparam, desc, text
+from sqlalchemy import create_engine, func, Integer, bindparam, desc, text, distinct
 from sqlalchemy.engine import Engine
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy_dremio.flight import DremioDialect_flight
@@ -92,10 +92,10 @@ class ProductRepository:
                 )
                 base_query = base_query.where(filter_expr)
 
-            # Get total count using COUNT with filters applied
-            count_stmt = select(func.count(Product.id)).select_from(
-                base_query.subquery()
-            )
+            # Get total count using the same filter but without the subquery
+            count_stmt = select(func.count(distinct(Product.id)))
+            if filter_text:
+                count_stmt = count_stmt.where(filter_expr)
             total = session.exec(count_stmt).one()
 
             # Calculate offset
