@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted application metadata into standalone app_info module
 - Refactored CLI to use new module structure
 - Enhanced product repository to support paginated queries
+- Removed ProductService class in favor of using ProductRepository directly
 
 ## [0.2] - 2024-10-25
 

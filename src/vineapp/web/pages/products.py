@@ -5,7 +5,6 @@ from typing import List, Dict, Any
 from nicegui import APIRouter, ui
 
 from ...products.models import ProductRepository
-from ...products.service import ProductService
 from ..components import frame
 
 
@@ -28,7 +27,6 @@ table_data = {
 def products_page() -> None:
     """Render the products page with a table of all products."""
     repository = ProductRepository()
-    service = ProductService(repository)
 
     with frame("Products"):
         # Add search input with debounce
@@ -102,12 +100,12 @@ def products_page() -> None:
             print(f"Sorting by {sort_by} {'descending' if descending else 'ascending'}")
             print(f"Filter: {table_data['filter']}")
 
-            products, total = service.get_paginated(
+            products, total = repository.get_paginated(
                 page=page,
                 items_per_page=rows_per_page,
                 sort_by=sort_by,
                 descending=descending,
-                filter_text=table_data["filter"],  # Pass the filter text to the service
+                filter_text=table_data["filter"],  # Pass the filter text to the repository
             )
 
             # Update table data
@@ -131,7 +129,7 @@ def products_page() -> None:
         # Initial data load
         def load_initial_data() -> None:
             """Load initial data and set total count."""
-            products, total = service.get_paginated(page=1, items_per_page=10)
+            products, total = repository.get_paginated(page=1, items_per_page=10)
             table_data["rows"] = [
                 {
                     "id": p.id,
@@ -154,10 +152,9 @@ def products_page() -> None:
 def product_detail(product_id: int) -> None:
     """Render the product detail page."""
     repository = ProductRepository()
-    service = ProductService(repository)
-
+    print(f"Fetching product details for ID {product_id}")  # Debug log
     with frame("Product Details"):
-        product = service.get_by_id(product_id)
+        product = repository.get_by_id(product_id)
 
         if product:
             with ui.card().classes("w-full").mark("product-details"):

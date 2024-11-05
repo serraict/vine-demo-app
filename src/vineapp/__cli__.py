@@ -5,7 +5,7 @@ from rich.console import Console
 from rich.table import Table
 
 from vineapp.app_info import get_application_info
-from vineapp.products import ProductRepository, ProductService
+from vineapp.products import ProductRepository
 
 app = typer.Typer()
 console = Console()
@@ -32,8 +32,7 @@ def about():
 def products():
     """Display a table of all products with their groups."""
     repository = ProductRepository()
-    service = ProductService(repository)
-    products_list = service.get_all()
+    products_list = repository.get_all()
 
     table = Table(title="Products")
     table.add_column("ID", justify="right", style="cyan")

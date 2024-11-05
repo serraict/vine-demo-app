@@ -1,29 +1,25 @@
 # Backlog
 
+## Doing
+
+Refactor code and write down architectural guidelines.
+
+Review the code and write down guidelines on how to ...
+
+- Create pages using nicegui
+- Write repository function
+
 ## Next
 
-### Goal: Create Web Application with NiceGUI
+### Deployment
 
-1. Implement Core Features
-   - [x] Create shared code module for CLI and web app
-     - [x] Refactor product listing logic into dedicated package
-     - [x] Extract about/version information into standalone module
-   - [x] Create about page
-     - [x] Show version and app information
-     - [x] Match CLI about command information
-     - [x] Add links to documentation and GitHub
-   - [x] Review nicegui testing strategy
-   - [x] Enhance product listing page
-     - [x] Display products in a table
-     - [x] Add basic sorting
-     - [x] Add filtering capabilities
-       - [x] Add search box for filtering by name
-       - [x] Add dropdown for filtering by product group
-     - [x] Implement basic server-side pagination
-     - [x] Fix incorrect total records display in product list
-     - [x] Add product details view
-       - [x] Create product detail route (/products/<id>)
-       - [x] Show detailed product information
+- [ ] Create deployable packages
+  - [ ] Github workflow for creating container on release
+  - [ ] Create production Docker container
+    - [ ] upload to ghcr
+  - [ ] Create development Docker container
+  - [ ] Add container documentation and examples
+
 
 ## Later
 
@@ -38,14 +34,6 @@
   - [ ] Add Superset dashboard embedding
   - [ ] Configure product analytics views
   - [ ] Setup dashboard linking from product pages
-
-### Deployment
-
-- [ ] Create deployable packages
-  - [ ] Configure PyPI package setup
-  - [ ] Create production Docker container
-  - [ ] Create development Docker container
-  - [ ] Add container documentation and examples
 
 ### Documentation
 

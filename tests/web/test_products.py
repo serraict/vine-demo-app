@@ -10,14 +10,11 @@ from vineapp.products.models import Product
 
 async def test_products_page_shows_table(user: User) -> None:
     """Test that products page shows a table with product data."""
-    with (
-        patch("vineapp.web.pages.products.ProductService") as mock_service,
-        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
-    ):
+    with patch("vineapp.web.pages.products.ProductRepository") as mock_repo_class:
         # Given
-        mock_repo.return_value = Mock()
-        mock_service.return_value = Mock()
-        mock_service.return_value.get_paginated.return_value = (
+        mock_repo = Mock()
+        mock_repo_class.return_value = mock_repo
+        mock_repo.get_paginated.return_value = (
             [
                 Product(
                     id=12,
@@ -64,20 +61,16 @@ async def test_products_page_shows_table(user: User) -> None:
         ]
 
 
-async def test_products_page_filtering_calls_service(user) -> None:
-    """Test that entering a filter value calls the service with the filter text."""
+async def test_products_page_filtering_calls_repository(user) -> None:
+    """Test that entering a filter value calls the repository with the filter text."""
 
-    with (
-        patch("vineapp.web.pages.products.ProductService") as mock_service,
-        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
-    ):
+    with patch("vineapp.web.pages.products.ProductRepository") as mock_repo_class:
         # Given
-        mock_repo.return_value = Mock()
-        service_mock = Mock()
-        mock_service.return_value = service_mock
-        service_mock.get_paginated.return_value = ([], 0)  # Empty initial result
+        mock_repo = Mock()
+        mock_repo_class.return_value = mock_repo
+        mock_repo.get_paginated.return_value = ([], 0)  # Empty initial result
 
-        # An asyncio.Event to signal when the product service is called
+        # An asyncio.Event to signal when the repository is called
         done_event = asyncio.Event()
 
         def on_get_paginated(
@@ -87,7 +80,7 @@ async def test_products_page_filtering_calls_service(user) -> None:
                 done_event.set()  # Set the event when desired call is made
             return [], 0
 
-        service_mock.get_paginated.side_effect = on_get_paginated
+        mock_repo.get_paginated.side_effect = on_get_paginated
 
         # When
         await user.open("/products")
@@ -99,30 +92,27 @@ async def test_products_page_filtering_calls_service(user) -> None:
         try:
             await asyncio.wait_for(done_event.wait(), timeout=2.0)
         except asyncio.TimeoutError:
-            raise RuntimeError("Timeout while waiting for service call.")
+            raise RuntimeError("Timeout while waiting for repository call.")
 
-        # Then verify service was called with filter
-        service_mock.get_paginated.assert_called_with(
+        # Then verify repository was called with filter
+        mock_repo.get_paginated.assert_called_with(
             page=1, items_per_page=10, sort_by=None, descending=False, filter_text="mix"
         )
 
 
 async def test_product_detail_page_shows_product(user: User) -> None:
     """Test that product detail page shows product information."""
-    with (
-        patch("vineapp.web.pages.products.ProductService") as mock_service,
-        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
-    ):
+    with patch("vineapp.web.pages.products.ProductRepository") as mock_repo_class:
         # Given
-        mock_repo.return_value = Mock()
-        mock_service.return_value = Mock()
+        mock_repo = Mock()
+        mock_repo_class.return_value = mock_repo
         test_product = Product(
             id=12,
             name="T. Bee 13",
             product_group_id=113,
             product_group_name="13 aziaat",
         )
-        mock_service.return_value.get_by_id.return_value = test_product
+        mock_repo.get_by_id.return_value = test_product
 
         # When
         await user.open("/products/12")
@@ -134,14 +124,11 @@ async def test_product_detail_page_shows_product(user: User) -> None:
 
 async def test_product_detail_page_handles_invalid_id(user: User) -> None:
     """Test that product detail page handles invalid product ID."""
-    with (
-        patch("vineapp.web.pages.products.ProductService") as mock_service,
-        patch("vineapp.web.pages.products.ProductRepository") as mock_repo,
-    ):
+    with patch("vineapp.web.pages.products.ProductRepository") as mock_repo_class:
         # Given
-        mock_repo.return_value = Mock()
-        mock_service.return_value = Mock()
-        mock_service.return_value.get_by_id.return_value = None
+        mock_repo = Mock()
+        mock_repo_class.return_value = mock_repo
+        mock_repo.get_by_id.return_value = None
 
         # When
         await user.open("/products/999")
