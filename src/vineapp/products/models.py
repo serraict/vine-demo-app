@@ -49,7 +49,10 @@ class InvalidParameterError(RepositoryError):
 
 
 class ProductRepository:
-    """Read-only repository for product data access."""
+    """Read-only repository for product data access.
+
+    Currently using Dremio Flight protocol which doesn't support parameterized queries.
+    """
 
     def __init__(self, connection: Optional[Union[str, Engine]] = None):
         """Initialize repository with optional connection string or engine."""
@@ -80,12 +83,10 @@ class ProductRepository:
             The product if found, None otherwise
         """
         with Session(self.engine) as session:
-            # Create base query
+            # Note: Using string interpolation because Dremio Flight doesn't support parameters
             base_query = select(Product)
-            # Add where clause using text() for direct SQL
             filter_expr = text(f"id = {product_id}")
             query = base_query.where(filter_expr)
-            # Execute query
             result = session.exec(query)
             return result.first()
 
@@ -124,7 +125,7 @@ class ProductRepository:
 
             # Apply filter if provided
             if filter_text:
-                # Create filter expression with direct string interpolation
+                # Note: Using string interpolation because Dremio Flight doesn't support parameters
                 pattern = f"%{filter_text}%"
                 filter_expr = text(
                     f"lower(name) LIKE lower('{pattern}') OR "
