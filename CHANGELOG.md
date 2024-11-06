@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved UI layout with consistent navigation card-based design across all pages
 - Converted ApplicationInfo to Pydantic model for consistent model handling
 - Unified model display approach using shared model_card component across pages
+- Enhanced ApplicationInfo model with proper URL type validation
 
 ## [0.2] - 2024-10-25
 

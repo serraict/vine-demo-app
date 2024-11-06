@@ -1,7 +1,7 @@
 """Application metadata information."""
 
 from importlib.metadata import metadata, version
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 
 class ApplicationInfo(BaseModel):
@@ -11,7 +11,7 @@ class ApplicationInfo(BaseModel):
     version: str
     description: str
     author_email: str
-    project_url: str
+    project_url: HttpUrl
 
 
 def get_application_info() -> ApplicationInfo:
