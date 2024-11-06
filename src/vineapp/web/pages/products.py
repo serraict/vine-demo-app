@@ -6,6 +6,7 @@ from nicegui import APIRouter, ui
 
 from ...products.models import ProductRepository
 from ..components import frame
+from ..components.theme import CARD_CLASSES, HEADER_CLASSES, SUBHEADER_CLASSES, LABEL_CLASSES, LINK_CLASSES
 
 
 router = APIRouter(prefix="/products")
@@ -29,10 +30,10 @@ def products_page() -> None:
     repository = ProductRepository()
 
     with frame("Products"):
-        with ui.card().classes("w-full max-w-5xl mx-auto p-4 shadow-lg"):
+        with ui.card().classes(CARD_CLASSES.replace("max-w-3xl", "max-w-5xl")):
             # Header section
             with ui.row().classes("w-full justify-between items-center mb-4"):
-                ui.label("Products Overview").classes("text-2xl font-bold text-primary")
+                ui.label("Products Overview").classes(HEADER_CLASSES)
                 # Add search input with debounce
                 ui.input(
                     placeholder="Search products...",
@@ -158,42 +159,34 @@ def product_detail(product_id: int) -> None:
     repository = ProductRepository()
     print(f"Fetching product details for ID {product_id}")  # Debug log
     with frame("Product Details"):
-        with ui.card().classes("w-full max-w-3xl mx-auto p-4 shadow-lg"):
+        with ui.card().classes(CARD_CLASSES):
             product = repository.get_by_id(product_id)
 
             if product:
                 # Header section with back button
                 with ui.row().classes("w-full justify-between items-center mb-6"):
-                    ui.label(product.name).classes("text-2xl font-bold text-primary")
-                    ui.link(
-                        "← Back to Products", "/products"
-                    ).classes("text-accent hover:text-secondary")
+                    ui.label(product.name).classes(HEADER_CLASSES)
+                    ui.link("← Back to Products", "/products").classes(LINK_CLASSES)
 
                 # Details section
                 with ui.card().classes("w-full p-4 bg-gray-50"):
                     with ui.column().classes("gap-4"):
                         # Product ID section
                         with ui.row().classes("gap-2 items-center"):
-                            ui.label("Product ID").classes(
-                                "text-lg font-bold text-secondary"
-                            )
-                            ui.label(str(product.id)).classes("text-lg")
+                            ui.label("Product ID").classes(LABEL_CLASSES)
+                            ui.label(str(product.id)).classes(SUBHEADER_CLASSES)
 
                         # Divider
                         ui.separator()
 
                         # Product Group section
                         with ui.row().classes("gap-2 items-center"):
-                            ui.label("Product Group").classes(
-                                "text-lg font-bold text-secondary"
-                            )
-                            ui.label(product.product_group_name).classes("text-lg")
+                            ui.label("Product Group").classes(LABEL_CLASSES)
+                            ui.label(product.product_group_name).classes(SUBHEADER_CLASSES)
 
             else:
                 # Error state
                 with ui.column().classes("items-center gap-6 py-8"):
                     ui.icon("error_outline").classes("text-negative text-4xl")
                     ui.label("Product not found").classes("text-2xl text-negative")
-                    ui.link(
-                        "← Back to Products", "/products"
-                    ).classes("text-accent hover:text-secondary mt-4")
+                    ui.link("← Back to Products", "/products").classes(LINK_CLASSES + " mt-4")
