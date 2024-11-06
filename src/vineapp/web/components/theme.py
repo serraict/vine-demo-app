@@ -23,11 +23,20 @@ def frame(navigation_title: str):
         warning="#d38334",
     )
 
-    with ui.header().classes("items-center justify-between"):
+    with ui.header().classes(
+        "w-full px-6 py-2 bg-primary flex justify-between items-center"
+    ):
+        # Left section: App title and navigation
         with ui.row().classes("items-center gap-4"):
-            ui.label("Vine App").classes("text-xl font-bold text-white")
-            ui.label(navigation_title).classes("text-lg text-white")
-        with ui.row():
+            ui.link("Vine App", "/").classes(
+                "text-xl font-bold text-white no-underline"
+            )
             menu()
-    with ui.column().classes("w-full items-center p-4"):
-        yield
+
+        # Right section: Page title
+        ui.label(navigation_title).classes("text-lg text-white/90")
+
+    # Main content
+    with ui.element("main").classes("w-full flex-grow"):
+        with ui.column().classes("w-full items-center p-4"):
+            yield

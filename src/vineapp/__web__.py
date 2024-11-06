@@ -7,6 +7,7 @@ from .web.startup import startup
 
 def init() -> None:
     """Initialize the web application."""
+    # Clear any default page layout
     app.on_startup(startup)
 
 
