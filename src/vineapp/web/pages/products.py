@@ -6,7 +6,13 @@ from nicegui import APIRouter, ui
 
 from ...products.models import ProductRepository
 from ..components import frame
-from ..components.theme import CARD_CLASSES, HEADER_CLASSES, SUBHEADER_CLASSES, LABEL_CLASSES, LINK_CLASSES
+from ..components.theme import (
+    CARD_CLASSES,
+    HEADER_CLASSES,
+    SUBHEADER_CLASSES,
+    LABEL_CLASSES,
+    LINK_CLASSES,
+)
 
 
 router = APIRouter(prefix="/products")
@@ -102,7 +108,9 @@ def products_page() -> None:
                 descending = new_pagination.get("descending", False)
 
                 print(f"Fetching page {page} with {rows_per_page} rows per page")
-                print(f"Sorting by {sort_by} {'descending' if descending else 'ascending'}")
+                print(
+                    f"Sorting by {sort_by} {'descending' if descending else 'ascending'}"
+                )
                 print(f"Filter: {table_data['filter']}")
 
                 products, total = repository.get_paginated(
@@ -110,7 +118,9 @@ def products_page() -> None:
                     items_per_page=rows_per_page,
                     sort_by=sort_by,
                     descending=descending,
-                    filter_text=table_data["filter"],  # Pass the filter text to the repository
+                    filter_text=table_data[
+                        "filter"
+                    ],  # Pass the filter text to the repository
                 )
 
                 # Update table data
@@ -157,36 +167,30 @@ def products_page() -> None:
 def product_detail(product_id: int) -> None:
     """Render the product detail page."""
     repository = ProductRepository()
-    print(f"Fetching product details for ID {product_id}")  # Debug log
+
     with frame("Product Details"):
         with ui.card().classes(CARD_CLASSES):
             product = repository.get_by_id(product_id)
 
             if product:
-                # Header section with back button
                 with ui.row().classes("w-full justify-between items-center mb-6"):
                     ui.label(product.name).classes(HEADER_CLASSES)
                     ui.link("← Back to Products", "/products").classes(LINK_CLASSES)
 
-                # Details section
-                with ui.card().classes("w-full p-4 bg-gray-50"):
-                    with ui.column().classes("gap-4"):
-                        # Product ID section
-                        with ui.row().classes("gap-2 items-center"):
-                            ui.label("Product ID").classes(LABEL_CLASSES)
-                            ui.label(str(product.id)).classes(SUBHEADER_CLASSES)
-
-                        # Divider
-                        ui.separator()
-
-                        # Product Group section
-                        with ui.row().classes("gap-2 items-center"):
-                            ui.label("Product Group").classes(LABEL_CLASSES)
-                            ui.label(product.product_group_name).classes(SUBHEADER_CLASSES)
+                with ui.column().classes("gap-4"):
+                    # Product ID section
+                    with ui.row().classes("gap-2 items-center"):
+                        ui.label("Product ID").classes(LABEL_CLASSES)
+                        ui.label(str(product.id)).classes(SUBHEADER_CLASSES)
+                    with ui.row().classes("gap-2 items-center"):
+                        ui.label("Product Group").classes(LABEL_CLASSES)
+                        ui.label(product.product_group_name).classes(SUBHEADER_CLASSES)
 
             else:
                 # Error state
                 with ui.column().classes("items-center gap-6 py-8"):
                     ui.icon("error_outline").classes("text-negative text-4xl")
                     ui.label("Product not found").classes("text-2xl text-negative")
-                    ui.link("← Back to Products", "/products").classes(LINK_CLASSES + " mt-4")
+                    ui.link("← Back to Products", "/products").classes(
+                        LINK_CLASSES + " mt-4"
+                    )
