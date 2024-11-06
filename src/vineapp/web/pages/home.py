@@ -4,11 +4,11 @@ from nicegui import APIRouter, ui
 
 from ...app_info import get_application_info
 from ..components import frame
+from ..components.model_card import display_model_card
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
     SUBHEADER_CLASSES,
-    LABEL_CLASSES,
     LINK_CLASSES,
     NAV_CARD_CLASSES,
 )
@@ -56,27 +56,4 @@ def about_page() -> None:
     info = get_application_info()
 
     with frame("About"):
-        with ui.card().classes(CARD_CLASSES):
-            ui.label(info.description).classes(HEADER_CLASSES + " mb-4")
-
-            with ui.column().classes("gap-4"):
-                with ui.row().classes("gap-2 items-start"):
-                    ui.label("App Name:").classes(LABEL_CLASSES)
-                    ui.label(info.name)
-
-                with ui.row().classes("gap-2"):
-                    ui.label("Version:").classes(LABEL_CLASSES)
-                    ui.label(info.version)
-
-                with ui.row().classes("gap-2"):
-                    ui.label("Author:").classes(LABEL_CLASSES)
-                    ui.label(info.author_email)
-
-                with ui.row().classes("gap-2"):
-                    ui.label("Links:").classes(LABEL_CLASSES)
-                    ui.link("GitHub", info.project_url, new_tab=True).classes(
-                        LINK_CLASSES
-                    )
-                    ui.link(
-                        "Documentation", f"{info.project_url}/docs", new_tab=True
-                    ).classes(LINK_CLASSES)
+        display_model_card(info, description_field="description")

@@ -1,11 +1,10 @@
 """Application metadata information."""
 
-from dataclasses import dataclass
 from importlib.metadata import metadata, version
+from pydantic import BaseModel
 
 
-@dataclass
-class ApplicationInfo:
+class ApplicationInfo(BaseModel):
     """Application metadata information."""
 
     name: str

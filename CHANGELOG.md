@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Navigation link to About page from homepage
 - Sorting functionality for products table (by name and product group)
 - Server-side pagination for products table with configurable page size
+- Reusable model_card component for displaying Pydantic models in a consistent format
 
 ### Changed
 
@@ -27,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced product repository to support paginated queries
 - Removed ProductService class in favor of using ProductRepository directly
 - Improved UI layout with consistent navigation card-based design across all pages
+- Converted ApplicationInfo to Pydantic model for consistent model handling
+- Unified model display approach using shared model_card component across pages
 
 ## [0.2] - 2024-10-25
 
