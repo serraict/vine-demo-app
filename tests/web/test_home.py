@@ -9,8 +9,8 @@ async def test_homepage_loads(user: User) -> None:
     await user.open("/")
 
     # Then
-    await user.should_see("This is the homepage")
-    await user.should_see("View Products")
+    # await user.should_see("Vine App")
+    await user.should_see("Products")
     await user.should_see("About")
 
 

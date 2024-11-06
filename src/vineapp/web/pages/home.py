@@ -57,16 +57,16 @@ def about_page() -> None:
 
     with frame("About"):
         with ui.card().classes(CARD_CLASSES):
-            ui.label(info.name).classes(HEADER_CLASSES + " mb-4")
+            ui.label(info.description).classes(HEADER_CLASSES + " mb-4")
 
             with ui.column().classes("gap-4"):
+                with ui.row().classes("gap-2 items-start"):
+                    ui.label("App Name:").classes(LABEL_CLASSES)
+                    ui.label(info.name)
+
                 with ui.row().classes("gap-2"):
                     ui.label("Version:").classes(LABEL_CLASSES)
                     ui.label(info.version)
-
-                with ui.row().classes("gap-2 items-start"):
-                    ui.label("Description:").classes(LABEL_CLASSES)
-                    ui.label(info.description)
 
                 with ui.row().classes("gap-2"):
                     ui.label("Author:").classes(LABEL_CLASSES)
