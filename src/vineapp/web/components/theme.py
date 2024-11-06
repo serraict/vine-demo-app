@@ -28,7 +28,10 @@ def frame(navigation_title: str):
     ):
         # Left section: App logo and navigation
         with ui.row().classes("items-center gap-8"):
-            with ui.link("/").classes("flex items-center gap-1 no-underline"):
+            # Logo that navigates home on click
+            with ui.element("a").classes(
+                "flex items-center gap-1 no-underline cursor-pointer"
+            ).on("click", lambda: ui.navigate.to("/")):
                 # Data pipeline icon
                 ui.icon("account_tree", color="white").classes("text-xl")
                 # Leaf icon overlapping slightly
