@@ -29,18 +29,24 @@ def index_page() -> None:
 
             # Main content section
             with ui.column().classes("w-full items-center gap-4"):
-                ui.label("Explore and manage your data pipeline with ease").classes(SUBHEADER_CLASSES)
+                ui.label("Explore and manage your data pipeline with ease").classes(
+                    SUBHEADER_CLASSES
+                )
 
                 # Navigation cards
                 with ui.row().classes("w-full gap-4 justify-center mt-4"):
                     with ui.card().classes(NAV_CARD_CLASSES):
                         ui.label("Products").classes(HEADER_CLASSES + " mb-2")
-                        ui.label("View and manage your data products").classes(SUBHEADER_CLASSES + " mb-4")
+                        ui.label("View and manage your data products").classes(
+                            SUBHEADER_CLASSES + " mb-4"
+                        )
                         ui.link("View Products", "/products").classes(LINK_CLASSES)
 
                     with ui.card().classes(NAV_CARD_CLASSES):
                         ui.label("About").classes(HEADER_CLASSES + " mb-2")
-                        ui.label("Learn more about Vine App").classes(SUBHEADER_CLASSES + " mb-4")
+                        ui.label("Learn more about Vine App").classes(
+                            SUBHEADER_CLASSES + " mb-4"
+                        )
                         ui.link("About", "/about").classes(LINK_CLASSES)
 
 
@@ -68,5 +74,9 @@ def about_page() -> None:
 
                 with ui.row().classes("gap-2"):
                     ui.label("Links:").classes(LABEL_CLASSES)
-                    ui.link("GitHub", info.project_url, new_tab=True).classes(LINK_CLASSES)
-                    ui.link("Documentation", f"{info.project_url}/docs", new_tab=True).classes(LINK_CLASSES)
+                    ui.link("GitHub", info.project_url, new_tab=True).classes(
+                        LINK_CLASSES
+                    )
+                    ui.link(
+                        "Documentation", f"{info.project_url}/docs", new_tab=True
+                    ).classes(LINK_CLASSES)
