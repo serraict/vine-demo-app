@@ -26,11 +26,14 @@ def frame(navigation_title: str):
     with ui.header().classes(
         "w-full px-6 py-2 bg-primary flex justify-between items-center"
     ):
-        # Left section: App title and navigation
-        with ui.row().classes("items-center gap-4"):
-            ui.link("Vine App", "/").classes(
-                "text-xl font-bold text-white no-underline"
-            )
+        # Left section: App logo and navigation
+        with ui.row().classes("items-center gap-8"):
+            with ui.link("/").classes("flex items-center gap-1 no-underline"):
+                # Data pipeline icon
+                ui.icon("account_tree", color="white").classes("text-xl")
+                # Leaf icon overlapping slightly
+                ui.icon("eco", color="white").classes("text-lg -ml-1")
+                ui.label("Vine").classes("text-xl font-bold text-white ml-1")
             menu()
 
         # Right section: Page title
