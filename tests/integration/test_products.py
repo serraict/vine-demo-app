@@ -1,6 +1,10 @@
 """Integration tests for product data access."""
 
-from vineapp.products import Product
+from vineapp.products import Product, ProductRepository
+from vineapp.products.models import InvalidParameterError
+from sqlalchemy.engine import Engine
+from unittest.mock import create_autospec
+import pytest
 
 
 def test_get_all_products(product_repository):
@@ -110,3 +114,82 @@ def test_product_sorting(product_repository):
         # Compare only non-null pairs
         for curr, next_val in get_non_null_pairs(products, "name"):
             assert curr >= next_val
+
+
+def test_can_get_products(product_repository: ProductRepository) -> None:
+    """Test that we can get products from Dremio."""
+    products = product_repository.get_all()
+    assert len(products) > 0
+
+
+def test_can_get_product_by_id(product_repository: ProductRepository) -> None:
+    """Test that we can get a product by ID."""
+    # First get all products to find a valid ID
+    products = product_repository.get_all()
+    assert len(products) > 0
+
+    # Then get one by ID
+    product = product_repository.get_by_id(products[0].id)
+    assert product is not None
+    assert product.id == products[0].id
+
+
+def test_can_get_paginated_products(product_repository: ProductRepository) -> None:
+    """Test that we can get paginated products."""
+    products, total = product_repository.get_paginated(page=1, items_per_page=2)
+    assert len(products) == 2
+    assert total > 0
+
+
+def test_can_get_filtered_products(product_repository: ProductRepository) -> None:
+    """Test that we can filter products."""
+    products, total = product_repository.get_paginated(filter_text="Bee")
+    assert len(products) > 0
+    assert all("Bee" in p.name for p in products)
+
+
+def test_default_sorting_order(product_repository: ProductRepository) -> None:
+    """Test that default sorting is by product_group_name, then name."""
+    products, _ = product_repository.get_paginated(
+        page=1,
+        items_per_page=100,  # Get enough products to verify sorting
+        sort_by=None,  # Use default sorting
+    )
+
+    # Verify products are ordered by product_group_name, then name
+    assert len(products) > 1  # Need at least 2 products to verify ordering
+    for i in range(len(products) - 1):
+        current = products[i]
+        next_product = products[i + 1]
+
+        # If product groups are the same, names should be in order
+        if current.product_group_name == next_product.product_group_name:
+            assert current.name <= next_product.name
+        # If product groups are different, they should be in order
+        else:
+            assert current.product_group_name <= next_product.product_group_name
+
+
+def test_pagination_validation():
+    """Test pagination parameter validation."""
+    repository = ProductRepository(create_autospec(Engine))
+
+    # Test invalid page numbers
+    with pytest.raises(
+        InvalidParameterError, match="Page number must be greater than 0"
+    ):
+        repository.get_paginated(page=0)
+    with pytest.raises(
+        InvalidParameterError, match="Page number must be greater than 0"
+    ):
+        repository.get_paginated(page=-1)
+
+    # Test invalid items per page
+    with pytest.raises(
+        InvalidParameterError, match="Items per page must be greater than 0"
+    ):
+        repository.get_paginated(items_per_page=0)
+    with pytest.raises(
+        InvalidParameterError, match="Items per page must be greater than 0"
+    ):
+        repository.get_paginated(items_per_page=-5)
