@@ -1,5 +1,6 @@
 """Tests for products CLI commands."""
 
+from pytest import MonkeyPatch
 from typer.testing import CliRunner
 from vineapp.__cli__ import app
 from vineapp.products import Product
@@ -7,10 +8,13 @@ from vineapp.products import Product
 runner = CliRunner()
 
 
-def test_products_command(monkeypatch):
+def test_products_command(monkeypatch: MonkeyPatch):
     """Test products list command."""
 
-    # Mock product repository to return test data
+    # Pytest uses dependency injection based on the parameter names.
+    # If you have a parameter named "monkeypatch", Pytest will automatically
+    # provide a fixture with that name.
+
     class MockProductRepository:
         def get_all(self):
             return [
