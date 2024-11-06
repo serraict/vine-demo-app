@@ -23,11 +23,10 @@ def frame(navigation_title: str):
         warning="#d38334",
     )
 
-    with ui.header().classes("items-center"):
-        ui.label("Modularization Example").classes("font-bold")
-        ui.space()
-        ui.label(navigation_title)
-        ui.space()
+    with ui.header().classes("items-center justify-between"):
+        with ui.row().classes("items-center gap-4"):
+            ui.label("Vine App").classes("text-xl font-bold")
+            ui.label(navigation_title).classes("text-lg")
         with ui.row():
             menu()
     with ui.column().classes("w-full items-center p-4"):

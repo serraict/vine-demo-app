@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored CLI to use new module structure
 - Enhanced product repository to support paginated queries
 - Removed ProductService class in favor of using ProductRepository directly
+- Improved UI layout with consistent navigation card-based design across all pages
 
 ## [0.2] - 2024-10-25
 
