@@ -4,7 +4,14 @@ from nicegui import APIRouter, ui
 
 from ...app_info import get_application_info
 from ..components import frame
-from ..components.theme import CARD_CLASSES, HEADER_CLASSES, SUBHEADER_CLASSES, LABEL_CLASSES, LINK_CLASSES, NAV_CARD_CLASSES
+from ..components.styles import (
+    CARD_CLASSES,
+    HEADER_CLASSES,
+    SUBHEADER_CLASSES,
+    LABEL_CLASSES,
+    LINK_CLASSES,
+    NAV_CARD_CLASSES,
+)
 
 
 # Root router without parameters

@@ -5,15 +5,6 @@ from .menu import menu
 from nicegui import ui
 
 
-# Common style classes
-CARD_CLASSES = "w-full max-w-3xl mx-auto p-4 shadow-lg"
-HEADER_CLASSES = "text-2xl font-bold text-primary"
-SUBHEADER_CLASSES = "text-lg text-gray-600"
-LABEL_CLASSES = "font-bold"
-LINK_CLASSES = "text-accent hover:text-secondary"
-NAV_CARD_CLASSES = "w-64 p-4 hover:shadow-lg transition-shadow"
-
-
 @contextmanager
 def frame(navigation_title: str):
     """Create a themed frame with header and navigation.
@@ -34,8 +25,8 @@ def frame(navigation_title: str):
 
     with ui.header().classes("items-center justify-between"):
         with ui.row().classes("items-center gap-4"):
-            ui.label("Vine App").classes("text-xl font-bold")
-            ui.label(navigation_title).classes("text-lg")
+            ui.label("Vine App").classes("text-xl font-bold text-white")
+            ui.label(navigation_title).classes("text-lg text-white")
         with ui.row():
             menu()
     with ui.column().classes("w-full items-center p-4"):
