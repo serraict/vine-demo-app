@@ -29,7 +29,7 @@ def index_page() -> None:
 
             # Main content section
             with ui.column().classes("w-full items-center gap-4"):
-                ui.label("Explore and manage your data pipeline with ease").classes(
+                ui.label("A demo application for using Serra Vine.").classes(
                     SUBHEADER_CLASSES
                 )
 
@@ -37,7 +37,7 @@ def index_page() -> None:
                 with ui.row().classes("w-full gap-4 justify-center mt-4"):
                     with ui.card().classes(NAV_CARD_CLASSES):
                         ui.label("Products").classes(HEADER_CLASSES + " mb-2")
-                        ui.label("View and manage your data products").classes(
+                        ui.label("View and manage your products").classes(
                             SUBHEADER_CLASSES + " mb-4"
                         )
                         ui.link("View Products", "/products").classes(LINK_CLASSES)
