@@ -35,6 +35,7 @@ def display_model_card(
             )
 
         with ui.column().classes("gap-4"):
+            # Display regular fields
             for field_name, field in model.model_fields.items():
                 # Skip the description field if it's already shown as header
                 if field_name == description_field:
@@ -48,6 +49,22 @@ def display_model_card(
                     value = getattr(model, field_name)
                     # Check if field type contains 'Url' in its string representation
                     if "Url" in str(field.annotation):
+                        ui.link(str(value), str(value), new_tab=True).classes(
+                            LINK_CLASSES
+                        )
+                    else:
+                        ui.label(str(value)).classes(VALUE_CLASSES)
+
+            # Display computed fields
+            for field_name, field in model.__class__.model_computed_fields.items():
+                with ui.row().classes("gap-2 items-start"):
+                    ui.label(field_name.replace("_", " ").title()).classes(
+                        LABEL_CLASSES
+                    )
+                    # Get the computed field value
+                    value = getattr(model, field_name)
+                    # Check if return type contains 'Url'
+                    if "Url" in str(field.return_type):
                         ui.link(str(value), str(value), new_tab=True).classes(
                             LINK_CLASSES
                         )
