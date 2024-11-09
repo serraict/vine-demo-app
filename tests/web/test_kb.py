@@ -65,5 +65,6 @@ async def test_kb_page_shows_databases(user: User, mock_env) -> None:
 async def test_kb_page_requires_env_var(user: User) -> None:
     """Test that the knowledge base page handles missing environment variable."""
     # When/Then
-    with pytest.raises(ValueError, match="VINEAPP_FIBERY_URL.*not set"):
-        await user.open("/kb")
+    with patch.dict(os.environ, {}, clear=True):
+        with pytest.raises(ValueError, match="VINEAPP_FIBERY_URL.*not set"):
+            await user.open("/kb")
