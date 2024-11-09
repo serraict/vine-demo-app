@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - GraphQL client for Fibery API integration with token-based authentication
 - Knowledge base page showing Fibery environment information and database links
+- Database detail pages showing schema information and example entities
+- FiberyEntity model for consistent entity representation
 - Navigation link to Knowledge Base from homepage
 - Computed URL fields in FiberyInfo model for KB, API, and GraphQL endpoints
 - Enhanced model_card component to display computed fields as clickable links
