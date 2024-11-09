@@ -17,6 +17,9 @@ Connect to the Fibery environment.
   - [ ] Add list of Fibery databases with links.
     - [x] Fibery exposes a graphql interface. We can use it to discover the types (=databases in Fibery).
     - [ ] Add database links to the KB page
+    - [ ] Create database detail pages
+      - [ ] Display database schema
+      - [ ] Show 5 example entities using model_card
   - [x] Add navigation link in the menu
   - [x] Add tests for the new page
 - [ ] Output process segments to the command line.
