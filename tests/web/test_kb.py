@@ -43,27 +43,69 @@ def mock_graphql_response():
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "name", "type": {"name": "String"}},
                     {"name": "description", "type": {"name": "String"}},
-                ]
+                ],
             }
         }
     }
-    
+
     entities_response = {
         "data": {
             "findActions": [
-                {
-                    "id": "1",
-                    "name": "Test Action",
-                    "description": "Test Description"
-                }
+                {"id": "1", "name": "Test Action", "description": "Test Description"}
             ]
         }
     }
-    
+
     with patch.object(requests, "post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
         mock_response.json.side_effect = [schema_response, entities_response]
+        mock_post.return_value = mock_response
+        yield
+
+
+@pytest.fixture
+def mock_graphql_response_plural():
+    """Mock GraphQL API responses for plural type names."""
+    schema_response = {
+        "data": {
+            "__type": {
+                "name": "PublicLearning",
+                "fields": [
+                    {"name": "id", "type": {"name": "ID"}},
+                    {"name": "name", "type": {"name": "String"}},
+                    {"name": "description", "type": {"name": "String"}},
+                ],
+            }
+        }
+    }
+
+    # First attempt with singular fails
+    singular_error = {
+        "errors": [
+            {
+                "message": "Cannot query field 'findLearning' on type 'Query'. Did you mean 'findLearnings'?"
+            }
+        ]
+    }
+
+    # Second attempt with plural succeeds
+    plural_response = {
+        "data": {
+            "findLearnings": [
+                {"id": "1", "name": "Test Learning", "description": "Test Description"}
+            ]
+        }
+    }
+
+    with patch.object(requests, "post") as mock_post:
+        mock_response = Mock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.side_effect = [
+            schema_response,
+            singular_error,
+            plural_response,
+        ]
         mock_post.return_value = mock_response
         yield
 
@@ -108,7 +150,9 @@ async def test_kb_page_requires_env_var(user: User) -> None:
             await user.open("/kb")
 
 
-async def test_database_detail_page_loads(user: User, mock_env, mock_graphql_response) -> None:
+async def test_database_detail_page_loads(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the database detail page loads and shows expected content."""
     # When
     await user.open("/kb/database/actions")
@@ -119,7 +163,9 @@ async def test_database_detail_page_loads(user: User, mock_env, mock_graphql_res
     await user.should_see("Example Entities")
 
 
-async def test_database_detail_page_shows_schema(user: User, mock_env, mock_graphql_response) -> None:
+async def test_database_detail_page_shows_schema(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the database detail page shows the schema information."""
     # When
     await user.open("/kb/database/actions")
@@ -128,3 +174,16 @@ async def test_database_detail_page_shows_schema(user: User, mock_env, mock_grap
     await user.should_see("Id")  # Field names are capitalized in display
     await user.should_see("Name")
     await user.should_see("Description")
+
+
+async def test_database_detail_page_handles_plural_types(
+    user: User, mock_env, mock_graphql_response_plural
+) -> None:
+    """Test that the database detail page handles plural type names correctly."""
+    # When
+    await user.open("/kb/database/learning")
+
+    # Then
+    await user.should_see("Learning Database")
+    await user.should_see("Test Learning")  # From example entity
+    await user.should_see("Test Description")

@@ -30,7 +30,6 @@ def kb_page() -> None:
 
             with ui.column().classes("gap-4"):
                 for db in info.databases:
-                    # Create link for each database using kb_url
+                    # Create link for each database to our detail page
                     db_path = db.lower().replace(" ", "-")
-                    db_url = f"{info.kb_url}database/{db_path}"
-                    ui.link(db, db_url, new_tab=True).classes(LINK_CLASSES)
+                    ui.link(db, f"/kb/database/{db_path}").classes(LINK_CLASSES)

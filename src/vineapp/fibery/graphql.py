@@ -49,6 +49,9 @@ class FiberyGraphQLClient:
 
         Returns:
             The JSON response from the API
+
+        Raises:
+            requests.RequestException: If the request fails or returns an error status
         """
         headers = {
             "Authorization": f"Token {self.token}",
@@ -56,6 +59,7 @@ class FiberyGraphQLClient:
         }
 
         response = requests.post(self.url, headers=headers, json={"query": query})
+        response.raise_for_status()  # Raise exception for error status codes
 
         return response.json()
 

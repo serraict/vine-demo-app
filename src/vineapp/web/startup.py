@@ -2,7 +2,7 @@
 
 from nicegui import app, ui
 
-from .pages import home, products, kb
+from .pages import home, products, kb, database
 
 
 def startup() -> None:
@@ -17,3 +17,4 @@ def startup() -> None:
     app.include_router(home.root_router)
     app.include_router(products.router)
     app.include_router(kb.router)
+    app.include_router(database.router)

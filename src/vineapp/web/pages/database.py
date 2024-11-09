@@ -16,10 +16,26 @@ from ..components.styles import (
 router = APIRouter(prefix="/kb/database")
 
 
+def _try_query_with_field(client, query: str) -> tuple[dict, bool]:
+    """Try executing a GraphQL query and check if it succeeded.
+
+    Args:
+        client: The GraphQL client to use
+        query: The query to execute
+
+    Returns:
+        Tuple of (result, success) where success indicates if the query succeeded
+    """
+    result = client.execute(query)
+    if "errors" in result:
+        return result, False
+    return result, True
+
+
 @router.page("/{name}")
 def database_page(name: str) -> None:
     """Render the database detail page.
-    
+
     Args:
         name: The name of the database (e.g., 'actions' or 'learning')
     """
@@ -45,7 +61,31 @@ def database_page(name: str) -> None:
             """
             try:
                 schema_result = client.execute(schema_query)
-                type_info = schema_result['data']['__type']
+                
+                # Check for GraphQL errors
+                if "errors" in schema_result:
+                    error_msg = schema_result["errors"][0].get(
+                        "message", "Unknown GraphQL error"
+                    )
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label(f"GraphQL Error: {error_msg}").classes("text-red-500")
+                    return
+                
+                # Check for expected data structure
+                if "data" not in schema_result or "__type" not in schema_result["data"]:
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label("Unexpected API response format").classes(
+                            "text-red-500"
+                        )
+                    return
+                
+                type_info = schema_result["data"]["__type"]
+                if not type_info:
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label(f"Type '{type_name}' not found").classes(
+                            "text-red-500"
+                        )
+                    return
                 
                 # Display schema information
                 with ui.card().classes(CARD_CLASSES):
@@ -53,31 +93,76 @@ def database_page(name: str) -> None:
                     
                     # Create rows for the table
                     rows = [
-                        {'Field': field['name'], 'Type': field['type']['name']}
-                        for field in type_info['fields']
+                        {"Field": field["name"], "Type": field["type"]["name"]}
+                        for field in type_info["fields"]
                     ]
                     
                     # Create table with schema information
                     ui.table(
                         rows=rows,
                         columns=[
-                            {'name': 'Field', 'label': 'Field', 'field': 'Field'},
-                            {'name': 'Type', 'label': 'Type', 'field': 'Type'},
-                        ]
+                            {"name": "Field", "label": "Field", "field": "Field"},
+                            {"name": "Type", "label": "Type", "field": "Type"},
+                        ],
                     ).classes("w-full")
                 
-                # Get example entities
+                # Get example entities - try both singular and plural forms
+                find_field = f"find{name.title()}"
                 entities_query = f"""
                     query {{
-                        find{name.title()} (first: 5) {{
+                        {find_field} (limit: 5) {{
                             id
                             name
-                            description
+                            description {{
+                                text
+                            }}
                         }}
                     }}
                 """
-                entities_result = client.execute(entities_query)
-                entities = entities_result['data'][f'find{name.title()}']
+                result, success = _try_query_with_field(client, entities_query)
+                
+                if not success:
+                    # Try plural form
+                    find_field = f"{find_field}s"
+                    entities_query = f"""
+                        query {{
+                            {find_field} (limit: 5) {{
+                                id
+                                name
+                                description {{
+                                    text
+                                }}
+                            }}
+                        }}
+                    """
+                    result, success = _try_query_with_field(client, entities_query)
+                    
+                    if not success:
+                        error_msg = result["errors"][0].get(
+                            "message", "Unknown GraphQL error"
+                        )
+                        with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                            ui.label(f"GraphQL Error: {error_msg}").classes(
+                                "text-red-500"
+                            )
+                        return
+                
+                # Check for expected data structure
+                if "data" not in result:
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label("Unexpected API response format").classes(
+                            "text-red-500"
+                        )
+                    return
+                
+                if find_field not in result["data"]:
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label(f"No entities found for '{name}'").classes(
+                            "text-red-500"
+                        )
+                    return
+                
+                entities = result["data"][find_field]
                 
                 # Display example entities
                 with ui.card().classes(CARD_CLASSES + " mt-4"):
@@ -85,16 +170,20 @@ def database_page(name: str) -> None:
                     
                     with ui.column().classes("gap-4"):
                         for entity_data in entities:
+                            # Convert RichField description to plain text
+                            description = entity_data.get("description")
+                            if isinstance(description, dict):
+                                entity_data["description"] = description.get("text", "")
                             # Convert dictionary to Pydantic model
                             entity = FiberyEntity(**entity_data)
                             display_model_card(entity)
                             
             except requests.RequestException as e:
-                ui.card().classes(CARD_CLASSES + " border-red-500").add(
-                    ui.label(f"Error accessing Fibery API: {str(e)}").classes("text-red-500")
-                )
+                with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                    ui.label(f"Error accessing Fibery API: {str(e)}").classes(
+                        "text-red-500"
+                    )
                 
         except ValueError as e:
-            ui.card().classes(CARD_CLASSES + " border-red-500").add(
+            with ui.card().classes(CARD_CLASSES + " border-red-500"):
                 ui.label(f"Configuration error: {str(e)}").classes("text-red-500")
-            )
