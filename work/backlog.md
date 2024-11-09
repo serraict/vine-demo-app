@@ -9,14 +9,14 @@ Connect to the Fibery environment.
   - [x] Add a page component that uses our model_card for displaying Fibery info
     Fibery URL to be retrieved from env var.
   - [x] Add link to the Fibery knowledge base using our URL field handling
-  - [ ] The space name should be set as an env var too.
-    - [ ] From the space name and the base url create link to:
-      - [ ] Space homepage
-      - [ ] Api base address
-      - [ ] Link to graphql app
+  - [x] The space name should be set as an env var too.
+    - [x] From the space name and the base url create link to:
+      - [x] Space homepage
+      - [x] Api base address
+      - [x] Link to graphql app
   - [ ] Add list of Fibery databases with links.
-  - [ ] Add navigation link in the menu
-  - [ ] Add tests for the new page
+  - [x] Add navigation link in the menu
+  - [x] Add tests for the new page
 - [ ] Output process segments to the command line.
 - [ ] Store process segments in the mongodb.
 
