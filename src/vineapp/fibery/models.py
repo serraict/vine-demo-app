@@ -1,6 +1,7 @@
 """Fibery data models."""
 
 import os
+from typing import Optional
 from pydantic import BaseModel, HttpUrl, computed_field
 
 
@@ -36,6 +37,14 @@ class FiberyInfo(BaseModel):
         return HttpUrl(f"{base}/api/graphql/space/{self.space_name}")
 
 
+class FiberyEntity(BaseModel):
+    """Base model for Fibery entities."""
+
+    id: str
+    name: str
+    description: Optional[str] = None
+
+
 def get_fibery_info() -> FiberyInfo:
     """Get Fibery environment information from environment variables."""
     base_url = os.getenv("VINEAPP_FIBERY_URL")
@@ -50,8 +59,7 @@ def get_fibery_info() -> FiberyInfo:
         base_url=base_url.rstrip("/"),
         space_name=space_name,
         databases=[
-            "Process Segments",
-            "Products",
-            "Schemas",
+            "Actions",
+            "Learning",
         ],
     )
