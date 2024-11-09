@@ -4,19 +4,22 @@ Example usage:
 
     try:
         client = get_fibery_client()
-        # Query to get all Fibery types (databases)
+        # Query to get schema information
         query = '''
             query {
-                fibery {
+                __schema {
                     types {
                         name
-                        id
+                        fields {
+                            name
+                        }
                     }
                 }
             }
         '''
         result = client.execute(query)
-        types = result['data']['fibery']['types']
+        types = [t for t in result['data']['__schema']['types'] 
+                if t['name'].startswith('Public') and t['fields']]
         for type_info in types:
             print(f"Found type: {type_info['name']}")
             
