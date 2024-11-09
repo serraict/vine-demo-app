@@ -5,6 +5,12 @@ Follow both this guide and the main CONTRIBUTING.md when making changes.
 
 ## Context Understanding
 
+1. When working on adding new features, do not change infrastructural code like:
+
+   - `src/web/components`
+   - test infrastructure
+   - shared base classes
+
 Before making changes:
 
 1. Analyze project structure:
