@@ -7,8 +7,13 @@ Connect to the Fibery environment.
 - [x] Create a web page that shows link to the Fibery knowledge base
   - [x] Create a new route /kb
   - [x] Add a page component that uses our model_card for displaying Fibery info
-        Fibery URL to be retrieved from env var.
+    Fibery URL to be retrieved from env var.
   - [x] Add link to the Fibery knowledge base using our URL field handling
+  - [ ] The space name should be set as an env var too.
+    - [ ] From the space name and the base url create link to:
+      - [ ] Space homepage
+      - [ ] Api base address
+      - [ ] Link to graphql app
   - [ ] Add list of Fibery databases with links.
   - [ ] Add navigation link in the menu
   - [ ] Add tests for the new page
@@ -25,7 +30,6 @@ Connect to the Fibery environment.
     - [ ] upload to ghcr
   - [ ] Create development Docker container
   - [ ] Add container documentation and examples
-
 
 ## Later
 

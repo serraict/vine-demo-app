@@ -5,6 +5,8 @@ Follow both this guide and the main CONTRIBUTING.md when making changes.
 
 ## Context Understanding
 
+Try to write tests to build your understanding of the context.
+
 1. When working on adding new features, do not change infrastructural code like:
 
    - `src/web/components`
