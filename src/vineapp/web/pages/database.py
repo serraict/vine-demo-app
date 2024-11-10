@@ -4,7 +4,7 @@ from nicegui import APIRouter, ui
 import requests
 
 from ...fibery.graphql import get_fibery_client
-from ...fibery.models import FiberyEntity
+from ...fibery.models import FiberyEntity, FiberySchema
 from ..components import frame
 from ..components.model_card import display_model_card
 from ..components.styles import (
@@ -43,7 +43,7 @@ def database_page(name: str) -> None:
         try:
             # Convert URL-friendly name back to type name (e.g., 'actions' -> 'PublicActions')
             type_name = f"Public{name.title()}"
-            
+
             # Get schema information using GraphQL
             client = get_fibery_client()
             schema_query = f"""
@@ -61,7 +61,7 @@ def database_page(name: str) -> None:
             """
             try:
                 schema_result = client.execute(schema_query)
-                
+
                 # Check for GraphQL errors
                 if "errors" in schema_result:
                     error_msg = schema_result["errors"][0].get(
@@ -70,7 +70,7 @@ def database_page(name: str) -> None:
                     with ui.card().classes(CARD_CLASSES + " border-red-500"):
                         ui.label(f"GraphQL Error: {error_msg}").classes("text-red-500")
                     return
-                
+
                 # Check for expected data structure
                 if "data" not in schema_result or "__type" not in schema_result["data"]:
                     with ui.card().classes(CARD_CLASSES + " border-red-500"):
@@ -78,7 +78,7 @@ def database_page(name: str) -> None:
                             "text-red-500"
                         )
                     return
-                
+
                 type_info = schema_result["data"]["__type"]
                 if not type_info:
                     with ui.card().classes(CARD_CLASSES + " border-red-500"):
@@ -86,17 +86,25 @@ def database_page(name: str) -> None:
                             "text-red-500"
                         )
                     return
-                
+
+                # Create schema model from type info
+                try:
+                    schema = FiberySchema.from_type_info(type_info)
+                except ValueError as e:
+                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+                        ui.label(f"Schema error: {str(e)}").classes("text-red-500")
+                    return
+
                 # Display schema information
                 with ui.card().classes(CARD_CLASSES):
                     ui.label("Schema").classes(HEADER_CLASSES + " mb-4")
-                    
-                    # Create rows for the table
+
+                    # Create rows for the table using schema fields
                     rows = [
-                        {"Field": field["name"], "Type": field["type"]["name"]}
-                        for field in type_info["fields"]
+                        {"Field": field.name, "Type": field.type_name}
+                        for field in schema.fields
                     ]
-                    
+
                     # Create table with schema information
                     ui.table(
                         rows=rows,
@@ -105,7 +113,7 @@ def database_page(name: str) -> None:
                             {"name": "Type", "label": "Type", "field": "Type"},
                         ],
                     ).classes("w-full")
-                
+
                 # Get example entities - try both singular and plural forms
                 find_field = f"find{name.title()}"
                 entities_query = f"""
@@ -120,7 +128,7 @@ def database_page(name: str) -> None:
                     }}
                 """
                 result, success = _try_query_with_field(client, entities_query)
-                
+
                 if not success:
                     # Try plural form
                     find_field = f"{find_field}s"
@@ -136,7 +144,7 @@ def database_page(name: str) -> None:
                         }}
                     """
                     result, success = _try_query_with_field(client, entities_query)
-                    
+
                     if not success:
                         error_msg = result["errors"][0].get(
                             "message", "Unknown GraphQL error"
@@ -146,7 +154,7 @@ def database_page(name: str) -> None:
                                 "text-red-500"
                             )
                         return
-                
+
                 # Check for expected data structure
                 if "data" not in result:
                     with ui.card().classes(CARD_CLASSES + " border-red-500"):
@@ -154,20 +162,20 @@ def database_page(name: str) -> None:
                             "text-red-500"
                         )
                     return
-                
+
                 if find_field not in result["data"]:
                     with ui.card().classes(CARD_CLASSES + " border-red-500"):
                         ui.label(f"No entities found for '{name}'").classes(
                             "text-red-500"
                         )
                     return
-                
+
                 entities = result["data"][find_field]
-                
+
                 # Display example entities
                 with ui.card().classes(CARD_CLASSES + " mt-4"):
                     ui.label("Example Entities").classes(HEADER_CLASSES + " mb-4")
-                    
+
                     with ui.column().classes("gap-4"):
                         for entity_data in entities:
                             # Convert RichField description to plain text
@@ -177,13 +185,13 @@ def database_page(name: str) -> None:
                             # Convert dictionary to Pydantic model
                             entity = FiberyEntity(**entity_data)
                             display_model_card(entity)
-                            
+
             except requests.RequestException as e:
                 with ui.card().classes(CARD_CLASSES + " border-red-500"):
                     ui.label(f"Error accessing Fibery API: {str(e)}").classes(
                         "text-red-500"
                     )
-                
+
         except ValueError as e:
             with ui.card().classes(CARD_CLASSES + " border-red-500"):
                 ui.label(f"Configuration error: {str(e)}").classes("text-red-500")

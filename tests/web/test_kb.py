@@ -4,7 +4,6 @@ import os
 from unittest.mock import patch, Mock
 
 import pytest
-import requests
 from nicegui import ui
 from nicegui.testing import User
 
@@ -43,23 +42,66 @@ def mock_graphql_response():
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "name", "type": {"name": "String"}},
                     {"name": "description", "type": {"name": "String"}},
-                ],
+                ]
             }
         }
     }
-
+    
     entities_response = {
         "data": {
             "findActions": [
-                {"id": "1", "name": "Test Action", "description": "Test Description"}
+                {
+                    "id": "1",
+                    "name": "Test Action",
+                    "description": {"text": "Test Description"}
+                }
             ]
         }
     }
-
-    with patch.object(requests, "post") as mock_post:
+    
+    with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
         mock_response.json.side_effect = [schema_response, entities_response]
+        mock_post.return_value = mock_response
+        yield
+
+
+@pytest.fixture
+def mock_graphql_schema_error():
+    """Mock GraphQL API response with schema error."""
+    error_response = {
+        "errors": [
+            {
+                "message": "Type 'PublicActions' not found"
+            }
+        ]
+    }
+    
+    with patch("requests.post") as mock_post:
+        mock_response = Mock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = error_response
+        mock_post.return_value = mock_response
+        yield
+
+
+@pytest.fixture
+def mock_graphql_invalid_schema():
+    """Mock GraphQL API response with invalid schema structure."""
+    invalid_response = {
+        "data": {
+            "__type": {
+                "name": "PublicActions",
+                # Missing fields key
+            }
+        }
+    }
+    
+    with patch("requests.post") as mock_post:
+        mock_response = Mock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = invalid_response
         mock_post.return_value = mock_response
         yield
 
@@ -75,11 +117,11 @@ def mock_graphql_response_plural():
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "name", "type": {"name": "String"}},
                     {"name": "description", "type": {"name": "String"}},
-                ],
+                ]
             }
         }
     }
-
+    
     # First attempt with singular fails
     singular_error = {
         "errors": [
@@ -88,24 +130,24 @@ def mock_graphql_response_plural():
             }
         ]
     }
-
+    
     # Second attempt with plural succeeds
     plural_response = {
         "data": {
             "findLearnings": [
-                {"id": "1", "name": "Test Learning", "description": "Test Description"}
+                {
+                    "id": "1",
+                    "name": "Test Learning",
+                    "description": {"text": "Test Description"}
+                }
             ]
         }
     }
-
-    with patch.object(requests, "post") as mock_post:
+    
+    with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
-        mock_response.json.side_effect = [
-            schema_response,
-            singular_error,
-            plural_response,
-        ]
+        mock_response.json.side_effect = [schema_response, singular_error, plural_response]
         mock_post.return_value = mock_response
         yield
 
@@ -150,9 +192,7 @@ async def test_kb_page_requires_env_var(user: User) -> None:
             await user.open("/kb")
 
 
-async def test_database_detail_page_loads(
-    user: User, mock_env, mock_graphql_response
-) -> None:
+async def test_database_detail_page_loads(user: User, mock_env, mock_graphql_response) -> None:
     """Test that the database detail page loads and shows expected content."""
     # When
     await user.open("/kb/database/actions")
@@ -163,27 +203,48 @@ async def test_database_detail_page_loads(
     await user.should_see("Example Entities")
 
 
-async def test_database_detail_page_shows_schema(
-    user: User, mock_env, mock_graphql_response
-) -> None:
+async def test_database_detail_page_shows_schema(user: User, mock_env, mock_graphql_response) -> None:
     """Test that the database detail page shows the schema information."""
     # When
     await user.open("/kb/database/actions")
 
     # Then
-    await user.should_see("Id")  # Field names are capitalized in display
-    await user.should_see("Name")
-    await user.should_see("Description")
+    # Check for schema content in example entity
+    await user.should_see("Id")  # Field label in example entity
+    await user.should_see("Name")  # Field label in example entity
+    await user.should_see("Description")  # Field label in example entity
+
+
+async def test_database_detail_page_handles_schema_error(
+    user: User, mock_env, mock_graphql_schema_error
+) -> None:
+    """Test that the database detail page handles schema errors."""
+    # When
+    await user.open("/kb/database/actions")
+
+    # Then
+    await user.should_see("Type 'PublicActions' not found")
+
+
+async def test_database_detail_page_handles_invalid_schema(
+    user: User, mock_env, mock_graphql_invalid_schema
+) -> None:
+    """Test that the database detail page handles invalid schema structure."""
+    # When
+    await user.open("/kb/database/actions")
+
+    # Then
+    await user.should_see("Schema error: Invalid type info structure")
 
 
 async def test_database_detail_page_handles_plural_types(
     user: User, mock_env, mock_graphql_response_plural
 ) -> None:
-    """Test that the database detail page handles plural type names correctly."""
+    """Test that the database detail page handles plural type names."""
     # When
     await user.open("/kb/database/learning")
 
     # Then
     await user.should_see("Learning Database")
-    await user.should_see("Test Learning")  # From example entity
+    await user.should_see("Test Learning")
     await user.should_see("Test Description")
