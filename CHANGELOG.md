@@ -14,30 +14,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Database detail pages showing schema information and example entities
 - FiberyEntity model for consistent entity representation
 - Navigation link to Knowledge Base from homepage
-- Computed URL fields in FiberyInfo model for KB, API, and GraphQL endpoints
+- Computed URL fields in FiberyInfo model for KB API and GraphQL endpoints
 - Enhanced model_card component to display computed fields as clickable links
 - Product detail view showing detailed information for individual products
 - Clickable product names in table linking to detail view
 - Integration tests for Dremio connection and product retrieval
-- UI tests for web interface navigation using NiceGUI's testing framework
-- About page showing application information and links to documentation
-- Navigation link to About page from homepage
-- Sorting functionality for products table (by name and product group)
-- Server-side pagination for products table with configurable page size
 - Reusable model_card component for displaying Pydantic models in a consistent format
+- Support for both singular and plural GraphQL field names (e.g., findAction vs findLearnings)
+- Proper handling of RichField descriptions in database entities
+- Error handling for GraphQL queries with informative error messages
 
 ### Changed
 
-- Enhanced products table to include ID column
-- Restructured product management into dedicated package
-- Extracted application metadata into standalone app_info module
-- Refactored CLI to use new module structure
-- Enhanced product repository to support paginated queries
-- Removed ProductService class in favor of using ProductRepository directly
 - Improved UI layout with consistent navigation card-based design across all pages
 - Converted ApplicationInfo to Pydantic model for consistent model handling
 - Unified model display approach using shared model_card component across pages
 - Enhanced ApplicationInfo model with proper URL type validation
+- Improved FiberyField model to better match GraphQL schema behavior
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
 
 ## [0.2] - 2024-10-25
 
@@ -48,5 +49,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2024-03-25
 
 ### Added
-
-- CLI application with 'about' command showing package metadata
