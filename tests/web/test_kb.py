@@ -42,23 +42,23 @@ def mock_graphql_response():
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "name", "type": {"name": "String"}},
                     {"name": "description", "type": {"name": "String"}},
-                ]
+                ],
             }
         }
     }
-    
+
     entities_response = {
         "data": {
             "findActions": [
                 {
                     "id": "1",
                     "name": "Test Action",
-                    "description": {"text": "Test Description"}
+                    "description": {"text": "Test Description"},
                 }
             ]
         }
     }
-    
+
     with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
@@ -70,14 +70,8 @@ def mock_graphql_response():
 @pytest.fixture
 def mock_graphql_schema_error():
     """Mock GraphQL API response with schema error."""
-    error_response = {
-        "errors": [
-            {
-                "message": "Type 'PublicActions' not found"
-            }
-        ]
-    }
-    
+    error_response = {"errors": [{"message": "Type 'PublicActions' not found"}]}
+
     with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
@@ -97,7 +91,7 @@ def mock_graphql_invalid_schema():
             }
         }
     }
-    
+
     with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
@@ -117,11 +111,11 @@ def mock_graphql_response_plural():
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "name", "type": {"name": "String"}},
                     {"name": "description", "type": {"name": "String"}},
-                ]
+                ],
             }
         }
     }
-    
+
     # First attempt with singular fails
     singular_error = {
         "errors": [
@@ -130,7 +124,7 @@ def mock_graphql_response_plural():
             }
         ]
     }
-    
+
     # Second attempt with plural succeeds
     plural_response = {
         "data": {
@@ -138,16 +132,20 @@ def mock_graphql_response_plural():
                 {
                     "id": "1",
                     "name": "Test Learning",
-                    "description": {"text": "Test Description"}
+                    "description": {"text": "Test Description"},
                 }
             ]
         }
     }
-    
+
     with patch("requests.post") as mock_post:
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
-        mock_response.json.side_effect = [schema_response, singular_error, plural_response]
+        mock_response.json.side_effect = [
+            schema_response,
+            singular_error,
+            plural_response,
+        ]
         mock_post.return_value = mock_response
         yield
 
@@ -192,7 +190,9 @@ async def test_kb_page_requires_env_var(user: User) -> None:
             await user.open("/kb")
 
 
-async def test_database_detail_page_loads(user: User, mock_env, mock_graphql_response) -> None:
+async def test_database_detail_page_loads(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the database detail page loads and shows expected content."""
     # When
     await user.open("/kb/database/actions")
@@ -203,7 +203,9 @@ async def test_database_detail_page_loads(user: User, mock_env, mock_graphql_res
     await user.should_see("Example Entities")
 
 
-async def test_database_detail_page_shows_schema(user: User, mock_env, mock_graphql_response) -> None:
+async def test_database_detail_page_shows_schema(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the database detail page shows the schema information."""
     # When
     await user.open("/kb/database/actions")

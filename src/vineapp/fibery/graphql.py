@@ -18,11 +18,11 @@ Example usage:
             }
         '''
         result = client.execute(query)
-        types = [t for t in result['data']['__schema']['types'] 
+        types = [t for t in result['data']['__schema']['types']
                 if t['name'].startswith('Public') and t['fields']]
         for type_info in types:
             print(f"Found type: {type_info['name']}")
-            
+
     except ValueError as e:
         print(f"Configuration error: {e}")
     except requests.RequestException as e:
