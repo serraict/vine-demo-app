@@ -37,13 +37,13 @@ def database_page(name: str) -> None:
     """Render the database detail page.
 
     Args:
-        name: The name of the database (e.g., 'actions' or 'learning')
+        name: The name of the database (e.g., 'Actie' or 'Werkdocument')
     """
-    with frame(f"{name.title()} Database"):
+    with frame(f"{name} Database"):
         try:
             # Get space info and construct type name using actual space name
             info = get_fibery_info()
-            type_name = f"{info._get_type_space_name()}{name.title()}"
+            type_name = f"{info._get_type_space_name()}{name}"
 
             # Get schema information using GraphQL
             client = get_fibery_client()
@@ -116,7 +116,7 @@ def database_page(name: str) -> None:
                     ).classes("w-full")
 
                 # Get example entities - try both singular and plural forms
-                find_field = f"find{name.title()}"
+                find_field = f"find{name}"
                 entities_query = f"""
                     query {{
                         {find_field} (limit: 5) {{
