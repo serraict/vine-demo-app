@@ -7,7 +7,6 @@ from ...fibery.models import get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
 from ..components.message import message
-from ..components.theme import with_error_handling
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -76,13 +75,12 @@ def _get_database_types(client, info) -> list:
 
 
 @router.page("/")
-@with_error_handling
 def kb_page() -> None:
     """Render the knowledge base page."""
-    info = get_fibery_info()
-    client = get_fibery_client()
-
     with frame("Knowledge Base"):
+        info = get_fibery_info()
+        client = get_fibery_client()
+
         display_model_card(info, description_field="description")
 
         database_types = _get_database_types(client, info)

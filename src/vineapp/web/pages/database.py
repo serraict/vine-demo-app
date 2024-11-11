@@ -8,7 +8,6 @@ from ...fibery.models import FiberyEntity, FiberySchema, get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
 from ..components.message import message
-from ..components.theme import with_error_handling
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -166,18 +165,17 @@ def _get_entities(client, name: str) -> Optional[list]:
 
 
 @router.page("/{name}")
-@with_error_handling
 def database_page(name: str) -> None:
     """Render the database detail page.
 
     Args:
         name: The name of the database (e.g., 'Actie' or 'Werkdocument')
     """
-    info = get_fibery_info()
-    client = get_fibery_client()
-    type_name = f"{info._get_type_space_name()}{name}"
-
     with frame(f"{name} Database"):
+        info = get_fibery_info()
+        client = get_fibery_client()
+        type_name = f"{info._get_type_space_name()}{name}"
+
         schema = _get_schema(client, type_name)
         if schema:
             _display_schema(schema)
