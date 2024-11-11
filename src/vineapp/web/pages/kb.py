@@ -16,6 +16,36 @@ from ..components.styles import (
 router = APIRouter(prefix="/kb")
 
 
+def _show_error(message: str) -> None:
+    """Display an error message in a card.
+
+    Args:
+        message: The error message to display
+    """
+    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+        ui.label(message).classes("text-red-500")
+
+
+def _is_database_type(type_info: dict, space_prefix: str) -> bool:
+    """Check if a type represents a database.
+
+    Args:
+        type_info: The type information from GraphQL schema
+        space_prefix: The space name prefix to match
+
+    Returns:
+        bool: True if the type represents a database
+    """
+    return (
+        type_info["name"].startswith(space_prefix)
+        and type_info["fields"]
+        and not any(
+            suffix in type_info["name"]
+            for suffix in ["BackgroundJob", "Operations"]
+        )
+    )
+
+
 @router.page("/")
 def kb_page() -> None:
     """Render the knowledge base page."""
@@ -23,10 +53,8 @@ def kb_page() -> None:
     client = get_fibery_client()
 
     with frame("Knowledge Base"):
-        # Display Fibery info using model_card
         display_model_card(info, description_field="description")
 
-        # Get available databases from GraphQL schema
         query = """
             query {
                 __schema {
@@ -43,51 +71,28 @@ def kb_page() -> None:
         try:
             response = client.execute(query)
             if "errors" in response:
-                with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                    error_msg = response["errors"][0].get(
-                        "message", "Unknown GraphQL error"
-                    )
-                    ui.label(f"GraphQL Error: {error_msg}").classes("text-red-500")
+                error_msg = response["errors"][0].get("message", "Unknown GraphQL error")
+                _show_error(f"GraphQL Error: {error_msg}")
                 return
 
             if "data" not in response:
-                with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                    ui.label("Unexpected API response format").classes("text-red-500")
+                _show_error("Unexpected API response format")
                 return
 
-            # Filter for main Fibery database types
             types = response["data"]["__schema"]["types"]
             space_prefix = info._get_type_space_name()
             database_types = [
-                t
-                for t in types
-                if (
-                    t["name"].startswith(space_prefix)
-                    and t["fields"]
-                    and not any(
-                        suffix in t["name"]
-                        for suffix in ["BackgroundJob", "Operations"]
-                    )
-                )
+                t for t in types if _is_database_type(t, space_prefix)
             ]
 
-            # Display list of databases
             with ui.card().classes(CARD_CLASSES):
                 ui.label("Available Databases").classes(HEADER_CLASSES + " mb-4")
 
                 with ui.column().classes("gap-4"):
                     for type_info in database_types:
                         name = type_info["name"]
-                        # Remove space name prefix for cleaner display
-                        display_name = (
-                            name[len(space_prefix) :]
-                            if name.startswith(space_prefix)
-                            else name
-                        )
-                        ui.link(display_name, f"/kb/database/{display_name}").classes(
-                            LINK_CLASSES
-                        )
+                        display_name = name[len(space_prefix):] if name.startswith(space_prefix) else name
+                        ui.link(display_name, f"/kb/database/{display_name}").classes(LINK_CLASSES)
 
         except Exception as e:
-            with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                ui.label(f"Error: {str(e)}").classes("text-red-500")
+            _show_error(f"Error: {str(e)}")
