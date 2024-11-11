@@ -2,7 +2,7 @@
 
 from nicegui.testing import User
 
-from .test_kb import mock_env, fibery_url  # noqa: F401
+from .test_kb import mock_env, fibery_url, mock_graphql_response  # noqa: F401
 
 
 async def test_homepage_loads(user: User) -> None:
@@ -27,7 +27,7 @@ async def test_homepage_links_to_products(user: User) -> None:
     await user.should_see("Products")
 
 
-async def test_homepage_links_to_kb(user: User, mock_env) -> None:  # noqa: F811
+async def test_homepage_links_to_kb(user: User, mock_env, mock_graphql_response) -> None:  # noqa: F811
     """Test that homepage contains link to knowledge base page."""
     # When
     await user.open("/")
