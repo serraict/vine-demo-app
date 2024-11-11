@@ -5,6 +5,7 @@ from nicegui import ui
 from nicegui.testing import User
 
 from vineapp.web.components.model_card import display_model_card
+from vineapp.web.components.message import message, show_error
 
 
 class AViewModel(BaseModel):
@@ -45,3 +46,29 @@ async def test_model_card_renders_url_as_link(user: User) -> None:
     await user.should_see("https://example.com/")  # URL should be visible
     await user.should_see("https://example.com/api")  # Computed URL should be visible
     await user.should_see(kind=ui.link)  # Both URLs should be links
+
+
+async def test_message_shows_notification(user: User) -> None:
+    """Test that message() shows a notification."""
+    # When
+    @ui.page("/test")
+    def test_page():
+        message("Test message", type="info")
+
+    await user.open("/test")
+
+    # Then
+    await user.should_see("Test message")
+
+
+async def test_show_error_shows_negative_notification(user: User) -> None:
+    """Test that show_error() shows a negative notification."""
+    # When
+    @ui.page("/test")
+    def test_page():
+        show_error("Test error")
+
+    await user.open("/test")
+
+    # Then
+    await user.should_see("Test error")
