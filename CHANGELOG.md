@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified model display approach using shared model_card component across pages
 - Enhanced ApplicationInfo model with proper URL type validation
 - Improved FiberyField model to better match GraphQL schema behavior
+- Refactored Fibery models to use configured space_name consistently instead of hardcoding "Public"
+- Updated FiberyDatabase to require space_name parameter for explicit space handling
 
 ### Deprecated
 

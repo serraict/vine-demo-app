@@ -25,17 +25,21 @@ class FiberyInfo(BaseModel):
     @property
     def kb_url(self) -> HttpUrl:
         """Get the URL to the Fibery knowledge base."""
-        return HttpUrl(urljoin(str(self.base_url), "Public/"))
+        return HttpUrl(urljoin(str(self.base_url), f"{self.space_name}/"))
 
     @property
     def api_url(self) -> HttpUrl:
         """Get the URL to the Fibery API."""
-        return HttpUrl(urljoin(str(self.base_url), "api/graphql/space/Public"))
+        return HttpUrl(
+            urljoin(str(self.base_url), f"api/graphql/space/{self.space_name}")
+        )
 
     @property
     def graphql_url(self) -> HttpUrl:
         """Get the URL to the Fibery GraphQL app."""
-        return HttpUrl(urljoin(str(self.base_url), "api/graphql/space/Public"))
+        return HttpUrl(
+            urljoin(str(self.base_url), f"api/graphql/space/{self.space_name}")
+        )
 
 
 class GraphQLType(BaseModel):
@@ -98,11 +102,12 @@ class FiberyDatabase(BaseModel):
     entities: List[FiberyEntity] = []
 
     @classmethod
-    def from_name(cls, name: str) -> "FiberyDatabase":
+    def from_name(cls, name: str, space_name: str) -> "FiberyDatabase":
         """Create a FiberyDatabase instance from a database name.
 
         Args:
             name: The name of the database (e.g., 'actions' or 'learning')
+            space_name: The Fibery space name to use
 
         Returns:
             A FiberyDatabase instance with schema and entities loaded
@@ -112,8 +117,8 @@ class FiberyDatabase(BaseModel):
         """
         from .graphql import get_fibery_client
 
-        # Convert name to type name (e.g., 'actions' -> 'PublicActions')
-        type_name = f"Public{name.title()}"
+        # Convert name to type name (e.g., 'actions' -> '{space_name}Actions')
+        type_name = f"{space_name}{name.title()}"
 
         # Get schema information using GraphQL
         client = get_fibery_client()

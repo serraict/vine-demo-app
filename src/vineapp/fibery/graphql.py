@@ -2,6 +2,8 @@
 
 Example usage:
 
+    space_name = "Public"
+
     try:
         client = get_fibery_client()
         # Query to get schema information
@@ -19,7 +21,7 @@ Example usage:
         '''
         result = client.execute(query)
         types = [t for t in result['data']['__schema']['types']
-                if t['name'].startswith('Public') and t['fields']]
+                if t['name'].startswith(space_name) and t['fields']]
         for type_info in types:
             print(f"Found type: {type_info['name']}")
 

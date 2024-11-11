@@ -37,15 +37,15 @@ def test_fibery_info_constructs_urls():
     """Test that FiberyInfo correctly constructs URLs from base URL and space name."""
     # Given
     base_url = "https://serra.fibery.io"
-    space_name = "Public"
+    space_name = "TestSpace"
 
     # When
     info = FiberyInfo(base_url=base_url, space_name=space_name)
 
     # Then
-    assert str(info.kb_url) == "https://serra.fibery.io/Public/"
-    assert str(info.api_url) == "https://serra.fibery.io/api/graphql/space/Public"
-    assert str(info.graphql_url) == "https://serra.fibery.io/api/graphql/space/Public"
+    assert str(info.kb_url) == "https://serra.fibery.io/TestSpace/"
+    assert str(info.api_url) == "https://serra.fibery.io/api/graphql/space/TestSpace"
+    assert str(info.graphql_url) == "https://serra.fibery.io/api/graphql/space/TestSpace"
 
 
 def test_get_fibery_info_requires_url():
@@ -104,7 +104,7 @@ def test_fibery_schema_from_type_info():
     """Test that FiberySchema correctly constructs from GraphQL type info."""
     # Given
     type_info = {
-        "name": "PublicActions",
+        "name": "TestSpaceActions",
         "fields": [
             {"name": "id", "type": {"name": "ID"}},
             {"name": "name", "type": {"name": "String"}},
@@ -115,7 +115,7 @@ def test_fibery_schema_from_type_info():
     schema = FiberySchema.from_type_info(type_info)
 
     # Then
-    assert schema.name == "PublicActions"
+    assert schema.name == "TestSpaceActions"
     assert len(schema.fields) == 2
     assert schema.fields[0].name == "id"
     assert schema.fields[0].type_name == "ID"
@@ -127,7 +127,7 @@ def test_fibery_schema_validates_type_info():
     """Test that FiberySchema validates type info structure."""
     # Given
     invalid_type_info = {
-        "name": "PublicActions",
+        "name": "TestSpaceActions",
         # Missing fields key
     }
 
@@ -140,10 +140,11 @@ def test_fibery_schema_validates_type_info():
 def test_fibery_database_from_name(mock_get_client):
     """Test that FiberyDatabase correctly loads from name."""
     # Given
+    space_name = "TestSpace"
     schema_response = {
         "data": {
             "__type": {
-                "name": "PublicActions",
+                "name": "TestSpaceActions",
                 "fields": [
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "publicId", "type": {"name": "String"}},
@@ -153,7 +154,7 @@ def test_fibery_database_from_name(mock_get_client):
                     {"name": "createdBy", "type": {"name": "FiberyUser"}},
                     {"name": "description", "type": {"name": "RichField"}},
                     {"name": "name", "type": {"name": "String"}},
-                    {"name": "state", "type": {"name": "WorkflowStatePublicActions"}},
+                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceActions"}},
                 ],
             }
         }
@@ -176,11 +177,11 @@ def test_fibery_database_from_name(mock_get_client):
     mock_get_client.return_value = mock_client
 
     # When
-    db = FiberyDatabase.from_name("actions")
+    db = FiberyDatabase.from_name("actions", space_name)
 
     # Then
     assert db.name == "actions"
-    assert db.type_schema.name == "PublicActions"
+    assert db.type_schema.name == "TestSpaceActions"
     assert len(db.type_schema.fields) == 9  # All standard fields
     assert len(db.entities) == 1
     assert db.entities[0].name == "Test Action"
@@ -191,10 +192,11 @@ def test_fibery_database_from_name(mock_get_client):
 def test_fibery_database_handles_plural_form(mock_get_client):
     """Test that FiberyDatabase handles plural form field names."""
     # Given
+    space_name = "TestSpace"
     schema_response = {
         "data": {
             "__type": {
-                "name": "PublicLearning",
+                "name": "TestSpaceLearning",
                 "fields": [
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "publicId", "type": {"name": "String"}},
@@ -204,7 +206,7 @@ def test_fibery_database_handles_plural_form(mock_get_client):
                     {"name": "createdBy", "type": {"name": "FiberyUser"}},
                     {"name": "description", "type": {"name": "RichField"}},
                     {"name": "name", "type": {"name": "String"}},
-                    {"name": "state", "type": {"name": "WorkflowStatePublicLearning"}},
+                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceLearning"}},
                 ],
             }
         }
@@ -235,11 +237,11 @@ def test_fibery_database_handles_plural_form(mock_get_client):
     mock_get_client.return_value = mock_client
 
     # When
-    db = FiberyDatabase.from_name("learning")
+    db = FiberyDatabase.from_name("learning", space_name)
 
     # Then
     assert db.name == "learning"
-    assert db.type_schema.name == "PublicLearning"
+    assert db.type_schema.name == "TestSpaceLearning"
     assert len(db.type_schema.fields) == 9  # All standard fields
     assert len(db.entities) == 1
     assert db.entities[0].name == "Test Learning"

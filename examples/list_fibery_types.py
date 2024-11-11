@@ -1,6 +1,7 @@
 """Example script demonstrating Fibery GraphQL client usage."""
 
 from vineapp.fibery.graphql import get_fibery_client
+from vineapp.fibery.models import get_fibery_info
 
 
 def main():
@@ -8,6 +9,7 @@ def main():
     try:
         print("Getting Fibery client...")
         client = get_fibery_client()
+        info = get_fibery_info()
 
         # Query to get schema information
         query = """
@@ -43,7 +45,7 @@ def main():
             t
             for t in types
             if (
-                t["name"].startswith("Public")
+                t["name"].startswith(info.space_name)
                 and t["fields"]
                 and not any(
                     suffix in t["name"] for suffix in ["BackgroundJob", "Operations"]
@@ -55,8 +57,8 @@ def main():
         print("-------------------------")
         for type_info in database_types:
             name = type_info["name"]
-            # Remove 'Public' prefix for cleaner display
-            display_name = name[6:] if name.startswith("Public") else name
+            # Remove space name prefix for cleaner display
+            display_name = name[len(info.space_name):] if name.startswith(info.space_name) else name
             print(f"- {display_name}")
 
     except ValueError as e:
