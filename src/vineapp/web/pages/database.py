@@ -2,6 +2,7 @@
 
 from nicegui import APIRouter, ui
 import requests
+from typing import Optional
 
 from ...fibery.graphql import get_fibery_client
 from ...fibery.models import FiberyEntity, FiberySchema, get_fibery_info
@@ -16,20 +17,129 @@ from ..components.styles import (
 router = APIRouter(prefix="/kb/database")
 
 
-def _try_query_with_field(client, query: str) -> tuple[dict, bool]:
-    """Try executing a GraphQL query and check if it succeeded.
+def _show_error(message: str) -> None:
+    """Display an error message in a card.
+
+    Args:
+        message: The error message to display
+    """
+    with ui.card().classes(CARD_CLASSES + " border-red-500"):
+        ui.label(message).classes("text-red-500")
+
+
+def _build_schema_query(type_name: str) -> str:
+    """Build GraphQL query for schema information.
+
+    Args:
+        type_name: The name of the type to query
+
+    Returns:
+        str: The GraphQL query
+    """
+    return f"""
+        query {{
+            __type(name: "{type_name}") {{
+                name
+                fields {{
+                    name
+                    type {{
+                        name
+                    }}
+                }}
+            }}
+        }}
+    """
+
+
+def _build_entities_query(field_name: str) -> str:
+    """Build GraphQL query for entities.
+
+    Args:
+        field_name: The field name to query (e.g., findActions)
+
+    Returns:
+        str: The GraphQL query
+    """
+    return f"""
+        query {{
+            {field_name} (limit: 5) {{
+                id
+                name
+                description {{
+                    text
+                }}
+            }}
+        }}
+    """
+
+
+def _display_schema(schema: FiberySchema) -> None:
+    """Display schema information in a card.
+
+    Args:
+        schema: The schema to display
+    """
+    with ui.card().classes(CARD_CLASSES):
+        ui.label("Schema").classes(HEADER_CLASSES + " mb-4")
+        rows = [
+            {"Field": field.name, "Type": field.type_name} for field in schema.fields
+        ]
+        ui.table(
+            rows=rows,
+            columns=[
+                {"name": "Field", "label": "Field", "field": "Field"},
+                {"name": "Type", "label": "Type", "field": "Type"},
+            ],
+        ).classes("w-full")
+
+
+def _display_entities(entities: list) -> None:
+    """Display entities in a card.
+
+    Args:
+        entities: List of entities to display
+    """
+    with ui.card().classes(CARD_CLASSES + " mt-4"):
+        ui.label("Example Entities").classes(HEADER_CLASSES + " mb-4")
+        with ui.column().classes("gap-4"):
+            for entity_data in entities:
+                description = entity_data.get("description")
+                if isinstance(description, dict):
+                    entity_data["description"] = description.get("text", "")
+                entity = FiberyEntity(**entity_data)
+                display_model_card(entity)
+
+
+def _get_entities(client, name: str) -> Optional[list]:
+    """Get entities from Fibery.
 
     Args:
         client: The GraphQL client to use
-        query: The query to execute
+        name: The name of the database
 
     Returns:
-        Tuple of (result, success) where success indicates if the query succeeded
+        Optional[list]: List of entities if found, None if error
     """
-    result = client.execute(query)
+    # Try singular form first
+    find_field = f"find{name}"
+    result = client.execute(_build_entities_query(find_field))
+    if "errors" not in result and "data" in result and find_field in result["data"]:
+        return result["data"][find_field]
+
+    # Try plural form
+    find_field = f"{find_field}s"
+    result = client.execute(_build_entities_query(find_field))
+    if "errors" not in result and "data" in result and find_field in result["data"]:
+        return result["data"][find_field]
+
     if "errors" in result:
-        return result, False
-    return result, True
+        error_msg = result["errors"][0].get("message", "Unknown GraphQL error")
+        _show_error(f"GraphQL Error: {error_msg}")
+    elif "data" not in result:
+        _show_error("Unexpected API response format")
+    else:
+        _show_error(f"No entities found for '{name}'")
+    return None
 
 
 @router.page("/{name}")
@@ -41,158 +151,40 @@ def database_page(name: str) -> None:
     """
     with frame(f"{name} Database"):
         try:
-            # Get space info and construct type name using actual space name
             info = get_fibery_info()
+            client = get_fibery_client()
             type_name = f"{info._get_type_space_name()}{name}"
 
-            # Get schema information using GraphQL
-            client = get_fibery_client()
-            schema_query = f"""
-                query {{
-                    __type(name: "{type_name}") {{
-                        name
-                        fields {{
-                            name
-                            type {{
-                                name
-                            }}
-                        }}
-                    }}
-                }}
-            """
+            # Get and validate schema
+            schema_result = client.execute(_build_schema_query(type_name))
+            if "errors" in schema_result:
+                error_msg = schema_result["errors"][0].get(
+                    "message", "Unknown GraphQL error"
+                )
+                _show_error(f"GraphQL Error: {error_msg}")
+                return
+
+            if "data" not in schema_result or "__type" not in schema_result["data"]:
+                _show_error("Unexpected API response format")
+                return
+
+            type_info = schema_result["data"]["__type"]
+            if not type_info:
+                _show_error(f"Type '{type_name}' not found")
+                return
+
             try:
-                schema_result = client.execute(schema_query)
+                schema = FiberySchema.from_type_info(type_info)
+                _display_schema(schema)
 
-                # Check for GraphQL errors
-                if "errors" in schema_result:
-                    error_msg = schema_result["errors"][0].get(
-                        "message", "Unknown GraphQL error"
-                    )
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label(f"GraphQL Error: {error_msg}").classes("text-red-500")
-                    return
+                entities = _get_entities(client, name)
+                if entities:
+                    _display_entities(entities)
 
-                # Check for expected data structure
-                if "data" not in schema_result or "__type" not in schema_result["data"]:
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label("Unexpected API response format").classes(
-                            "text-red-500"
-                        )
-                    return
+            except ValueError as e:
+                _show_error(f"Schema error: {str(e)}")
 
-                type_info = schema_result["data"]["__type"]
-                if not type_info:
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label(f"Type '{type_name}' not found").classes(
-                            "text-red-500"
-                        )
-                    return
-
-                # Create schema model from type info
-                try:
-                    schema = FiberySchema.from_type_info(type_info)
-                except ValueError as e:
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label(f"Schema error: {str(e)}").classes("text-red-500")
-                    return
-
-                # Display schema information
-                with ui.card().classes(CARD_CLASSES):
-                    ui.label("Schema").classes(HEADER_CLASSES + " mb-4")
-
-                    # Create rows for the table using schema fields
-                    rows = [
-                        {"Field": field.name, "Type": field.type_name}
-                        for field in schema.fields
-                    ]
-
-                    # Create table with schema information
-                    ui.table(
-                        rows=rows,
-                        columns=[
-                            {"name": "Field", "label": "Field", "field": "Field"},
-                            {"name": "Type", "label": "Type", "field": "Type"},
-                        ],
-                    ).classes("w-full")
-
-                # Get example entities - try both singular and plural forms
-                find_field = f"find{name}"
-                entities_query = f"""
-                    query {{
-                        {find_field} (limit: 5) {{
-                            id
-                            name
-                            description {{
-                                text
-                            }}
-                        }}
-                    }}
-                """
-                result, success = _try_query_with_field(client, entities_query)
-
-                if not success:
-                    # Try plural form
-                    find_field = f"{find_field}s"
-                    entities_query = f"""
-                        query {{
-                            {find_field} (limit: 5) {{
-                                id
-                                name
-                                description {{
-                                    text
-                                }}
-                            }}
-                        }}
-                    """
-                    result, success = _try_query_with_field(client, entities_query)
-
-                    if not success:
-                        error_msg = result["errors"][0].get(
-                            "message", "Unknown GraphQL error"
-                        )
-                        with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                            ui.label(f"GraphQL Error: {error_msg}").classes(
-                                "text-red-500"
-                            )
-                        return
-
-                # Check for expected data structure
-                if "data" not in result:
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label("Unexpected API response format").classes(
-                            "text-red-500"
-                        )
-                    return
-
-                if find_field not in result["data"]:
-                    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                        ui.label(f"No entities found for '{name}'").classes(
-                            "text-red-500"
-                        )
-                    return
-
-                entities = result["data"][find_field]
-
-                # Display example entities
-                with ui.card().classes(CARD_CLASSES + " mt-4"):
-                    ui.label("Example Entities").classes(HEADER_CLASSES + " mb-4")
-
-                    with ui.column().classes("gap-4"):
-                        for entity_data in entities:
-                            # Convert RichField description to plain text
-                            description = entity_data.get("description")
-                            if isinstance(description, dict):
-                                entity_data["description"] = description.get("text", "")
-                            # Convert dictionary to Pydantic model
-                            entity = FiberyEntity(**entity_data)
-                            display_model_card(entity)
-
-            except requests.RequestException as e:
-                with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                    ui.label(f"Error accessing Fibery API: {str(e)}").classes(
-                        "text-red-500"
-                    )
-
+        except requests.RequestException as e:
+            _show_error(f"Error accessing Fibery API: {str(e)}")
         except ValueError as e:
-            with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                ui.label(f"Configuration error: {str(e)}").classes("text-red-500")
+            _show_error(f"Configuration error: {str(e)}")
