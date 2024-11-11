@@ -34,36 +34,79 @@ def mock_env(fibery_url):
 @pytest.fixture
 def mock_graphql_response():
     """Mock GraphQL API responses."""
-    schema_response = {
-        "data": {
-            "__type": {
-                "name": "PublicActions",
-                "fields": [
-                    {"name": "id", "type": {"name": "ID"}},
-                    {"name": "name", "type": {"name": "String"}},
-                    {"name": "description", "type": {"name": "String"}},
-                ],
-            }
-        }
-    }
-
-    entities_response = {
-        "data": {
-            "findActions": [
-                {
-                    "id": "1",
-                    "name": "Test Action",
-                    "description": {"text": "Test Description"},
+    responses = [
+        # Response for schema types query (used by kb page)
+        {
+            "data": {
+                "__schema": {
+                    "types": [
+                        {
+                            "name": "PublicActions",
+                            "fields": [
+                                {"name": "id", "type": {"name": "ID"}},
+                                {"name": "name", "type": {"name": "String"}},
+                            ]
+                        },
+                        {
+                            "name": "PublicLearning",
+                            "fields": [
+                                {"name": "id", "type": {"name": "ID"}},
+                                {"name": "name", "type": {"name": "String"}},
+                            ]
+                        },
+                    ]
                 }
-            ]
-        }
-    }
+            }
+        },
+        # Response for type schema query (used by database page)
+        {
+            "data": {
+                "__type": {
+                    "name": "PublicActions",
+                    "fields": [
+                        {"name": "id", "type": {"name": "ID"}},
+                        {"name": "name", "type": {"name": "String"}},
+                        {"name": "description", "type": {"name": "String"}},
+                    ],
+                }
+            }
+        },
+        # Response for entities query (used by database page)
+        {
+            "data": {
+                "findActions": [
+                    {
+                        "id": "1",
+                        "name": "Test Action",
+                        "description": {"text": "Test Description"},
+                    }
+                ]
+            }
+        },
+    ]
 
     with patch("requests.post") as mock_post:
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.side_effect = [schema_response, entities_response]
-        mock_post.return_value = mock_response
+        def mock_post_side_effect(*args, **kwargs):
+            mock_response = Mock()
+            mock_response.raise_for_status.return_value = None
+            
+            # Get the current query being made
+            query = kwargs.get('json', {}).get('query', '')
+            print(f"\nReceived query: {query}")
+            
+            if "__schema" in query:
+                print("Returning schema types response")
+                mock_response.json.return_value = responses[0]
+            elif "__type" in query:
+                print("Returning type schema response")
+                mock_response.json.return_value = responses[1]
+            else:
+                print("Returning entities response")
+                mock_response.json.return_value = responses[2]
+            
+            return mock_response
+
+        mock_post.side_effect = mock_post_side_effect
         yield
 
 
@@ -103,54 +146,87 @@ def mock_graphql_invalid_schema():
 @pytest.fixture
 def mock_graphql_response_plural():
     """Mock GraphQL API responses for plural type names."""
-    schema_response = {
-        "data": {
-            "__type": {
-                "name": "PublicLearning",
-                "fields": [
-                    {"name": "id", "type": {"name": "ID"}},
-                    {"name": "name", "type": {"name": "String"}},
-                    {"name": "description", "type": {"name": "String"}},
-                ],
+    responses = [
+        # Response for schema types query
+        {
+            "data": {
+                "__schema": {
+                    "types": [
+                        {
+                            "name": "PublicLearning",
+                            "fields": [
+                                {"name": "id", "type": {"name": "ID"}},
+                                {"name": "name", "type": {"name": "String"}},
+                            ]
+                        }
+                    ]
+                }
             }
-        }
-    }
-
-    # First attempt with singular fails
-    singular_error = {
-        "errors": [
-            {
-                "message": "Cannot query field 'findLearning' on type 'Query'. Did you mean 'findLearnings'?"
+        },
+        # Response for type schema query
+        {
+            "data": {
+                "__type": {
+                    "name": "PublicLearning",
+                    "fields": [
+                        {"name": "id", "type": {"name": "ID"}},
+                        {"name": "name", "type": {"name": "String"}},
+                        {"name": "description", "type": {"name": "String"}},
+                    ],
+                }
             }
-        ]
-    }
-
-    # Second attempt with plural succeeds
-    plural_response = {
-        "data": {
-            "findLearnings": [
+        },
+        # Response for singular entities query (fails)
+        {
+            "errors": [
                 {
-                    "id": "1",
-                    "name": "Test Learning",
-                    "description": {"text": "Test Description"},
+                    "message": "Cannot query field 'findLearning' on type 'Query'. Did you mean 'findLearnings'?"
                 }
             ]
-        }
-    }
+        },
+        # Response for plural entities query (succeeds)
+        {
+            "data": {
+                "findLearnings": [
+                    {
+                        "id": "1",
+                        "name": "Test Learning",
+                        "description": {"text": "Test Description"},
+                    }
+                ]
+            }
+        },
+    ]
 
     with patch("requests.post") as mock_post:
-        mock_response = Mock()
-        mock_response.raise_for_status.return_value = None
-        mock_response.json.side_effect = [
-            schema_response,
-            singular_error,
-            plural_response,
-        ]
-        mock_post.return_value = mock_response
+        def mock_post_side_effect(*args, **kwargs):
+            mock_response = Mock()
+            mock_response.raise_for_status.return_value = None
+            
+            # Get the current query being made
+            query = kwargs.get('json', {}).get('query', '')
+            print(f"\nReceived query: {query}")
+            
+            if "__schema" in query:
+                print("Returning schema types response")
+                mock_response.json.return_value = responses[0]
+            elif "__type" in query:
+                print("Returning type schema response")
+                mock_response.json.return_value = responses[1]
+            elif "findLearning " in query:  # Note the space to avoid matching findLearnings
+                print("Returning singular error response")
+                mock_response.json.return_value = responses[2]
+            else:
+                print("Returning plural response")
+                mock_response.json.return_value = responses[3]
+            
+            return mock_response
+
+        mock_post.side_effect = mock_post_side_effect
         yield
 
 
-async def test_kb_page_loads(user: User, mock_env) -> None:
+async def test_kb_page_loads(user: User, mock_env, mock_graphql_response) -> None:
     """Test that the knowledge base page loads and shows expected content."""
     # When
     await user.open("/kb")
@@ -160,7 +236,7 @@ async def test_kb_page_loads(user: User, mock_env) -> None:
     await user.should_see("Available Databases")
 
 
-async def test_kb_page_shows_fibery_url(user: User, mock_env, fibery_url) -> None:
+async def test_kb_page_shows_fibery_url(user: User, mock_env, mock_graphql_response) -> None:
     """Test that the knowledge base page shows the Fibery URL as a link."""
     # When
     await user.open("/kb")
@@ -171,15 +247,14 @@ async def test_kb_page_shows_fibery_url(user: User, mock_env, fibery_url) -> Non
     await user.should_see(kind=ui.link)
 
 
-async def test_kb_page_shows_databases(user: User, mock_env) -> None:
+async def test_kb_page_shows_databases(user: User, mock_env, mock_graphql_response) -> None:
     """Test that the knowledge base page shows the list of databases."""
     # When
     await user.open("/kb")
 
     # Then
-    info = get_fibery_info()
-    for db in info.databases:
-        await user.should_see(db)
+    await user.should_see("Actions")
+    await user.should_see("Learning")
 
 
 async def test_kb_page_requires_env_var(user: User) -> None:

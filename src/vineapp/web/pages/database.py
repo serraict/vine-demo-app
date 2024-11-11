@@ -4,7 +4,7 @@ from nicegui import APIRouter, ui
 import requests
 
 from ...fibery.graphql import get_fibery_client
-from ...fibery.models import FiberyEntity, FiberySchema
+from ...fibery.models import FiberyEntity, FiberySchema, get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
 from ..components.styles import (
@@ -41,8 +41,9 @@ def database_page(name: str) -> None:
     """
     with frame(f"{name.title()} Database"):
         try:
-            # Convert URL-friendly name back to type name (e.g., 'actions' -> 'PublicActions')
-            type_name = f"Public{name.title()}"
+            # Get space info and construct type name using actual space name
+            info = get_fibery_info()
+            type_name = f"{info._get_type_space_name()}{name.title()}"
 
             # Get schema information using GraphQL
             client = get_fibery_client()
