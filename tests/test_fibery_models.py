@@ -94,12 +94,12 @@ def test_get_fibery_info_allows_space_override():
     """Test that get_fibery_info allows overriding the space name."""
     # Given
     with patch.dict(
-        os.environ, 
+        os.environ,
         {
             "VINEAPP_FIBERY_URL": "https://serra.fibery.io",
-            "VINEAPP_FIBERY_SPACE": "Original Space"
-        }, 
-        clear=True
+            "VINEAPP_FIBERY_SPACE": "Original Space",
+        },
+        clear=True,
     ):
         # When
         info = get_fibery_info(space_name="ICT Wetering Potlilium")

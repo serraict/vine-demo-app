@@ -45,14 +45,14 @@ def mock_graphql_response():
                             "fields": [
                                 {"name": "id", "type": {"name": "ID"}},
                                 {"name": "name", "type": {"name": "String"}},
-                            ]
+                            ],
                         },
                         {
                             "name": "PublicLearning",
                             "fields": [
                                 {"name": "id", "type": {"name": "ID"}},
                                 {"name": "name", "type": {"name": "String"}},
-                            ]
+                            ],
                         },
                     ]
                 }
@@ -86,14 +86,15 @@ def mock_graphql_response():
     ]
 
     with patch("requests.post") as mock_post:
+
         def mock_post_side_effect(*args, **kwargs):
             mock_response = Mock()
             mock_response.raise_for_status.return_value = None
-            
+
             # Get the current query being made
-            query = kwargs.get('json', {}).get('query', '')
+            query = kwargs.get("json", {}).get("query", "")
             print(f"\nReceived query: {query}")
-            
+
             if "__schema" in query:
                 print("Returning schema types response")
                 mock_response.json.return_value = responses[0]
@@ -103,7 +104,7 @@ def mock_graphql_response():
             else:
                 print("Returning entities response")
                 mock_response.json.return_value = responses[2]
-            
+
             return mock_response
 
         mock_post.side_effect = mock_post_side_effect
@@ -157,7 +158,7 @@ def mock_graphql_response_plural():
                             "fields": [
                                 {"name": "id", "type": {"name": "ID"}},
                                 {"name": "name", "type": {"name": "String"}},
-                            ]
+                            ],
                         }
                     ]
                 }
@@ -199,27 +200,30 @@ def mock_graphql_response_plural():
     ]
 
     with patch("requests.post") as mock_post:
+
         def mock_post_side_effect(*args, **kwargs):
             mock_response = Mock()
             mock_response.raise_for_status.return_value = None
-            
+
             # Get the current query being made
-            query = kwargs.get('json', {}).get('query', '')
+            query = kwargs.get("json", {}).get("query", "")
             print(f"\nReceived query: {query}")
-            
+
             if "__schema" in query:
                 print("Returning schema types response")
                 mock_response.json.return_value = responses[0]
             elif "__type" in query:
                 print("Returning type schema response")
                 mock_response.json.return_value = responses[1]
-            elif "findLearning " in query:  # Note the space to avoid matching findLearnings
+            elif (
+                "findLearning " in query
+            ):  # Note the space to avoid matching findLearnings
                 print("Returning singular error response")
                 mock_response.json.return_value = responses[2]
             else:
                 print("Returning plural response")
                 mock_response.json.return_value = responses[3]
-            
+
             return mock_response
 
         mock_post.side_effect = mock_post_side_effect
@@ -236,7 +240,9 @@ async def test_kb_page_loads(user: User, mock_env, mock_graphql_response) -> Non
     await user.should_see("Available Databases")
 
 
-async def test_kb_page_shows_fibery_url(user: User, mock_env, mock_graphql_response) -> None:
+async def test_kb_page_shows_fibery_url(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the knowledge base page shows the Fibery URL as a link."""
     # When
     await user.open("/kb")
@@ -247,7 +253,9 @@ async def test_kb_page_shows_fibery_url(user: User, mock_env, mock_graphql_respo
     await user.should_see(kind=ui.link)
 
 
-async def test_kb_page_shows_databases(user: User, mock_env, mock_graphql_response) -> None:
+async def test_kb_page_shows_databases(
+    user: User, mock_env, mock_graphql_response
+) -> None:
     """Test that the knowledge base page shows the list of databases."""
     # When
     await user.open("/kb")

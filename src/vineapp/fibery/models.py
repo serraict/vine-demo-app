@@ -225,12 +225,13 @@ class FiberyDatabase(BaseModel):
             raise ValueError("Limit must be a positive integer")
 
         from .graphql import get_fibery_client
+
         client = get_fibery_client()
 
         # Build the field name based on whether the type name ends with 's'
         base_name = self.name.title()
         field_name = f"find{base_name}"
-        if not base_name.endswith('s'):
+        if not base_name.endswith("s"):
             field_name = f"{field_name}s"
 
         query = self._build_entities_query(field_name, limit)
@@ -252,7 +253,7 @@ class FiberyDatabase(BaseModel):
             FiberyEntity(
                 id=entity["id"],
                 name=entity["name"],
-                description=self._process_description(entity.get("description"))
+                description=self._process_description(entity.get("description")),
             )
             for entity in entities_data
         ]
@@ -260,7 +261,7 @@ class FiberyDatabase(BaseModel):
 
 def get_fibery_info(space_name: Optional[str] = None) -> FiberyInfo:
     """Get information about the Fibery environment from environment variables.
-    
+
     Args:
         space_name: Optional space name to override the environment variable
 

@@ -50,6 +50,7 @@ async def test_model_card_renders_url_as_link(user: User) -> None:
 
 async def test_message_shows_notification(user: User) -> None:
     """Test that message() shows a notification."""
+
     # When
     @ui.page("/test")
     def test_page():
@@ -63,6 +64,7 @@ async def test_message_shows_notification(user: User) -> None:
 
 async def test_show_error_shows_negative_notification(user: User) -> None:
     """Test that show_error() shows a negative notification."""
+
     # When
     @ui.page("/test")
     def test_page():

@@ -27,7 +27,9 @@ async def test_homepage_links_to_products(user: User) -> None:
     await user.should_see("Products")
 
 
-async def test_homepage_links_to_kb(user: User, mock_env, mock_graphql_response) -> None:  # noqa: F811
+async def test_homepage_links_to_kb(
+    user: User, mock_env, mock_graphql_response  # noqa: F811
+) -> None:
     """Test that homepage contains link to knowledge base page."""
     # When
     await user.open("/")
