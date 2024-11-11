@@ -8,6 +8,7 @@ from ...fibery.graphql import get_fibery_client
 from ...fibery.models import FiberyEntity, FiberySchema, get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
+from ..components.message import show_error
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -15,16 +16,6 @@ from ..components.styles import (
 
 
 router = APIRouter(prefix="/kb/database")
-
-
-def _show_error(message: str) -> None:
-    """Display an error message in a card.
-
-    Args:
-        message: The error message to display
-    """
-    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-        ui.label(message).classes("text-red-500")
 
 
 def _build_schema_query(type_name: str) -> str:
@@ -134,11 +125,11 @@ def _get_entities(client, name: str) -> Optional[list]:
 
     if "errors" in result:
         error_msg = result["errors"][0].get("message", "Unknown GraphQL error")
-        _show_error(f"GraphQL Error: {error_msg}")
+        show_error(f"GraphQL Error: {error_msg}")
     elif "data" not in result:
-        _show_error("Unexpected API response format")
+        show_error("Unexpected API response format")
     else:
-        _show_error(f"No entities found for '{name}'")
+        show_error(f"No entities found for '{name}'")
     return None
 
 
@@ -161,16 +152,16 @@ def database_page(name: str) -> None:
                 error_msg = schema_result["errors"][0].get(
                     "message", "Unknown GraphQL error"
                 )
-                _show_error(f"GraphQL Error: {error_msg}")
+                show_error(f"GraphQL Error: {error_msg}")
                 return
 
             if "data" not in schema_result or "__type" not in schema_result["data"]:
-                _show_error("Unexpected API response format")
+                show_error("Unexpected API response format")
                 return
 
             type_info = schema_result["data"]["__type"]
             if not type_info:
-                _show_error(f"Type '{type_name}' not found")
+                show_error(f"Type '{type_name}' not found")
                 return
 
             try:
@@ -182,9 +173,9 @@ def database_page(name: str) -> None:
                     _display_entities(entities)
 
             except ValueError as e:
-                _show_error(f"Schema error: {str(e)}")
+                show_error(f"Schema error: {str(e)}")
 
         except requests.RequestException as e:
-            _show_error(f"Error accessing Fibery API: {str(e)}")
+            show_error(f"Error accessing Fibery API: {str(e)}")
         except ValueError as e:
-            _show_error(f"Configuration error: {str(e)}")
+            show_error(f"Configuration error: {str(e)}")

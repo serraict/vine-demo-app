@@ -6,6 +6,7 @@ from ...fibery.graphql import get_fibery_client
 from ...fibery.models import get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
+from ..components.message import message
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -14,16 +15,6 @@ from ..components.styles import (
 
 
 router = APIRouter(prefix="/kb")
-
-
-def _show_error(message: str) -> None:
-    """Display an error message in a card.
-
-    Args:
-        message: The error message to display
-    """
-    with ui.card().classes(CARD_CLASSES + " border-red-500"):
-        ui.label(message).classes("text-red-500")
 
 
 def _is_database_type(type_info: dict, space_prefix: str) -> bool:
@@ -40,8 +31,7 @@ def _is_database_type(type_info: dict, space_prefix: str) -> bool:
         type_info["name"].startswith(space_prefix)
         and type_info["fields"]
         and not any(
-            suffix in type_info["name"]
-            for suffix in ["BackgroundJob", "Operations"]
+            suffix in type_info["name"] for suffix in ["BackgroundJob", "Operations"]
         )
     )
 
@@ -71,19 +61,19 @@ def kb_page() -> None:
         try:
             response = client.execute(query)
             if "errors" in response:
-                error_msg = response["errors"][0].get("message", "Unknown GraphQL error")
-                _show_error(f"GraphQL Error: {error_msg}")
+                error_msg = response["errors"][0].get(
+                    "message", "Unknown GraphQL error"
+                )
+                message(f"GraphQL Error: {error_msg}")
                 return
 
             if "data" not in response:
-                _show_error("Unexpected API response format")
+                message("Unexpected API response format")
                 return
 
             types = response["data"]["__schema"]["types"]
             space_prefix = info._get_type_space_name()
-            database_types = [
-                t for t in types if _is_database_type(t, space_prefix)
-            ]
+            database_types = [t for t in types if _is_database_type(t, space_prefix)]
 
             with ui.card().classes(CARD_CLASSES):
                 ui.label("Available Databases").classes(HEADER_CLASSES + " mb-4")
@@ -91,8 +81,14 @@ def kb_page() -> None:
                 with ui.column().classes("gap-4"):
                     for type_info in database_types:
                         name = type_info["name"]
-                        display_name = name[len(space_prefix):] if name.startswith(space_prefix) else name
-                        ui.link(display_name, f"/kb/database/{display_name}").classes(LINK_CLASSES)
+                        display_name = (
+                            name[len(space_prefix) :]
+                            if name.startswith(space_prefix)
+                            else name
+                        )
+                        ui.link(display_name, f"/kb/database/{display_name}").classes(
+                            LINK_CLASSES
+                        )
 
         except Exception as e:
-            _show_error(f"Error: {str(e)}")
+            message(f"Error: {str(e)}")

@@ -7,6 +7,7 @@ from nicegui import APIRouter, ui
 from ...products.models import ProductRepository
 from ..components import frame
 from ..components.model_card import display_model_card
+from ..components.message import show_error
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -176,10 +177,5 @@ def product_detail(product_id: int) -> None:
 
             display_model_card(product, title=product.name)
         else:
-            # Error state
-            with ui.column().classes("items-center gap-6 py-8"):
-                ui.icon("error_outline").classes("text-negative text-4xl")
-                ui.label("Product not found").classes("text-2xl text-negative")
-                ui.link("← Back to Products", "/products").classes(
-                    LINK_CLASSES + " mt-4"
-                )
+            show_error("Product not found")
+            ui.link("← Back to Products", "/products").classes(LINK_CLASSES + " mt-4")
