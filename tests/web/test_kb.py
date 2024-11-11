@@ -93,16 +93,12 @@ def mock_graphql_response():
 
             # Get the current query being made
             query = kwargs.get("json", {}).get("query", "")
-            print(f"\nReceived query: {query}")
 
             if "__schema" in query:
-                print("Returning schema types response")
                 mock_response.json.return_value = responses[0]
             elif "__type" in query:
-                print("Returning type schema response")
                 mock_response.json.return_value = responses[1]
             else:
-                print("Returning entities response")
                 mock_response.json.return_value = responses[2]
 
             return mock_response
@@ -207,21 +203,16 @@ def mock_graphql_response_plural():
 
             # Get the current query being made
             query = kwargs.get("json", {}).get("query", "")
-            print(f"\nReceived query: {query}")
 
             if "__schema" in query:
-                print("Returning schema types response")
                 mock_response.json.return_value = responses[0]
             elif "__type" in query:
-                print("Returning type schema response")
                 mock_response.json.return_value = responses[1]
             elif (
                 "findLearning " in query
             ):  # Note the space to avoid matching findLearnings
-                print("Returning singular error response")
                 mock_response.json.return_value = responses[2]
             else:
-                print("Returning plural response")
                 mock_response.json.return_value = responses[3]
 
             return mock_response
@@ -269,8 +260,8 @@ async def test_kb_page_requires_env_var(user: User) -> None:
     """Test that the knowledge base page handles missing environment variable."""
     # When/Then
     with patch.dict(os.environ, {}, clear=True):
-        with pytest.raises(ValueError, match="VINEAPP_FIBERY_URL.*not set"):
-            await user.open("/kb")
+        await user.open("/kb")
+        await user.should_see("Error: VINEAPP_FIBERY_URL environment variable not set")
 
 
 async def test_database_detail_page_loads(
@@ -294,7 +285,6 @@ async def test_database_detail_page_shows_schema(
     await user.open("/kb/database/Actions")
 
     # Then
-    # Check for schema content in example entity
     await user.should_see("Id")  # Field label in example entity
     await user.should_see("Name")  # Field label in example entity
     await user.should_see("Description")  # Field label in example entity

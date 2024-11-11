@@ -7,6 +7,7 @@ from ...fibery.models import get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
 from ..components.message import message
+from ..components.theme import with_error_handling
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -36,7 +37,46 @@ def _is_database_type(type_info: dict, space_prefix: str) -> bool:
     )
 
 
+def _get_database_types(client, info) -> list:
+    """Get available database types from GraphQL schema.
+
+    Args:
+        client: The GraphQL client to use
+        info: The Fibery environment info
+
+    Returns:
+        list: List of database types
+    """
+    query = """
+        query {
+            __schema {
+                types {
+                    name
+                    fields {
+                        name
+                    }
+                }
+            }
+        }
+    """
+
+    response = client.execute(query)
+    if "errors" in response:
+        error_msg = response["errors"][0].get("message", "Unknown GraphQL error")
+        message(f"GraphQL Error: {error_msg}")
+        return []
+
+    if "data" not in response:
+        message("Unexpected API response format")
+        return []
+
+    types = response["data"]["__schema"]["types"]
+    space_prefix = info._get_type_space_name()
+    return [t for t in types if _is_database_type(t, space_prefix)]
+
+
 @router.page("/")
+@with_error_handling
 def kb_page() -> None:
     """Render the knowledge base page."""
     info = get_fibery_info()
@@ -45,36 +85,8 @@ def kb_page() -> None:
     with frame("Knowledge Base"):
         display_model_card(info, description_field="description")
 
-        query = """
-            query {
-                __schema {
-                    types {
-                        name
-                        fields {
-                            name
-                        }
-                    }
-                }
-            }
-        """
-
-        try:
-            response = client.execute(query)
-            if "errors" in response:
-                error_msg = response["errors"][0].get(
-                    "message", "Unknown GraphQL error"
-                )
-                message(f"GraphQL Error: {error_msg}")
-                return
-
-            if "data" not in response:
-                message("Unexpected API response format")
-                return
-
-            types = response["data"]["__schema"]["types"]
-            space_prefix = info._get_type_space_name()
-            database_types = [t for t in types if _is_database_type(t, space_prefix)]
-
+        database_types = _get_database_types(client, info)
+        if database_types:
             with ui.card().classes(CARD_CLASSES):
                 ui.label("Available Databases").classes(HEADER_CLASSES + " mb-4")
 
@@ -82,13 +94,10 @@ def kb_page() -> None:
                     for type_info in database_types:
                         name = type_info["name"]
                         display_name = (
-                            name[len(space_prefix) :]
-                            if name.startswith(space_prefix)
+                            name[len(info._get_type_space_name()) :]
+                            if name.startswith(info._get_type_space_name())
                             else name
                         )
                         ui.link(display_name, f"/kb/database/{display_name}").classes(
                             LINK_CLASSES
                         )
-
-        except Exception as e:
-            message(f"Error: {str(e)}")

@@ -1,14 +1,14 @@
 """Database detail page implementation."""
 
 from nicegui import APIRouter, ui
-import requests
 from typing import Optional
 
 from ...fibery.graphql import get_fibery_client
 from ...fibery.models import FiberyEntity, FiberySchema, get_fibery_info
 from ..components import frame
 from ..components.model_card import display_model_card
-from ..components.message import show_error
+from ..components.message import message
+from ..components.theme import with_error_handling
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -101,6 +101,38 @@ def _display_entities(entities: list) -> None:
                 display_model_card(entity)
 
 
+def _get_schema(client, type_name: str) -> Optional[FiberySchema]:
+    """Get schema information from Fibery.
+
+    Args:
+        client: The GraphQL client to use
+        type_name: The name of the type to query
+
+    Returns:
+        Optional[FiberySchema]: Schema if found, None if error
+    """
+    schema_result = client.execute(_build_schema_query(type_name))
+    if "errors" in schema_result:
+        error_msg = schema_result["errors"][0].get("message", "Unknown GraphQL error")
+        message(f"GraphQL Error: {error_msg}")
+        return None
+
+    if "data" not in schema_result or "__type" not in schema_result["data"]:
+        message("Unexpected API response format")
+        return None
+
+    type_info = schema_result["data"]["__type"]
+    if not type_info:
+        message(f"Type '{type_name}' not found")
+        return None
+
+    try:
+        return FiberySchema.from_type_info(type_info)
+    except ValueError as e:
+        message(f"Schema error: {str(e)}")
+        return None
+
+
 def _get_entities(client, name: str) -> Optional[list]:
     """Get entities from Fibery.
 
@@ -125,57 +157,30 @@ def _get_entities(client, name: str) -> Optional[list]:
 
     if "errors" in result:
         error_msg = result["errors"][0].get("message", "Unknown GraphQL error")
-        show_error(f"GraphQL Error: {error_msg}")
+        message(f"GraphQL Error: {error_msg}")
     elif "data" not in result:
-        show_error("Unexpected API response format")
+        message("Unexpected API response format")
     else:
-        show_error(f"No entities found for '{name}'")
+        message(f"No entities found for '{name}'")
     return None
 
 
 @router.page("/{name}")
+@with_error_handling
 def database_page(name: str) -> None:
     """Render the database detail page.
 
     Args:
         name: The name of the database (e.g., 'Actie' or 'Werkdocument')
     """
+    info = get_fibery_info()
+    client = get_fibery_client()
+    type_name = f"{info._get_type_space_name()}{name}"
+
     with frame(f"{name} Database"):
-        try:
-            info = get_fibery_info()
-            client = get_fibery_client()
-            type_name = f"{info._get_type_space_name()}{name}"
-
-            # Get and validate schema
-            schema_result = client.execute(_build_schema_query(type_name))
-            if "errors" in schema_result:
-                error_msg = schema_result["errors"][0].get(
-                    "message", "Unknown GraphQL error"
-                )
-                show_error(f"GraphQL Error: {error_msg}")
-                return
-
-            if "data" not in schema_result or "__type" not in schema_result["data"]:
-                show_error("Unexpected API response format")
-                return
-
-            type_info = schema_result["data"]["__type"]
-            if not type_info:
-                show_error(f"Type '{type_name}' not found")
-                return
-
-            try:
-                schema = FiberySchema.from_type_info(type_info)
-                _display_schema(schema)
-
-                entities = _get_entities(client, name)
-                if entities:
-                    _display_entities(entities)
-
-            except ValueError as e:
-                show_error(f"Schema error: {str(e)}")
-
-        except requests.RequestException as e:
-            show_error(f"Error accessing Fibery API: {str(e)}")
-        except ValueError as e:
-            show_error(f"Configuration error: {str(e)}")
+        schema = _get_schema(client, type_name)
+        if schema:
+            _display_schema(schema)
+            entities = _get_entities(client, name)
+            if entities:
+                _display_entities(entities)

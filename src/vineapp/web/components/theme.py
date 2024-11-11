@@ -1,8 +1,14 @@
 """Theme and layout components."""
 
 from contextlib import contextmanager
+from typing import Callable, TypeVar, ParamSpec
+from functools import wraps
 from .menu import menu
+from .message import message
 from nicegui import ui
+
+P = ParamSpec('P')
+T = TypeVar('T')
 
 
 @contextmanager
@@ -47,3 +53,21 @@ def frame(navigation_title: str):
     with ui.element("main").classes("w-full flex-grow"):
         with ui.column().classes("w-full items-center p-4"):
             yield
+
+
+def with_error_handling(func: Callable[P, T]) -> Callable[P, T]:
+    """Decorator to add error handling to a page function.
+
+    Args:
+        func: The page function to wrap
+
+    Returns:
+        The wrapped function with error handling
+    """
+    @wraps(func)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            message(f"Error: {str(e)}")
+    return wrapper
