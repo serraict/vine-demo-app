@@ -161,24 +161,19 @@ class FiberyDatabase(BaseModel):
 
         return db
 
-    def load_entities(self, limit: int = 5) -> None:
-        """Load example entities from the database.
+    def _build_entities_query(self, field_name: str, limit: int) -> str:
+        """Build the GraphQL query for fetching entities.
 
         Args:
-            limit: Maximum number of entities to load
+            field_name: The field name to query (e.g., findActions)
+            limit: Maximum number of entities to fetch
 
-        Raises:
-            ValueError: If entities cannot be loaded
+        Returns:
+            str: The GraphQL query string
         """
-        from .graphql import get_fibery_client
-
-        client = get_fibery_client()
-
-        # Try singular form first
-        find_field = f"find{self.name.title()}"
-        entities_query = f"""
+        return f"""
             query {{
-                {find_field} (limit: {limit}) {{
+                {field_name} (limit: {limit}) {{
                     id
                     name
                     description {{
@@ -188,46 +183,63 @@ class FiberyDatabase(BaseModel):
             }}
         """
 
-        result = client.execute(entities_query)
-        success = "errors" not in result
+    def _process_description(self, description: Optional[Dict]) -> Optional[str]:
+        """Process a RichField description into plain text.
 
-        if not success:
-            # Try plural form
-            find_field = f"{find_field}s"
-            entities_query = f"""
-                query {{
-                    {find_field} (limit: {limit}) {{
-                        id
-                        name
-                        description {{
-                            text
-                        }}
-                    }}
-                }}
-            """
-            result = client.execute(entities_query)
+        Args:
+            description: The description field from the GraphQL response
 
-            if "errors" in result:
-                error_msg = result["errors"][0].get("message", "Unknown GraphQL error")
-                raise ValueError(f"GraphQL Error: {error_msg}")
+        Returns:
+            Optional[str]: The processed description text or None
+        """
+        if isinstance(description, dict):
+            return description.get("text", "")
+        return description
+
+    def load_entities(self, limit: int = 5) -> None:
+        """Load example entities from the database.
+
+        Args:
+            limit: Maximum number of entities to load (must be positive)
+
+        Raises:
+            ValueError: If entities cannot be loaded or if limit is invalid
+        """
+        if limit <= 0:
+            raise ValueError("Limit must be a positive integer")
+
+        from .graphql import get_fibery_client
+        client = get_fibery_client()
+
+        # Build the field name based on whether the type name ends with 's'
+        base_name = self.name.title()
+        field_name = f"find{base_name}"
+        if not base_name.endswith('s'):
+            field_name = f"{field_name}s"
+
+        query = self._build_entities_query(field_name, limit)
+        result = client.execute(query)
+
+        if "errors" in result:
+            error_msg = result["errors"][0].get("message", "Unknown GraphQL error")
+            raise ValueError(f"GraphQL Error: {error_msg}")
 
         if "data" not in result:
             raise ValueError("Unexpected API response format")
 
-        if find_field not in result["data"]:
+        entities_data = result["data"].get(field_name)
+        if not entities_data:
             raise ValueError(f"No entities found for '{self.name}'")
 
         # Process entities
-        raw_entities = result["data"][find_field]
-        self.entities = []
-
-        for entity_data in raw_entities:
-            # Convert RichField description to plain text
-            description = entity_data.get("description")
-            if isinstance(description, dict):
-                entity_data["description"] = description.get("text", "")
-
-            self.entities.append(FiberyEntity(**entity_data))
+        self.entities = [
+            FiberyEntity(
+                id=entity["id"],
+                name=entity["name"],
+                description=self._process_description(entity.get("description"))
+            )
+            for entity in entities_data
+        ]
 
 
 def get_fibery_info() -> FiberyInfo:

@@ -144,7 +144,7 @@ def test_fibery_database_from_name(mock_get_client):
     schema_response = {
         "data": {
             "__type": {
-                "name": "TestSpaceActions",
+                "name": "TestSpaceAction",
                 "fields": [
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "publicId", "type": {"name": "String"}},
@@ -154,7 +154,7 @@ def test_fibery_database_from_name(mock_get_client):
                     {"name": "createdBy", "type": {"name": "FiberyUser"}},
                     {"name": "description", "type": {"name": "RichField"}},
                     {"name": "name", "type": {"name": "String"}},
-                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceActions"}},
+                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceAction"}},
                 ],
             }
         }
@@ -177,11 +177,11 @@ def test_fibery_database_from_name(mock_get_client):
     mock_get_client.return_value = mock_client
 
     # When
-    db = FiberyDatabase.from_name("actions", space_name)
+    db = FiberyDatabase.from_name("action", space_name)
 
     # Then
-    assert db.name == "actions"
-    assert db.type_schema.name == "TestSpaceActions"
+    assert db.name == "action"
+    assert db.type_schema.name == "TestSpaceAction"
     assert len(db.type_schema.fields) == 9  # All standard fields
     assert len(db.entities) == 1
     assert db.entities[0].name == "Test Action"
@@ -189,14 +189,14 @@ def test_fibery_database_from_name(mock_get_client):
 
 
 @patch("vineapp.fibery.graphql.get_fibery_client")
-def test_fibery_database_handles_plural_form(mock_get_client):
-    """Test that FiberyDatabase handles plural form field names."""
+def test_fibery_database_handles_type_ending_with_s(mock_get_client):
+    """Test that FiberyDatabase correctly handles type names ending with 's'."""
     # Given
     space_name = "TestSpace"
     schema_response = {
         "data": {
             "__type": {
-                "name": "TestSpaceLearning",
+                "name": "TestSpaceNews",
                 "fields": [
                     {"name": "id", "type": {"name": "ID"}},
                     {"name": "publicId", "type": {"name": "String"}},
@@ -206,26 +206,18 @@ def test_fibery_database_handles_plural_form(mock_get_client):
                     {"name": "createdBy", "type": {"name": "FiberyUser"}},
                     {"name": "description", "type": {"name": "RichField"}},
                     {"name": "name", "type": {"name": "String"}},
-                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceLearning"}},
+                    {"name": "state", "type": {"name": "WorkflowStateTestSpaceNews"}},
                 ],
             }
         }
     }
 
-    singular_error = {
-        "errors": [
-            {
-                "message": "Cannot query field 'findLearning' on type 'Query'. Did you mean 'findLearnings'?"
-            }
-        ]
-    }
-
-    plural_response = {
+    entities_response = {
         "data": {
-            "findLearnings": [
+            "findNews": [
                 {
                     "id": "1",
-                    "name": "Test Learning",
+                    "name": "Test News",
                     "description": {"text": "Test Description"},
                 }
             ]
@@ -233,16 +225,16 @@ def test_fibery_database_handles_plural_form(mock_get_client):
     }
 
     mock_client = Mock()
-    mock_client.execute.side_effect = [schema_response, singular_error, plural_response]
+    mock_client.execute.side_effect = [schema_response, entities_response]
     mock_get_client.return_value = mock_client
 
     # When
-    db = FiberyDatabase.from_name("learning", space_name)
+    db = FiberyDatabase.from_name("news", space_name)
 
     # Then
-    assert db.name == "learning"
-    assert db.type_schema.name == "TestSpaceLearning"
+    assert db.name == "news"
+    assert db.type_schema.name == "TestSpaceNews"
     assert len(db.type_schema.fields) == 9  # All standard fields
     assert len(db.entities) == 1
-    assert db.entities[0].name == "Test Learning"
+    assert db.entities[0].name == "Test News"
     assert db.entities[0].description == "Test Description"
