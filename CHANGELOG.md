@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for both singular and plural GraphQL field names (e.g., findAction vs findLearnings)
 - Proper handling of RichField descriptions in database entities
 - Error handling for GraphQL queries with informative error messages
+- Support for overriding Fibery space name without modifying environment variables
 
 ### Changed
 
@@ -33,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved FiberyField model to better match GraphQL schema behavior
 - Refactored Fibery models to use configured space_name consistently instead of hardcoding "Public"
 - Updated FiberyDatabase to require space_name parameter for explicit space handling
+- Enhanced get_fibery_info to support optional space name override
+- Improved GraphQL client to handle space name overrides
+- Fixed case sensitivity handling in database type filtering
 
 ### Deprecated
 

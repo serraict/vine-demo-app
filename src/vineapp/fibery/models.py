@@ -258,19 +258,29 @@ class FiberyDatabase(BaseModel):
         ]
 
 
-def get_fibery_info() -> FiberyInfo:
-    """Get information about the Fibery environment from environment variables."""
+def get_fibery_info(space_name: Optional[str] = None) -> FiberyInfo:
+    """Get information about the Fibery environment from environment variables.
+    
+    Args:
+        space_name: Optional space name to override the environment variable
+
+    Returns:
+        FiberyInfo: Information about the Fibery environment
+
+    Raises:
+        ValueError: If required environment variables are not set
+    """
     import os
 
     url = os.getenv("VINEAPP_FIBERY_URL")
     if not url:
         raise ValueError("VINEAPP_FIBERY_URL environment variable not set")
 
-    space = os.getenv("VINEAPP_FIBERY_SPACE")
-    if not space:
+    env_space = os.getenv("VINEAPP_FIBERY_SPACE")
+    if not env_space and space_name is None:
         raise ValueError("VINEAPP_FIBERY_SPACE environment variable not set")
 
     return FiberyInfo(
         base_url=url,
-        space_name=space,
+        space_name=space_name or env_space,
     )

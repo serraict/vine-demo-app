@@ -90,6 +90,25 @@ def test_get_fibery_info_requires_space_name():
             get_fibery_info()
 
 
+def test_get_fibery_info_allows_space_override():
+    """Test that get_fibery_info allows overriding the space name."""
+    # Given
+    with patch.dict(
+        os.environ, 
+        {
+            "VINEAPP_FIBERY_URL": "https://serra.fibery.io",
+            "VINEAPP_FIBERY_SPACE": "Original Space"
+        }, 
+        clear=True
+    ):
+        # When
+        info = get_fibery_info(space_name="ICT Wetering Potlilium")
+
+        # Then
+        assert info.space_name == "ICT Wetering Potlilium"
+        assert str(info.kb_url) == "https://serra.fibery.io/ICT_Wetering_Potlilium/"
+
+
 def test_fibery_field_extracts_type_name():
     """Test that FiberyField correctly extracts type name from GraphQL type object."""
     # Given

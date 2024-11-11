@@ -7,9 +7,10 @@ from vineapp.fibery.models import get_fibery_info
 def main():
     """List available database types in the Fibery space."""
     try:
+        space_name = "ICT Wetering Potlilium"
         print("Getting Fibery client...")
-        client = get_fibery_client()
-        info = get_fibery_info()
+        client = get_fibery_client(space_name=space_name)
+        info = get_fibery_info(space_name=space_name)
 
         # Query to get schema information
         query = """
@@ -38,14 +39,26 @@ def main():
             print("\nUnexpected API response format")
             return
 
+        # Get all types for debugging
+        types = response["data"]["__schema"]["types"]
+        
+        print("\nAll available types:")
+        print("-------------------------")
+        for t in types:
+            if t["fields"]:  # Only show types that have fields
+                print(f"- {t['name']}")
+
+        print("\nFiltering for database types...")
         # Filter for main Fibery database types
         # (excluding BackgroundJob and Operations types)
-        types = response["data"]["__schema"]["types"]
+        space_prefix = "Ict" + info.space_name.replace(" ", "")[3:]  # Keep the actual casing from API
+        print(f"Looking for types with prefix: {space_prefix}")
+        
         database_types = [
             t
             for t in types
             if (
-                t["name"].startswith(info.space_name)
+                t["name"].startswith(space_prefix)
                 and t["fields"]
                 and not any(
                     suffix in t["name"] for suffix in ["BackgroundJob", "Operations"]
@@ -58,7 +71,7 @@ def main():
         for type_info in database_types:
             name = type_info["name"]
             # Remove space name prefix for cleaner display
-            display_name = name[len(info.space_name):] if name.startswith(info.space_name) else name
+            display_name = name[len(space_prefix):] if name.startswith(space_prefix) else name
             print(f"- {display_name}")
 
     except ValueError as e:

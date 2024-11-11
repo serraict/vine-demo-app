@@ -33,6 +33,7 @@ Example usage:
 
 import os
 from dataclasses import dataclass
+from typing import Optional
 import requests
 
 
@@ -66,8 +67,11 @@ class FiberyGraphQLClient:
         return response.json()
 
 
-def get_fibery_client() -> FiberyGraphQLClient:
+def get_fibery_client(space_name: Optional[str] = None) -> FiberyGraphQLClient:
     """Get a configured Fibery GraphQL client using environment variables.
+
+    Args:
+        space_name: Optional space name to override the environment variable
 
     Returns:
         A configured FiberyGraphQLClient instance
@@ -81,6 +85,6 @@ def get_fibery_client() -> FiberyGraphQLClient:
 
     from vineapp.fibery.models import get_fibery_info
 
-    info = get_fibery_info()
+    info = get_fibery_info(space_name=space_name)
 
     return FiberyGraphQLClient(url=str(info.graphql_url), token=token)
