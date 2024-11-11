@@ -45,7 +45,29 @@ def test_fibery_info_constructs_urls():
     # Then
     assert str(info.kb_url) == "https://serra.fibery.io/TestSpace/"
     assert str(info.api_url) == "https://serra.fibery.io/api/graphql/space/TestSpace"
-    assert str(info.graphql_url) == "https://serra.fibery.io/api/graphql/space/TestSpace"
+    assert (
+        str(info.graphql_url) == "https://serra.fibery.io/api/graphql/space/TestSpace"
+    )
+
+
+def test_fibery_info_handles_spaces_in_space_name():
+    """Test that FiberyInfo correctly handles spaces in space names."""
+    # Given
+    base_url = "https://serra.fibery.io"
+    space_name = "Test Space Name"
+
+    # When
+    info = FiberyInfo(base_url=base_url, space_name=space_name)
+
+    # Then
+    assert str(info.kb_url) == "https://serra.fibery.io/Test_Space_Name/"
+    assert (
+        str(info.api_url) == "https://serra.fibery.io/api/graphql/space/Test_Space_Name"
+    )
+    assert (
+        str(info.graphql_url)
+        == "https://serra.fibery.io/api/graphql/space/Test_Space_Name"
+    )
 
 
 def test_get_fibery_info_requires_url():
@@ -238,3 +260,46 @@ def test_fibery_database_handles_type_ending_with_s(mock_get_client):
     assert len(db.entities) == 1
     assert db.entities[0].name == "Test News"
     assert db.entities[0].description == "Test Description"
+
+
+@patch("vineapp.fibery.graphql.get_fibery_client")
+def test_fibery_database_handles_spaces_in_space_name(mock_get_client):
+    """Test that FiberyDatabase correctly handles spaces in space names."""
+    # Given
+    space_name = "Test Space Name"
+    schema_response = {
+        "data": {
+            "__type": {
+                "name": "TestSpaceNameAction",
+                "fields": [
+                    {"name": "id", "type": {"name": "ID"}},
+                    {"name": "name", "type": {"name": "String"}},
+                ],
+            }
+        }
+    }
+
+    entities_response = {
+        "data": {
+            "findActions": [
+                {
+                    "id": "1",
+                    "name": "Test Action",
+                    "description": {"text": "Test Description"},
+                }
+            ]
+        }
+    }
+
+    mock_client = Mock()
+    mock_client.execute.side_effect = [schema_response, entities_response]
+    mock_get_client.return_value = mock_client
+
+    # When
+    db = FiberyDatabase.from_name("action", space_name)
+
+    # Then
+    assert db.name == "action"
+    assert db.type_schema.name == "TestSpaceNameAction"  # No spaces in type name
+    assert len(db.entities) == 1
+    assert db.entities[0].name == "Test Action"

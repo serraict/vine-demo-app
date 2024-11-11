@@ -22,23 +22,37 @@ class FiberyInfo(BaseModel):
     space_name: str
     databases: List[str] = ["Actions", "Learning"]
 
+    def _get_url_space_name(self) -> str:
+        """Get the space name formatted for use in URLs (spaces replaced with underscores)."""
+        return self.space_name.replace(" ", "_")
+
+    def _get_type_space_name(self) -> str:
+        """Get the space name formatted for use in type names (spaces removed)."""
+        return self.space_name.replace(" ", "")
+
     @property
     def kb_url(self) -> HttpUrl:
         """Get the URL to the Fibery knowledge base."""
-        return HttpUrl(urljoin(str(self.base_url), f"{self.space_name}/"))
+        return HttpUrl(urljoin(str(self.base_url), f"{self._get_url_space_name()}/"))
 
     @property
     def api_url(self) -> HttpUrl:
         """Get the URL to the Fibery API."""
         return HttpUrl(
-            urljoin(str(self.base_url), f"api/graphql/space/{self.space_name}")
+            urljoin(
+                str(self.base_url),
+                f"api/graphql/space/{self._get_url_space_name()}",
+            )
         )
 
     @property
     def graphql_url(self) -> HttpUrl:
         """Get the URL to the Fibery GraphQL app."""
         return HttpUrl(
-            urljoin(str(self.base_url), f"api/graphql/space/{self.space_name}")
+            urljoin(
+                str(self.base_url),
+                f"api/graphql/space/{self._get_url_space_name()}",
+            )
         )
 
 
@@ -118,7 +132,9 @@ class FiberyDatabase(BaseModel):
         from .graphql import get_fibery_client
 
         # Convert name to type name (e.g., 'actions' -> '{space_name}Actions')
-        type_name = f"{space_name}{name.title()}"
+        # Remove spaces from space name in type prefix
+        type_prefix = space_name.replace(" ", "")
+        type_name = f"{type_prefix}{name.title()}"
 
         # Get schema information using GraphQL
         client = get_fibery_client()
