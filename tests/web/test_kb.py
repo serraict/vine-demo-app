@@ -270,7 +270,7 @@ async def test_database_detail_page_loads(
 ) -> None:
     """Test that the database detail page loads and shows expected content."""
     # When
-    await user.open("/kb/database/actions")
+    await user.open("/kb/database/Actions")
 
     # Then
     await user.should_see("Actions Database")
@@ -283,7 +283,7 @@ async def test_database_detail_page_shows_schema(
 ) -> None:
     """Test that the database detail page shows the schema information."""
     # When
-    await user.open("/kb/database/actions")
+    await user.open("/kb/database/Actions")
 
     # Then
     # Check for schema content in example entity
@@ -297,7 +297,7 @@ async def test_database_detail_page_handles_schema_error(
 ) -> None:
     """Test that the database detail page handles schema errors."""
     # When
-    await user.open("/kb/database/actions")
+    await user.open("/kb/database/Actions")
 
     # Then
     await user.should_see("Type 'PublicActions' not found")
@@ -308,7 +308,7 @@ async def test_database_detail_page_handles_invalid_schema(
 ) -> None:
     """Test that the database detail page handles invalid schema structure."""
     # When
-    await user.open("/kb/database/actions")
+    await user.open("/kb/database/Actions")
 
     # Then
     await user.should_see("Schema error: Invalid type info structure")
@@ -319,7 +319,7 @@ async def test_database_detail_page_handles_plural_types(
 ) -> None:
     """Test that the database detail page handles plural type names."""
     # When
-    await user.open("/kb/database/learning")
+    await user.open("/kb/database/Learning")
 
     # Then
     await user.should_see("Learning Database")

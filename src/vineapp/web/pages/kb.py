@@ -44,7 +44,9 @@ def kb_page() -> None:
             response = client.execute(query)
             if "errors" in response:
                 with ui.card().classes(CARD_CLASSES + " border-red-500"):
-                    error_msg = response["errors"][0].get("message", "Unknown GraphQL error")
+                    error_msg = response["errors"][0].get(
+                        "message", "Unknown GraphQL error"
+                    )
                     ui.label(f"GraphQL Error: {error_msg}").classes("text-red-500")
                 return
 
@@ -63,7 +65,8 @@ def kb_page() -> None:
                     t["name"].startswith(space_prefix)
                     and t["fields"]
                     and not any(
-                        suffix in t["name"] for suffix in ["BackgroundJob", "Operations"]
+                        suffix in t["name"]
+                        for suffix in ["BackgroundJob", "Operations"]
                     )
                 )
             ]
@@ -76,10 +79,14 @@ def kb_page() -> None:
                     for type_info in database_types:
                         name = type_info["name"]
                         # Remove space name prefix for cleaner display
-                        display_name = name[len(space_prefix):] if name.startswith(space_prefix) else name
-                        # Create link for each database to our detail page
-                        db_path = display_name.lower().replace(" ", "-")
-                        ui.link(display_name, f"/kb/database/{db_path}").classes(LINK_CLASSES)
+                        display_name = (
+                            name[len(space_prefix) :]
+                            if name.startswith(space_prefix)
+                            else name
+                        )
+                        ui.link(display_name, f"/kb/database/{display_name}").classes(
+                            LINK_CLASSES
+                        )
 
         except Exception as e:
             with ui.card().classes(CARD_CLASSES + " border-red-500"):
