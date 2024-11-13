@@ -53,13 +53,35 @@ WHERE "Vines".products.product_group_name = ?
 
 This error occurs with more complex parameter usage, particularly when combining parameters with SQL functions or operators.
 
+## Flight SQL Specification Findings
+
+The Arrow Flight SQL specification actually includes support for prepared statements and parameter binding:
+
+1. **Prepared Statements**:
+   - The protocol supports creating and managing prepared statements
+   - Includes commands like `ActionCreatePreparedStatementRequest` and `ActionClosePreparedStatementRequest`
+   - Supports bind parameters in prepared statements
+
+2. **Parameter Binding**:
+   - The specification acknowledges bind parameters without specific types
+   - Example given: `SELECT ?` as a valid parameterized query
+   - Suggests using union types or NULL types for handling parameters
+
+3. **Implementation Gap**:
+   - While the Flight SQL protocol supports parameters, Dremio's implementation appears to not fully support this feature
+   - The error messages suggest Dremio's Calcite SQL parser cannot convert parameterized queries into its internal representation
+
 ## Root Cause
 
-The core issue lies in Dremio's Flight SQL implementation, which uses Apache Calcite for SQL parsing. The error messages suggest that:
+The core issue appears to be a gap between:
+1. The Flight SQL protocol specification (which supports parameters)
+2. Dremio's implementation using Apache Calcite
+3. The SQLAlchemy dialect's attempt to use parameterized queries
 
-1. Dremio's Calcite-based SQL parser doesn't support dynamic parameter binding
-2. The limitation exists at the server side, not in the Python client libraries
-3. The issue affects both simple and complex parameter usage
+Specifically:
+- Flight SQL protocol supports parameters
+- SQLAlchemy generates parameterized queries as expected
+- But Dremio's Calcite-based implementation cannot handle these parameters
 
 ## Technical Implications
 
@@ -106,16 +128,15 @@ Different query patterns are affected differently:
 
 ## Conclusion
 
-The parameter binding limitation is fundamental to Dremio's current Flight SQL implementation. Any solution will need to either:
+The parameter binding limitation stems from a gap between the Flight SQL protocol specification (which supports parameters) and Dremio's current implementation (which doesn't fully support this feature). Any solution will need to either:
 
-1. Wait for Dremio to add parameter binding support (server-side fix)
-2. Implement parameter substitution before queries reach Dremio (client-side workaround)
+1. Wait for Dremio to implement full parameter binding support as specified in the Flight SQL protocol
+2. Implement parameter substitution before queries reach Dremio's Calcite parser
 3. Use alternative query patterns that avoid parameter binding
-
-This understanding helps inform the solution approaches detailed in `dremio-sqlmodel-solutions.md`.
 
 ## References
 
+- [Apache Arrow Flight SQL Specification](https://arrow.apache.org/docs/format/FlightSql.html)
 - [Apache Calcite Documentation](https://calcite.apache.org/docs/)
 - [Dremio Flight SQL Documentation](https://docs.dremio.com/software/drivers/flight-sql/)
 - [SQLAlchemy Parameter Binding](https://docs.sqlalchemy.org/en/14/core/tutorial.html#using-textual-sql)
