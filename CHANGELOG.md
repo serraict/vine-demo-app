@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced get_fibery_info to support optional space name override
 - Improved GraphQL client to handle space name overrides
 - Fixed case sensitivity handling in database type filtering
+- Removed hardcoded database list from FiberyInfo model in favor of dynamic GraphQL schema queries
 
 ### Deprecated
 

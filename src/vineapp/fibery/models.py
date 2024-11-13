@@ -20,7 +20,6 @@ class FiberyInfo(BaseModel):
     name: str = "Fibery Knowledge Base"
     base_url: HttpUrl
     space_name: str
-    databases: List[str] = ["Actions", "Learning"]
 
     def _get_url_space_name(self) -> str:
         """Get the space name formatted for use in URLs (spaces replaced with underscores)."""
