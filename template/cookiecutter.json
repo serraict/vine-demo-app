@@ -1,0 +1,17 @@
+{
+    "project_name": "Vine App",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "project_description": "A Python application for data integration and visualization",
+    "author_name": "Your Name",
+    "author_email": "your.email@example.com",
+    "project_type": ["web", "console", "both"],
+    "use_fibery": "y",
+    "use_dremio": "y",
+    "python_version": "3.11",
+    "version": "0.1.0",
+    "_copy_without_render": [
+        "*.html",
+        "*.js",
+        "*.css"
+    ]
+}
