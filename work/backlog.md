@@ -4,12 +4,14 @@
 
 ### Deployment
 
-- [ ] Create deployable packages
-  - [ ] Github workflow for creating container on release
-  - [ ] Create production Docker container
-    - [ ] upload to ghcr
-  - [ ] Create development Docker container
+- [x] Create deployable packages
+  - [x] Github workflow for creating container on release
+  - [x] Create production Docker container
+    - [x] upload to ghcr
   - [ ] Add container documentation and examples
+    - [ ] Document how to use the container
+    - [ ] Document environment variables
+    - [ ] Add example cron job configuration
 
 ## Next
 
