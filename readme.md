@@ -16,6 +16,16 @@ Fork the repository and then [detach it](https://docs.github.com/en/pull-request
 
 Rename your app.
 
+## Container Usage
+
+The application is available as a Docker container:
+
+```bash
+docker pull ghcr.io/serraict/vine-app:latest
+```
+
+For detailed instructions on using the container, including environment variables, cron jobs, and deployment examples, see the [Container Documentation](docs/container.md).
+
 ## CLI Usage
 
 The application provides a command-line interface. To see available commands:
