@@ -85,7 +85,7 @@ def test_dynamic_sort_products(dremio_engine):
 
     This demonstrates how we'd want to sort products using SQLModel's
     expressive syntax for dynamic sort fields and directions.
-    
+
     Note: This test actually passes, showing that basic SQL operations
     without parameters work fine with Dremio Flight.
     """
