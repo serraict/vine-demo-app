@@ -18,10 +18,39 @@
     - [x] Define integration options (Fibery/Dremio/both)
     - [ ] Define optional features (cronjobs)
   - [ ] Create template content
-    - [ ] Extract core project files (Docker, Python version, CI/CD)
-    - [ ] Create conditional component directories
-    - [ ] Setup modular test infrastructure
-    - [ ] Ensure template stays in sync with main project
+    - [ ] Setup minimal working template
+      - [ ] Create basic project structure
+      - [ ] Add minimal pyproject.toml
+      - [ ] Add simple CLI entrypoint
+      - [ ] Test template generation
+    - [ ] Add Docker support
+      - [ ] Add Dockerfile
+      - [ ] Add docker-compose.yml
+      - [ ] Test Docker build and run
+    - [ ] Add CI/CD
+      - [ ] Add GitHub Actions for testing
+      - [ ] Add GitHub Actions for linting
+      - [ ] Test CI workflow locally
+    - [ ] Add core components incrementally
+      - [ ] Add products module
+        - [ ] Extract base models
+        - [ ] Test with SQLite
+      - [ ] Add web interface
+        - [ ] Extract base pages
+        - [ ] Test local serving
+      - [ ] Add Dremio integration
+        - [ ] Extract repository pattern
+        - [ ] Test with Docker Dremio
+      - [ ] Add Fibery integration
+        - [ ] Extract GraphQL client
+        - [ ] Test with mock server
+    - [ ] Setup conditional rendering
+      - [ ] Implement component selection logic
+      - [ ] Test different combinations
+    - [ ] Add development tooling
+      - [ ] Add pre-commit hooks
+      - [ ] Add development scripts
+      - [ ] Test development workflow
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
