@@ -1,5 +1,5 @@
 [run]
-source = src/floridayvine
+source = src/vineapp
 
 [report]
 exclude_lines =
