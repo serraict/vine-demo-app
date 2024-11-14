@@ -1,59 +1,12 @@
 version: '3.8'
 
 services:
-  dremio:
-    # Using latest 25.x version to test parameter binding
-    image: dremio/dremio-oss:25.1.0
+  vineapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      # Web UI
-      - "9047:9047"
-      # Flight SQL
-      - "32010:32010"
-      # ODBC/JDBC
-      - "31010:31010"
-      # Internal communication
-      - "45678:45678"
-    volumes:
-      - dremio_data2:/opt/dremio/data
-      - dremio_conf2:/opt/dremio/conf
-      # Map our test data directory
-      - ./data:/opt/dremio/data/test_data
-    environment:
-      # Recommended memory settings for development
-      - DREMIO_MAX_DIRECT_MEMORY_SIZE_MB=2048
-      - DREMIO_MAX_HEAP_MEMORY_SIZE_MB=4096
-      # Optional: enable debug logging
-      # - DREMIO_LOG_LEVEL=debug
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9047/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - "7901:8000"
 
-volumes:
-  dremio_data2:
-  dremio_conf2:
-
-# After starting, Dremio will be available at:
-# - Web UI: http://localhost:9047
-# - Flight SQL: localhost:32010
-# 
-# Initial setup:
-# 1. Visit http://localhost:9047
-# 2. Create initial admin user
-# 3. Configure sources as needed
-#
-# Test data will be available at:
-# /opt/dremio/data/test_data/products.csv
-#
-# Connection string for testing:
-# VINEAPP_DB_CONNECTION=dremio+flight://user:password@localhost:32010/dremio
-#
-# Testing Parameter Binding:
-# 1. Start Dremio: docker-compose up -d
-# 2. Wait for healthcheck to pass
-# 3. Set up initial admin user at http://localhost:9047
-# 4. Set VINEAPP_DB_CONNECTION with your credentials
-# 5. Run parameter binding tests:
-#    INCLUDE_DREMIO_LIMITATIONS_TESTS=1 pytest tests/integration/test_products_ideal.py -v
+# After starting, the service will be available at:
+# - Web UI: http://localhost:7901
