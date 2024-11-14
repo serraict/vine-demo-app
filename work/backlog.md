@@ -8,10 +8,11 @@
   - [x] Github workflow for creating container on release
   - [x] Create production Docker container
     - [x] upload to ghcr
-  - [ ] Add container documentation and examples
-    - [ ] Document how to use the container
-    - [ ] Document environment variables
-    - [ ] Add example cron job configuration
+  - [x] Add container documentation and examples
+    - [x] Document how to use the container
+    - [x] Document environment variables
+    - [x] Add example cron job configuration
+  - [ ] verify the package by installing it into a serra vine instance
 
 ## Next
 
