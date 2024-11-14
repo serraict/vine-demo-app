@@ -1,5 +1,6 @@
 [project]
 name = "{{cookiecutter.project_slug}}"
+version = "{{cookiecutter.version}}"
 description = "{{cookiecutter.project_description}}"
 authors = [
     { name = "{{cookiecutter.author_name}}", email = "{{cookiecutter.author_email}}" },
@@ -9,11 +10,9 @@ dependencies = [
     "typer",
     "rich",
 ]
-dynamic = ["version"]
-license.file = "LICENSE"
 
 [build-system]
-requires = ["setuptools>=64", "setuptools_scm>=8"]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
@@ -21,8 +20,6 @@ cliapp = "{{cookiecutter.project_slug}}.__cli__:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools_scm]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -51,6 +51,10 @@
       - [ ] Add pre-commit hooks
       - [ ] Add development scripts
       - [ ] Test development workflow
+    - [ ] Add SCM versioning
+      - [ ] Add setuptools_scm configuration
+      - [ ] Update documentation for git requirements
+      - [ ] Test version detection
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
