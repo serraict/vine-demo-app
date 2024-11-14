@@ -39,7 +39,4 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: true
-    
-    - name: Build Docker image
-      run: |
-        make docker_image
+
