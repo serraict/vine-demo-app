@@ -16,6 +16,8 @@ services:
     volumes:
       - dremio_data2:/opt/dremio/data
       - dremio_conf2:/opt/dremio/conf
+      # Map our test data directory
+      - ./data:/opt/dremio/data/test_data
     environment:
       # Recommended memory settings for development
       - DREMIO_MAX_DIRECT_MEMORY_SIZE_MB=2048
@@ -41,6 +43,9 @@ volumes:
 # 1. Visit http://localhost:9047
 # 2. Create initial admin user
 # 3. Configure sources as needed
+#
+# Test data will be available at:
+# /opt/dremio/data/test_data/products.csv
 #
 # Connection string for testing:
 # VINEAPP_DB_CONNECTION=dremio+flight://user:password@localhost:32010/dremio
