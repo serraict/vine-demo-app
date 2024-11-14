@@ -12,7 +12,7 @@
     - [x] Document how to use the container
     - [x] Document environment variables
     - [x] Add example cron job configuration
-  - [ ] verify the package by installing it into a serra vine instance
+  - [x] verify the package by installing it into a serra vine instance
 
 ## Next
 
