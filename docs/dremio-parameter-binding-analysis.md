@@ -100,37 +100,43 @@ This implementation in Calcite suggests that the framework itself supports param
 
 ## Version Analysis
 
-We're currently using Dremio version 24.3, and reviewing release notes through version 25.x reveals several relevant aspects:
+We're currently using Dremio version 24.3, and testing with version 25.1.0 reveals:
 
 1. **No Direct Parameter Binding Improvements**:
-   - No specific fixes or improvements for Flight SQL parameter binding
-   - No changes to Calcite integration regarding RexDynamicParam handling
-   - Parameter binding limitations appear to persist through recent versions
+   - Parameter binding limitations persist in 25.1.0
+   - Error messages have changed but core functionality remains unsupported
+   - No indication of planned support in release notes
 
-2. **Query Planning & Execution Improvements**:
+2. **Error Message Changes**:
+   Version 24.3:
+   - Basic parameters: "Cannot convert RexNode to equivalent Dremio expression"
+   - LIKE patterns: "Illegal use of dynamic parameter"
+   - IN clauses: RexDynamicParam errors
+
+   Version 25.1.0:
+   - Basic parameters: NullPointerException
+   - LIKE patterns: Same "Illegal use of dynamic parameter" error
+   - IN clauses: NullPointerException
+   - Dynamic sorting: Works in both versions
+
+3. **Query Planning & Execution Improvements**:
    - Memory arbiter enabled by default for monitoring key operators (25.0)
    - Improved handling of complex queries and joins
    - Better support for query planning with partition filters
    - Enhanced error handling for concurrent operations
    - Reduced memory usage for query execution
 
-3. **Database Connectivity**:
-   - Updates to various database connectors (PostgreSQL, Oracle, etc.)
+4. **Database Connectivity**:
+   - Updates to various database connectors
    - Improved handling of connection pooling
    - Better error handling for connection issues
    - Enhanced support for authentication methods
 
-4. **Error Handling & Diagnostics**:
-   - Better error messages for query failures
-   - Improved logging and diagnostics
-   - Enhanced query profiling capabilities
-   - Better handling of concurrent operations
-
 5. **Implications for Our Use Case**:
-   - The parameter binding limitation appears to be a fundamental design choice
-   - No indication in release notes of planned support for parameter binding
-   - Memory and performance improvements might help with alternative approaches
-   - Need to design our solution assuming this limitation will persist
+   - Parameter binding limitation remains a fundamental design choice
+   - Error handling has changed but core limitations persist
+   - Memory and performance improvements don't address parameter binding
+   - Need to design our solution assuming this limitation will continue
    - Could leverage improved error handling in our workaround
 
 ## Root Cause Analysis
