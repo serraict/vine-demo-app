@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proper handling of RichField descriptions in database entities
 - Error handling for GraphQL queries with informative error messages
 - Support for overriding Fibery space name without modifying environment variables
+- Docker container support with cron job capabilities
+- GitHub Actions workflow for continuous integration and testing
+- GitHub Actions workflow for building and publishing Docker images
+- Code coverage reporting to Codecov
 
 ### Changed
 
@@ -38,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved GraphQL client to handle space name overrides
 - Fixed case sensitivity handling in database type filtering
 - Removed hardcoded database list from FiberyInfo model in favor of dynamic GraphQL schema queries
+- Separated Docker Compose configurations for development and production
 
 ### Deprecated
 
