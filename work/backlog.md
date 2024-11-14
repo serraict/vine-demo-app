@@ -5,6 +5,10 @@
 ### Project Template
 
 - [ ] Create cookiecutter template based on this project
+  - [ ] Setup template structure in repository
+    - [ ] Create `template` directory
+    - [ ] Setup cookiecutter configuration
+    - [ ] Create template README with usage instructions
   - [ ] Analyze current project structure and identify components to modularize
     - [ ] Map out core components (web, console, Fibery, Dremio)
     - [ ] Identify shared infrastructure (Docker, Python setup)
@@ -13,22 +17,28 @@
     - [ ] Define project type options (web/console/both)
     - [ ] Define integration options (Fibery/Dremio/both)
     - [ ] Define optional features (cronjobs)
-  - [ ] Create template structure
-    - [ ] Setup core project files (Docker, Python version, CI/CD)
+  - [ ] Create template content
+    - [ ] Extract core project files (Docker, Python version, CI/CD)
     - [ ] Create conditional component directories
     - [ ] Setup modular test infrastructure
+    - [ ] Ensure template stays in sync with main project
   - [ ] Implement template logic
     - [ ] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
     - [ ] Setup GitHub Actions workflows
-  - [ ] Create example projects
-    - [ ] Basic console app example
-    - [ ] Web app with Dremio example
-    - [ ] Full integration example
+  - [ ] Setup versioning strategy
+    - [ ] Add template version tracking
+    - [ ] Document template-project compatibility
+    - [ ] Include upgrade instructions
+  - [ ] Create example outputs
+    - [ ] Generate basic console app example
+    - [ ] Generate web app with Dremio example
+    - [ ] Generate full integration example
   - [ ] Write template documentation
     - [ ] Document available options
     - [ ] Add usage examples
     - [ ] Include best practices
+    - [ ] Document how template relates to main project
 
 ## Next
 
