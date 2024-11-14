@@ -18,19 +18,15 @@
     - [x] Define integration options (Fibery/Dremio/both)
     - [ ] Define optional features (cronjobs)
   - [ ] Create template content
-    - [ ] Setup minimal working template
-      - [ ] Create basic project structure
-      - [ ] Add minimal pyproject.toml
-      - [ ] Add simple CLI entrypoint
-      - [ ] Test template generation
+    - [x] Setup minimal working template
+      - [x] Create basic project structure
+      - [x] Add minimal pyproject.toml
+      - [x] Add simple CLI entrypoint
+      - [x] Test template generation
     - [ ] Add Docker support
       - [ ] Add Dockerfile
       - [ ] Add docker-compose.yml
       - [ ] Test Docker build and run
-    - [ ] Add CI/CD
-      - [ ] Add GitHub Actions for testing
-      - [ ] Add GitHub Actions for linting
-      - [ ] Test CI workflow locally
     - [ ] Add core components incrementally
       - [ ] Add products module
         - [ ] Extract base models
@@ -51,15 +47,15 @@
       - [ ] Add pre-commit hooks
       - [ ] Add development scripts
       - [ ] Test development workflow
-    - [ ] Add SCM versioning
-      - [ ] Add setuptools_scm configuration
-      - [ ] Update documentation for git requirements
-      - [ ] Test version detection
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
     - [ ] Setup GitHub Actions workflows
   - [ ] Setup versioning strategy
+    - [ ] Add SCM versioning to the genereated project (not to the template)
+      - [ ] Add setuptools_scm configuration
+      - [ ] Update documentation for git requirements
+      - [ ] Test version detection
     - [ ] Add template version tracking
     - [ ] Document template-project compatibility
     - [ ] Include upgrade instructions
