@@ -2,28 +2,35 @@
 
 ## Doing
 
-### Deployment
-
-- [x] Create deployable packages
-  - [x] Github workflow for creating container on release
-  - [x] Create production Docker container
-    - [x] upload to ghcr
-  - [x] Add container documentation and examples
-    - [x] Document how to use the container
-    - [x] Document environment variables
-    - [x] Add example cron job configuration
-  - [x] verify the package by installing it into a serra vine instance
-
-## Next
-
 ### Project Template
 
 - [ ] Create cookiecutter template based on this project
-  - [ ] Extract core project structure
-  - [ ] Configure cookiecutter variables
-  - [ ] Add Dremio integration options
-  - [ ] Include documentation templates
-  - [ ] Add test setup configurations
+  - [ ] Analyze current project structure and identify components to modularize
+    - [ ] Map out core components (web, console, Fibery, Dremio)
+    - [ ] Identify shared infrastructure (Docker, Python setup)
+    - [ ] Document dependencies between components
+  - [ ] Design cookiecutter variables and options
+    - [ ] Define project type options (web/console/both)
+    - [ ] Define integration options (Fibery/Dremio/both)
+    - [ ] Define optional features (cronjobs)
+  - [ ] Create template structure
+    - [ ] Setup core project files (Docker, Python version, CI/CD)
+    - [ ] Create conditional component directories
+    - [ ] Setup modular test infrastructure
+  - [ ] Implement template logic
+    - [ ] Create cookiecutter.json with variables
+    - [ ] Implement conditional file inclusion
+    - [ ] Setup GitHub Actions workflows
+  - [ ] Create example projects
+    - [ ] Basic console app example
+    - [ ] Web app with Dremio example
+    - [ ] Full integration example
+  - [ ] Write template documentation
+    - [ ] Document available options
+    - [ ] Add usage examples
+    - [ ] Include best practices
+
+## Next
 
 ## Later
 
