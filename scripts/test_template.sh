@@ -26,7 +26,7 @@ echo "Running tests..."
 pytest
 
 echo "Testing CLI..."
-python -m test_app version
+cliapp version
 
 echo "Cleaning up..."
 deactivate
