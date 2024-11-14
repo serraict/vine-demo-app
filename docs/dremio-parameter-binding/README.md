@@ -42,6 +42,7 @@ How to test different Dremio versions:
 - [Test Cases](../../tests/integration/test_products_ideal.py) - Example tests showing ideal SQLModel usage
 - [Product Model](../../src/vineapp/products/models.py) - Current implementation with workarounds
 - [Docker Setup](../../docker-compose.yml) - Test environment configuration
+- [Community Discussion](https://community.dremio.com/t/is-parameterized-sql-not-supported-by-dremio/4650/17) - Ongoing discussion about parameter binding support in Dremio
 
 ## Contributing
 
