@@ -87,16 +87,39 @@ building an application that targets the Serra Vine platform.
       - [ ] Implement component selection logic
       - [ ] Test different combinations
     - [ ] Add development tooling
-      - [ ] Remove noqa ignore instructions from the template files (instead ignore the entire directory)
-      - [ ] Add pre-commit hooks
-      - [ ] Add development scripts
-      - [ ] Test development workflow
-      - [ ] Test coverage
-      - [ ] makefile
-      - [ ] dremio test instance
-      - [ ] changelog
-      - [ ] contributing and contributing ai
-      - [ ] make quality
+      - [ ] Code Quality Tools
+        - [ ] flake8 (.flake8 config)
+        - [ ] pylint (pyproject.toml config)
+        - [ ] black (pyproject.toml config)
+        - [ ] isort (pyproject.toml config)
+        - [ ] mypy (pyproject.toml config)
+        - [ ] remove noqa comments from the template file.
+      - [ ] Testing Tools
+        - [ ] pytest (pyproject.toml config)
+        - [ ] pytest-cov (.coveragerc config)
+        - [ ] pytest-asyncio (pyproject.toml config)
+      - [ ] Git Hooks
+        - [ ] pre-commit (.pre-commit-config.yaml)
+        - [ ] commitlint (for conventional commits)
+      - [ ] Build & Development
+        - [ ] makefile (with common commands)
+        - [ ] development scripts (in scripts/ directory)
+        - [ ] requirements-dev.txt
+      - [ ] Documentation
+        - [ ] CHANGELOG.md (Keep a Changelog format)
+        - [ ] CONTRIBUTING.md
+        - [ ] CONTRIBUTING_AI_PROMPT.md
+      - [ ] CI/CD
+        - [ ] GitHub Actions workflows (.github/workflows/)
+        - [ ] coverage reporting
+      - [ ] Environment
+        - [ ] .env.example
+        - [ ] .gitignore
+        - [ ] docker-compose.yml (with Dremio test instance)
+        - [ ] docker-entrypoint.sh
+      - [ ] Project Configuration
+        - [ ] pyproject.toml (with all tool configs)
+        - [ ] setuptools_scm for versioning
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
