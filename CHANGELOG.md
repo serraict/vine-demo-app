@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Cookiecutter template for generating new Vine applications
+  - Project structure with web and console interfaces
+  - Docker support with development environment
+  - Products module with Dremio integration
+  - Web interface with NiceGUI components
+  - Products list page with search and sorting
+  - Product detail page with model card
+  - Comprehensive test suite for all components
+  - Development scripts for testing and verification
+
 ### Fixed
 
 - Fixed Docker web server health check by mapping port 7901 to NiceGUI's default port 8080
