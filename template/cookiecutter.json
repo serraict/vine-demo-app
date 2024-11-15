@@ -4,6 +4,7 @@
     "project_description": "A Python application for data integration and visualization",
     "author_name": "Your Name",
     "author_email": "your.email@example.com",
+    "project_url": "https://github.com/yourusername/{{cookiecutter.project_slug}}",
     "project_type": ["web", "console", "both"],
     "use_fibery": "y",
     "use_dremio": "y",

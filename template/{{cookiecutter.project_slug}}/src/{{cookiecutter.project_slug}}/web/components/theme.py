@@ -35,7 +35,10 @@ def frame(navigation_title: str):
                 .classes("flex items-center gap-1 no-underline cursor-pointer")
                 .on("click", lambda: ui.navigate.to("/"))
             ):
-                ui.icon("home", color="white").classes("text-xl")
+                # Data pipeline icon
+                ui.icon("account_tree", color="white").classes("text-xl")
+                # Leaf icon overlapping slightly
+                ui.icon("eco", color="white").classes("text-lg -ml-1")
             menu()
 
         # Right section: Page title

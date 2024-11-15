@@ -2,7 +2,9 @@
 
 from nicegui import APIRouter, ui
 
+from ...app_info import get_application_info
 from ..components import frame
+from ..components.model_card import display_model_card
 from ..components.styles import (
     CARD_CLASSES,
     HEADER_CLASSES,
@@ -34,6 +36,13 @@ def index_page() -> None:
                 # Navigation cards
                 with ui.row().classes("w-full gap-4 justify-center mt-4"):
                     with ui.card().classes(NAV_CARD_CLASSES):
+                        ui.label("Products").classes(HEADER_CLASSES + " mb-2")
+                        ui.label("View and manage your products").classes(
+                            SUBHEADER_CLASSES + " mb-4"
+                        )
+                        ui.link("View Products", "/products").classes(LINK_CLASSES)
+
+                    with ui.card().classes(NAV_CARD_CLASSES):
                         ui.label("About").classes(HEADER_CLASSES + " mb-2")
                         ui.label(
                             "Learn more about {{cookiecutter.project_name}}"
@@ -43,12 +52,8 @@ def index_page() -> None:
 
 @root_router.page("/about")
 def about_page() -> None:
-    """Render the about page."""
+    """Render the about page with application information."""
+    info = get_application_info()
+
     with frame("About"):
-        with ui.card().classes(CARD_CLASSES):
-            ui.label("About {{cookiecutter.project_name}}").classes(
-                HEADER_CLASSES + " mb-4"
-            )
-            ui.label(
-                "This is a Serra Vine application created from the template."
-            ).classes(SUBHEADER_CLASSES)
+        display_model_card(info, description_field="description")

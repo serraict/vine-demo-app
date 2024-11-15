@@ -1,5 +1,5 @@
-"""Web interface pages."""
+"""Web pages package."""
 
-from . import home
+from . import home, products
 
-__all__ = ["home"]
+__all__ = ["home", "products"]

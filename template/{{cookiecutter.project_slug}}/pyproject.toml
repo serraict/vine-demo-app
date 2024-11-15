@@ -6,15 +6,17 @@ authors = [
     { name = "{{cookiecutter.author_name}}", email = "{{cookiecutter.author_email}}" },
 ]
 requires-python = ">=3.10"
+urls = { "project" = "{{cookiecutter.project_url}}", "docs" = "{{cookiecutter.project_url}}/blob/main/README.md" }
 dependencies = [
-    "typer",
-    "rich",
-    "sqlalchemy",
-    "sqlmodel",
-    "sqlalchemy-dremio",
-    "pandas",
     "nicegui",
+    "typer",
+    "sqlmodel",
+    "rich",
+    "sqlalchemy-dremio",
+    "pyarrow",
+    "pandas",
 ]
+license.file = "LICENCE"
 
 [build-system]
 requires = ["setuptools>=64"]
@@ -32,4 +34,12 @@ python_files = ["test_*.py"]
 python_functions = ["test_*"]
 markers = [
     "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+    "asyncio: mark test as async",
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-p nicegui.testing.user_plugin"
+filterwarnings = [
+    # Ignore HTTPX deprecation warning from NiceGUI testing plugin
+    "ignore:The 'app' shortcut is now deprecated:DeprecationWarning:httpx",
 ]

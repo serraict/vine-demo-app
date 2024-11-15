@@ -2,7 +2,7 @@
 
 from nicegui import app, ui
 
-from .pages import home
+from .pages import home, products
 
 
 def startup() -> None:
@@ -15,3 +15,4 @@ def startup() -> None:
 
     # Include routers
     app.include_router(home.root_router)
+    app.include_router(products.router)

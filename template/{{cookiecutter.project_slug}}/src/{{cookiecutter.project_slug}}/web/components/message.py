@@ -1,23 +1,24 @@
-"""Message display component."""
+"""Message components for displaying errors and other notifications."""
 
 from nicegui import ui
 
 
 def message(text: str, type: str = "error") -> None:
-    """Display a message notification.
+    """Display a message using a notification.
 
     Args:
         text: The message text to display
-        type: The type of message (error, warning, info, success)
+        type: The message type ("error" by default, can be "positive", "negative", "warning", "info")
     """
-    with ui.element("div").classes("w-full flex justify-center"):
-        ui.notification(
-            text,
-            type=type,
-            position="top",
-            multi_line=True,
-            close_button=True,
-        ).classes("max-w-md")
+    # Map error type to negative for consistency with Quasar's types
+    notify_type = "negative" if type == "error" else type
+    ui.notify(
+        text,
+        type=notify_type,
+        position="top",
+        close_button="Close",
+        multi_line=True,
+    )
 
 
 def show_error(text: str) -> None:
