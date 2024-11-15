@@ -60,7 +60,7 @@ class ProductRepository:
             self.engine = connection
         else:
             conn_str = os.getenv(
-                "APP_DB_CONNECTION", "dremio+flight://localhost:32010/dremio"
+                "VINEAPP_DB_CONNECTION", "dremio+flight://localhost:32010/dremio"
             )
             self.engine = create_engine(conn_str)
 

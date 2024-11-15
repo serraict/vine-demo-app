@@ -62,7 +62,7 @@ def repository(mock_engine):
 
 def test_repository_init_with_connection_string():
     """Test repository initialization with connection string."""
-    os.environ["APP_DB_CONNECTION"] = "dremio+flight://test:32010/dremio"
+    os.environ["VINEAPP_DB_CONNECTION"] = "dremio+flight://test:32010/dremio"
     repo = ProductRepository()
     assert str(repo.engine.url) == "dremio+flight://test:32010/dremio"
 

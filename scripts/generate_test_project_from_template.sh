@@ -22,11 +22,16 @@ echo "Installing project and dependencies..."
 pip install -e .
 pip install -r requirements-dev.txt
 
+echo "Setting up environment variables..."
+cp .env.example .env
+
 echo "Running tests..."
 pytest
 
 echo "Testing CLI..."
 cliapp version
+echo "Testing products command..."
+cliapp products
 
 echo "Cleaning up..."
 deactivate
