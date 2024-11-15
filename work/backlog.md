@@ -54,7 +54,7 @@ building an application that targets the Serra Vine platform.
       - [ ] Add web interface
         - [x] Extract base pages
         - [x] Test local serving
-        - [ ] start the web server on the docker image
+        - [x] start the web server on the docker image
       - [ ] Add Dremio integration
         - [ ] Extract repository pattern
         - [ ] Test with Docker Dremio
