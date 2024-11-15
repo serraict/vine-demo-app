@@ -91,7 +91,7 @@ building an application that targets the Serra Vine platform.
         - [x] pytest-cov (.coveragerc config)
         - [x] pytest-asyncio (pyproject.toml config)
       - [ ] Git Hooks
-        - [ ] pre-commit (.pre-commit-config.yaml)
+        - [x] Add pre-commit to requirements-dev.txt (config skipped as not in demo)
       - [ ] Build & Development
         - [ ] makefile (with common commands)
         - [ ] development scripts (in scripts/ directory)
