@@ -11,16 +11,19 @@ building an application that targets the Serra Vine platform.
 - [ ] Create cookiecutter template based on this project
   - [ ] Create template content
     - [ ] Publish the template
-      - [ ] Create a new GitHub repository 'vine-app-template'
-      - [ ] Push template code to repository
-      - [ ] Add installation instructions in README.md:
-        ```
-        # Install
-        cookiecutter gh:serraict/vine-app-template
+      - [ ] Move template code to new repository 'vine-app-template'
+        - [ ] Copy template directory
+        - [ ] Copy scripts directory
+        - [ ] Copy work directory with backlog
+        - [ ] Update README.md with installation instructions:
+          ```
+          # Install
+          cookiecutter gh:serraict/vine-app-template
 
-        # Or for a specific version
-        cookiecutter gh:serraict/vine-app-template --checkout v1.0.0
-        ```
+          # Or for a specific version
+          cookiecutter gh:serraict/vine-app-template --checkout v1.0.0
+          ```
+        - [ ] Initial release v0.1.0
       - [ ] Tag releases with semantic versioning
     - [ ] Add core components incrementally
       - [ ] Add Fibery module
