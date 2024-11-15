@@ -4,7 +4,7 @@
 
 ### Project Template
 
-We will create a cookiecutter template baesd on this project,
+We will create a cookiecutter template based on this project,
 so that developers can get started quickly with
 building an application that targets the Serra Vine platform.
 
@@ -55,9 +55,11 @@ building an application that targets the Serra Vine platform.
         - [x] Extract base pages
         - [x] Test local serving
         - [x] start the web server on the docker image
-      - [ ] Add Dremio integration
-        - [ ] Extract repository pattern
-        - [ ] Test with Docker Dremio
+      - [x] Add Dremio integration
+        - [x] env.example will have to be available in the generated project
+        - [x] it is ok to request the user to change theirs after generating
+        - [x] Test locally by running the products command
+        - [x] The docker image should connect the serra-vine network
       - [ ] Add Fibery integration
         - [ ] Extract GraphQL client
         - [ ] Test with mock server
@@ -71,6 +73,8 @@ building an application that targets the Serra Vine platform.
       - [ ] Test coverage
       - [ ] makefile
       - [ ] dremio test instance
+      - [ ] changelog
+      - [ ] contributing and contributing ai
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion

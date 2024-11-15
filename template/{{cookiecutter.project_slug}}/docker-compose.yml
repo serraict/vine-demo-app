@@ -5,6 +5,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7901:8080"
+    env_file:
+      - .env
+    networks:
+      - serra-vine
+
+networks:
+  serra-vine:
+    external: true
 
 # After starting, the service will be available at:
 # - Web UI: http://localhost:7901

@@ -16,6 +16,7 @@ A cookiecutter template for creating data integration and visualization applicat
 - Python 3.11+
 - Cookiecutter (`pip install cookiecutter`)
 - Docker and Docker Compose (for development)
+- Access to Serra Vine's Dremio instance (if using Dremio integration)
 
 ## Usage
 
@@ -57,8 +58,39 @@ your_project/
 ├── tests/             # Test suite
 ├── docker-compose.yml # Development environment
 ├── Dockerfile         # Application container
+├── .env.example       # Example environment configuration
 └── pyproject.toml     # Python project configuration
 ```
+
+## Configuration
+
+### Environment Setup
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Update the `.env` file with your specific configuration:
+   - Set `<PROJECT>_DB_CONNECTION` with your Dremio connection string
+   - Configure optional settings like SQL logging
+   - Update Fibery settings if using Fibery integration
+
+### Dremio Integration
+
+If you selected Dremio integration during project creation:
+
+1. Ensure you have access to the Serra Vine Dremio instance
+2. Update your `.env` file with the correct Dremio connection string:
+   ```
+   <PROJECT>_DB_CONNECTION=dremio+flight://user:pass@localhost:32010/dremio?UseEncryption=false
+   ```
+3. The Docker container will automatically connect to the `serra-vine` network to access Dremio
+4. Test the connection by running the products command:
+   ```bash
+   python -m your_project products
+   ```
+   This will attempt to fetch products from Dremio, verifying the connection is working.
 
 ## Development
 
@@ -66,6 +98,21 @@ your_project/
 2. Install development dependencies: `pip install -r requirements-dev.txt`
 3. Run tests: `pytest`
 4. Start development server (web): `python -m your_project`
+
+### Docker Development
+
+1. Ensure the `serra-vine` network exists:
+   ```bash
+   docker network create serra-vine
+   ```
+
+2. Start the application:
+   ```bash
+   docker-compose up --build
+   ```
+
+The application will be available at:
+- Web UI: http://localhost:7901 (if web interface is enabled)
 
 ## License
 
