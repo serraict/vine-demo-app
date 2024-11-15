@@ -22,7 +22,7 @@ table_data = {
     "pagination": {
         "rowsPerPage": 10,
         "page": 1,
-        "rowsNumber": 0,  # This will actually signal the Quasar component to use server side pagination
+        "rowsNumber": 0,  # This will signal the Quasar component to use server side pagination
         "sortBy": None,
         "descending": False,
     },
@@ -82,7 +82,6 @@ def products_page() -> None:
                 """Handle click on view button."""
                 product_id = e.args.get("key")
                 if product_id:
-                    print(f"Navigating to /products/{product_id}")  # Debug log
                     ui.navigate.to(f"/products/{product_id}")
 
             async def handle_filter(e: Any) -> None:
@@ -107,20 +106,12 @@ def products_page() -> None:
                 sort_by = new_pagination.get("sortBy")
                 descending = new_pagination.get("descending", False)
 
-                print(f"Fetching page {page} with {rows_per_page} rows per page")
-                print(
-                    f"Sorting by {sort_by} {'descending' if descending else 'ascending'}"
-                )
-                print(f"Filter: {table_data['filter']}")
-
                 products, total = repository.get_paginated(
                     page=page,
                     items_per_page=rows_per_page,
                     sort_by=sort_by,
                     descending=descending,
-                    filter_text=table_data[
-                        "filter"
-                    ],  # Pass the filter text to the repository
+                    filter_text=table_data["filter"],
                 )
 
                 # Update table data
