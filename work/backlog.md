@@ -51,7 +51,7 @@ building an application that targets the Serra Vine platform.
         - [x] Add CLI commands
           - [x] Add product list command
           - [x] Add product detail command
-      - [ ] Add web interface
+      - [x] Add web interface
         - [x] Extract base pages
         - [x] Test local serving
         - [x] start the web server on the docker image
@@ -80,31 +80,22 @@ building an application that targets the Serra Vine platform.
         - [x] it is ok to request the user to change theirs after generating
         - [x] Test locally by running the products command
         - [x] The docker image should connect the serra-vine network
-      - [ ] Add Fibery integration
-        - [ ] Extract GraphQL client
-        - [ ] Test with mock server
-    - [ ] Setup conditional rendering
-      - [ ] Implement component selection logic
-      - [ ] Test different combinations
     - [ ] Add development tooling
-      - [ ] Code Quality Tools
-        - [ ] flake8 (.flake8 config)
-        - [ ] pylint (pyproject.toml config)
-        - [ ] black (pyproject.toml config)
-        - [ ] isort (pyproject.toml config)
-        - [ ] mypy (pyproject.toml config)
-        - [ ] remove noqa comments from the template file.
-      - [ ] Testing Tools
-        - [ ] pytest (pyproject.toml config)
-        - [ ] pytest-cov (.coveragerc config)
-        - [ ] pytest-asyncio (pyproject.toml config)
+      - [x] Code Quality Tools
+        - [x] flake8 (.flake8 config)
+        - [x] remove noqa comments from template files
+        - [x] black (pyproject.toml config)
+        - [x] mdformat (pyproject.toml config)
+      - [x] Testing Tools
+        - [x] pytest (pyproject.toml config)
+        - [x] pytest-cov (.coveragerc config)
+        - [x] pytest-asyncio (pyproject.toml config)
       - [ ] Git Hooks
         - [ ] pre-commit (.pre-commit-config.yaml)
-        - [ ] commitlint (for conventional commits)
       - [ ] Build & Development
         - [ ] makefile (with common commands)
         - [ ] development scripts (in scripts/ directory)
-        - [ ] requirements-dev.txt
+        - [x] requirements-dev.txt
       - [ ] Documentation
         - [ ] CHANGELOG.md (Keep a Changelog format)
         - [ ] CONTRIBUTING.md
@@ -118,9 +109,12 @@ building an application that targets the Serra Vine platform.
         - [ ] docker-compose.yml (with Dremio test instance)
         - [ ] docker-entrypoint.sh
       - [ ] Project Configuration
-        - [ ] pyproject.toml (with all tool configs)
+        - [x] pyproject.toml (with all tool configs)
         - [ ] setuptools_scm for versioning
-  - [ ] Implement template logic
+  - [ ] Setup conditional rendering
+    - [ ] Implement component selection logic
+    - [ ] Test different combinations
+  - [ ] Implement template logic 
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
     - [ ] Setup GitHub Actions workflows

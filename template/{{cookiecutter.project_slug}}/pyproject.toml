@@ -1,12 +1,9 @@
 [project]
-name = "{{cookiecutter.project_slug}}"
-version = "{{cookiecutter.version}}"
+name = "placeholder-name"  # Will be replaced with {{cookiecutter.project_slug}}
 description = "{{cookiecutter.project_description}}"
-authors = [
-    { name = "{{cookiecutter.author_name}}", email = "{{cookiecutter.author_email}}" },
-]
+authors = [{ name = "{{cookiecutter.author_name}}", email = "user@example.com" }]  # Will be replaced with {{cookiecutter.author_email}}
 requires-python = ">=3.10"
-urls = { "project" = "{{cookiecutter.project_url}}", "docs" = "{{cookiecutter.project_url}}/blob/main/README.md" }
+urls = { project = "https://example.com", docs = "https://example.com/docs" }  # Will be replaced with {{cookiecutter.project_url}}
 dependencies = [
     "nicegui",
     "typer",
@@ -16,17 +13,20 @@ dependencies = [
     "pyarrow",
     "pandas",
 ]
+dynamic = ["version"]
 license.file = "LICENCE"
 
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-cliapp = "{{cookiecutter.project_slug}}.__cli__:cli"
+cliapp = "placeholder_name.__cli__:cli"  # Will be replaced with {{cookiecutter.project_slug}}.__cli__:cli
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools_scm]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -43,3 +43,16 @@ filterwarnings = [
     # Ignore HTTPX deprecation warning from NiceGUI testing plugin
     "ignore:The 'app' shortcut is now deprecated:DeprecationWarning:httpx",
 ]
+
+[tool.mdformat]
+wrap = 80
+number = false
+end_of_line = "lf"
+
+[tool.mdformat.plugins]
+gfm = { task_list_item = true }
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+include = '\.pyi?$'
