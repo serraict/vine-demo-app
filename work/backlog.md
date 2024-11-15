@@ -55,6 +55,26 @@ building an application that targets the Serra Vine platform.
         - [x] Extract base pages
         - [x] Test local serving
         - [x] start the web server on the docker image
+        - [ ] Add product pages
+          - [x] Add shared components
+            - [x] Add model card component for displaying product details
+            - [x] Add styles for consistent UI elements
+            - [x] Add message component for error handling
+            - [x] Add menu component for navigation
+            - [x] Add theme component for layout
+            - [x] Add tests for components
+          - [ ] Add products list page
+            - [ ] Create products table component with pagination
+            - [ ] Add search functionality
+            - [ ] Add sorting capabilities
+            - [ ] Add view action button
+            - [ ] Add tests for table functionality
+            - [ ] Add tests for search and filter
+          - [ ] Add product detail page
+            - [ ] Display product information using model card
+            - [ ] Add back navigation
+            - [ ] Add tests for detail view
+            - [ ] Add tests for invalid product handling
       - [x] Add Dremio integration
         - [x] env.example will have to be available in the generated project
         - [x] it is ok to request the user to change theirs after generating
@@ -67,6 +87,7 @@ building an application that targets the Serra Vine platform.
       - [ ] Implement component selection logic
       - [ ] Test different combinations
     - [ ] Add development tooling
+      - [ ] Remove noqa ignore instructions from the template files (instead ignore the entire directory)
       - [ ] Add pre-commit hooks
       - [ ] Add development scripts
       - [ ] Test development workflow
@@ -75,6 +96,7 @@ building an application that targets the Serra Vine platform.
       - [ ] dremio test instance
       - [ ] changelog
       - [ ] contributing and contributing ai
+      - [ ] make quality
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion

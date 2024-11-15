@@ -15,8 +15,8 @@ cookiecutter --no-input -o test-output template/ \
 cd test-output/test_app
 
 echo "Creating and activating virtual environment..."
-python -m venv .venv
-source .venv/bin/activate
+python -m venv venvg
+source venvg/bin/activate
 
 echo "Installing project and dependencies..."
 pip install -e .
