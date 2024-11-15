@@ -33,5 +33,5 @@ deactivate
 cd ../..
 
 echo "Template test completed successfully!"
-echo "To test Docker setup, run: ./scripts/test_template_docker.sh"
-echo "To test web interface, run: ./scripts/test_template_web.sh"
+echo "To test Docker setup, run: ./scripts/test_generated_project_docker.sh"
+echo "To test web interface, run: ./scripts/test_generated_project_web.sh"
