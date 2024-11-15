@@ -4,6 +4,10 @@
 
 ### Project Template
 
+We will create a cookiecutter template baesd on this project,
+so that developers can get started quickly with
+building an application that targets the Serra Vine platform.
+
 - [ ] Create cookiecutter template based on this project
   - [x] Setup template structure in repository
     - [x] Create `template` directory
@@ -48,8 +52,9 @@
           - [x] Add product list command
           - [x] Add product detail command
       - [ ] Add web interface
-        - [ ] Extract base pages
+        - [x] Extract base pages
         - [ ] Test local serving
+        - [ ] start the web server on the docker image
       - [ ] Add Dremio integration
         - [ ] Extract repository pattern
         - [ ] Test with Docker Dremio
@@ -63,6 +68,9 @@
       - [ ] Add pre-commit hooks
       - [ ] Add development scripts
       - [ ] Test development workflow
+      - [ ] Test coverage
+      - [ ] makefile
+      - [ ] dremio test instance
   - [ ] Implement template logic
     - [x] Create cookiecutter.json with variables
     - [ ] Implement conditional file inclusion
