@@ -1,13 +1,18 @@
 #!/bin/bash
 set -e  # Exit on error
 
+if [ ! -d "test-output/test_app" ]; then
+    echo "Error: Test project not found. Please run ./scripts/generate_test_project_from_template.sh first"
+    exit 1
+fi
+
 cd test-output/test_app
 
 echo "Testing web interface..."
 source venvg/bin/activate
 
 # Start the web server in the background
-python -m {{cookiecutter.project_slug}}.__web__ &
+python -m test_app.__web__ &
 WEB_PID=$!
 
 echo "Waiting for server to start..."
