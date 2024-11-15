@@ -28,16 +28,9 @@ pytest
 echo "Testing CLI..."
 cliapp version
 
-echo "Testing Docker setup..."
-docker compose build
-docker compose up -d
-echo "Waiting for container to start..."
-sleep 2
-docker compose logs
-docker compose down
-
 echo "Cleaning up..."
 deactivate
 cd ../..
 
 echo "Template test completed successfully!"
+echo "To test Docker setup, run: ./scripts/test_template_docker.sh"
