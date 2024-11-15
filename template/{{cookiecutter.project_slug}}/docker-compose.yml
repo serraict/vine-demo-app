@@ -6,4 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "7901:8080"
+      - "7901:8000"
+
+# After starting, the service will be available at:
+# - Web UI: http://localhost:7901
