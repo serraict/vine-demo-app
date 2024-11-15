@@ -26,14 +26,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: {{cookiecutter.docker_registry}}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: {% raw %}${{ github.actor }}{% endraw %}
+        password: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
     
     - name: Build and tag Docker images
       run: |
-        docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} -t ${{ env.IMAGE_NAME }}:latest .
+        docker build -t {% raw %}${{ env.IMAGE_NAME }}{% endraw %}:{% raw %}${{ env.VERSION }}{% endraw %} -t {% raw %}${{ env.IMAGE_NAME }}{% endraw %}:latest .
     
     - name: Publish Docker images
       run: |
-        docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-        docker push ${{ env.IMAGE_NAME }}:latest
+        docker push {% raw %}${{ env.IMAGE_NAME }}{% endraw %}:{% raw %}${{ env.VERSION }}{% endraw %}
+        docker push {% raw %}${{ env.IMAGE_NAME }}{% endraw %}:latest
