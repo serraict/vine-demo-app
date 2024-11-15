@@ -7,7 +7,7 @@ echo "Testing web interface in Docker..."
 
 # Build the Docker image
 echo "Building Docker image..."
-docker compose build
+docker compose build --quiet
 
 # Start the container
 echo "Starting Docker container..."
