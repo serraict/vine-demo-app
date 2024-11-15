@@ -5,6 +5,10 @@ cd test-output/test_app
 
 echo "Testing web interface in Docker..."
 
+# Build the Docker image
+echo "Building Docker image..."
+docker compose build
+
 # Start the container
 echo "Starting Docker container..."
 docker compose up -d
