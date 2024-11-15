@@ -13,16 +13,32 @@ docker compose build --quiet
 echo "Starting Docker container..."
 docker compose up -d
 
-# Give the container and web server time to start
-echo "Waiting for web server to start..."
-sleep 5
+# Function to check if server is responding with expected content
+check_server() {
+    response=$(curl -s http://localhost:7901)
+    if [[ $? -eq 0 && "$response" == *"<!DOCTYPE html>"* ]]; then
+        return 0
+    fi
+    return 1
+}
 
-# Test if server is responding
-if curl -s http://localhost:7901 > /dev/null; then
-    echo "Web interface is running successfully in Docker!"
-    SUCCESS=true
-else
-    echo "Failed to access web interface in Docker"
+# Test if server is responding with retries
+echo "Waiting for web server to start..."
+max_attempts=12  # 60 seconds total
+attempt=1
+while [ $attempt -le $max_attempts ]; do
+    if check_server; then
+        echo "Web interface is running successfully in Docker!"
+        SUCCESS=true
+        break
+    fi
+    echo "Attempt $attempt of $max_attempts - Server not ready yet..."
+    sleep 5
+    attempt=$((attempt + 1))
+done
+
+if [ $attempt -gt $max_attempts ]; then
+    echo "Failed to access web interface in Docker after $max_attempts attempts"
     echo "Docker logs:"
     docker compose logs
     SUCCESS=false

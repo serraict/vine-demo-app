@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   {{cookiecutter.project_slug}}:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "7901:8000"
+      - "7901:8080"
 
 # After starting, the service will be available at:
 # - Web UI: http://localhost:7901
