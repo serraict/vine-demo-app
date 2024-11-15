@@ -7,8 +7,8 @@ echo "Testing web interface..."
 # Activate virtual environment
 source .venv/bin/activate
 
-# Start web server in background
-python -m test_app.__web__ &
+# Start web server in background with proper module resolution
+PYTHONPATH=src python -m test_app.__web__ &
 WEB_PID=$!
 
 # Give the server a moment to start
