@@ -9,126 +9,48 @@ so that developers can get started quickly with
 building an application that targets the Serra Vine platform.
 
 - [ ] Create cookiecutter template based on this project
-  - [x] Setup template structure in repository
-    - [x] Create `template` directory
-    - [x] Setup cookiecutter configuration
-    - [x] Create template README with usage instructions
-  - [x] Analyze current project structure and identify components to modularize
-    - [x] Map out core components (web, console, Fibery, Dremio)
-    - [x] Identify shared infrastructure (Docker, Python setup)
-    - [x] Document dependencies between components
-  - [ ] Design cookiecutter variables and options
-    - [x] Define project type options (web/console/both)
-    - [x] Define integration options (Fibery/Dremio/both)
-    - [ ] Define optional features (cronjobs)
   - [ ] Create template content
-    - [x] Setup minimal working template
-      - [x] Create basic project structure
-      - [x] Add minimal pyproject.toml
-      - [x] Add simple CLI entrypoint
-      - [x] Test template generation
-    - [x] Add Docker support
-      - [x] Add Dockerfile
-      - [x] Add docker-compose.yml
-      - [x] Test Docker build and run
-      - [x] Improve template testing by separating Docker tests
+    - [ ] Publish the template
+      - [ ] Create a new GitHub repository 'vine-app-template'
+      - [ ] Push template code to repository
+      - [ ] Add installation instructions in README.md:
+        ```
+        # Install
+        cookiecutter gh:serraict/vine-app-template
+
+        # Or for a specific version
+        cookiecutter gh:serraict/vine-app-template --checkout v1.0.0
+        ```
+      - [ ] Tag releases with semantic versioning
     - [ ] Add core components incrementally
-      - [x] Add products module
-        - [x] Create products package structure
-          - [x] Add __init__.py
-          - [x] Add models.py
-          - [x] Add repository.py
-        - [x] Implement base models
-          - [x] Add Product SQLModel
-          - [x] Add repository exceptions
-        - [x] Implement repository pattern
-          - [x] Add ProductRepository that connects to dremio
-          - [x] Only retrieve operations are needed
-          - [x] Add pagination support
-        - [x] Add tests
-          - [x] Add test_models.py
-          - [x] Add test_repository.py
-        - [x] Add CLI commands
-          - [x] Add product list command
-          - [x] Add product detail command
-      - [x] Add web interface
-        - [x] Extract base pages
-        - [x] Test local serving
-        - [x] start the web server on the docker image
-        - [x] Add product pages
-          - [x] Add shared components
-            - [x] Add model card component for displaying product details
-            - [x] Add styles for consistent UI elements
-            - [x] Add message component for error handling
-            - [x] Add menu component for navigation
-            - [x] Add theme component for layout
-            - [x] Add tests for components
-          - [x] Add products list page
-            - [x] Create products table component with pagination
-            - [x] Add search functionality
-            - [x] Add sorting capabilities
-            - [x] Add view action button
-            - [x] Add tests for table functionality
-            - [x] Add tests for search and filter
-          - [x] Add product detail page
-            - [x] Display product information using model card
-            - [x] Add back navigation
-            - [x] Add tests for detail view
-            - [x] Add tests for invalid product handling
-      - [x] Add Dremio integration
-        - [x] env.example will have to be available in the generated project
-        - [x] it is ok to request the user to change theirs after generating
-        - [x] Test locally by running the products command
-        - [x] The docker image should connect the serra-vine network
-    - [ ] Add development tooling
-      - [x] Code Quality Tools
-        - [x] flake8 (.flake8 config)
-        - [x] remove noqa comments from template files
-        - [x] black (pyproject.toml config)
-        - [x] mdformat (pyproject.toml config)
-      - [x] Testing Tools
-        - [x] pytest (pyproject.toml config)
-        - [x] pytest-cov (.coveragerc config)
-        - [x] pytest-asyncio (pyproject.toml config)
-      - [ ] Git Hooks
-        - [x] Add pre-commit to requirements-dev.txt (config skipped as not in demo)
-      - [x] Build & Development
-        - [x] makefile (with common commands)
-        - [x] development scripts (in scripts/ directory)
-        - [x] requirements-dev.txt
-      - [x] Documentation
-        - [x] CHANGELOG.md (Keep a Changelog format)
-        - [x] CONTRIBUTING.md
-        - [x] CONTRIBUTING_AI_PROMPT.md
-      - [x] CI/CD
-        - [x] GitHub Actions workflows (.github/workflows/)
-        - [x] coverage reporting
+      - [ ] Add Fibery module
+        - [ ] Create fibery package structure
+          - [ ] Add __init__.py
+          - [ ] Add models.py
+          - [ ] Add graphql.py
+        - [ ] Add tests
+          - [ ] Add test_fibery_models.py
+          - [ ] Add test_fibery_graphql.py
+        - [ ] Add requests to dependencies in pyproject.toml
+        - [ ] Add environment variables to .env.example
+  - [ ] Design cookiecutter variables and options
+    - [ ] Define optional features (cronjobs)
   - [ ] Setup conditional rendering
     - [ ] Implement component selection logic
     - [ ] Test different combinations
-  - [ ] Implement template logic 
-    - [x] Create cookiecutter.json with variables
-    - [ ] Implement conditional file inclusion
-    - [ ] Setup GitHub Actions workflows
   - [ ] Setup versioning strategy
     - [ ] Add SCM versioning to the generated project (not to the template)
       - [ ] Add setuptools_scm configuration
       - [ ] Update documentation for git requirements
       - [ ] Test version detection
     - [ ] Add template version tracking
-    - [ ] Document template-project compatibility
-    - [ ] Include upgrade instructions
   - [ ] Create example outputs
     - [ ] Generate basic console app example
     - [ ] Generate web app with Dremio example
     - [ ] Generate full integration example
   - [ ] Write template documentation
-    - [x] Document available options
-    - [x] Add usage examples
     - [ ] Include best practices
     - [ ] Document how template relates to main project
-
-## Next
 
 ## Later
 
