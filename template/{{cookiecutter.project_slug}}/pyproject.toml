@@ -1,9 +1,10 @@
 [project]
-name = "placeholder-name"  # Will be replaced with {{cookiecutter.project_slug}}
+name = "{{cookiecutter.project_slug}}"
+version = "{{cookiecutter.version}}"
 description = "{{cookiecutter.project_description}}"
-authors = [{ name = "{{cookiecutter.author_name}}", email = "user@example.com" }]  # Will be replaced with {{cookiecutter.author_email}}
+authors = [{ name = "{{cookiecutter.author_name}}", email = "{{cookiecutter.author_email}}" }]
 requires-python = ">=3.10"
-urls = { project = "https://example.com", docs = "https://example.com/docs" }  # Will be replaced with {{cookiecutter.project_url}}
+urls = { project = "{{cookiecutter.project_url}}", docs = "{{cookiecutter.project_url}}/blob/main/README.md" }
 dependencies = [
     "nicegui",
     "typer",
@@ -13,20 +14,17 @@ dependencies = [
     "pyarrow",
     "pandas",
 ]
-dynamic = ["version"]
 license.file = "LICENCE"
 
 [build-system]
-requires = ["setuptools>=64", "setuptools_scm>=8"]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-cliapp = "placeholder_name.__cli__:cli"  # Will be replaced with {{cookiecutter.project_slug}}.__cli__:cli
+cliapp = "{{cookiecutter.project_slug}}.__cli__:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools_scm]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
