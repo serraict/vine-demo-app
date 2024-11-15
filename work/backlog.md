@@ -29,24 +29,24 @@
       - [x] Test Docker build and run
       - [x] Improve template testing by separating Docker tests
     - [ ] Add core components incrementally
-      - [ ] Add products module
-        - [ ] Create products package structure
-          - [ ] Add __init__.py
-          - [ ] Add models.py
-          - [ ] Add repository.py
-        - [ ] Implement base models
-          - [ ] Add Product SQLModel
-          - [ ] Add repository exceptions
-        - [ ] Implement repository pattern
-          - [ ] Add ProductRepository that connects to dremio
-          - [ ] Only retrieve operations are needed
-          - [ ] Add pagination support
-        - [ ] Add tests
-          - [ ] Add test_models.py
-          - [ ] Add test_repository.py
-        - [ ] Add CLI commands
-          - [ ] Add product list command
-          - [ ] Add product detail command
+      - [x] Add products module
+        - [x] Create products package structure
+          - [x] Add __init__.py
+          - [x] Add models.py
+          - [x] Add repository.py
+        - [x] Implement base models
+          - [x] Add Product SQLModel
+          - [x] Add repository exceptions
+        - [x] Implement repository pattern
+          - [x] Add ProductRepository that connects to dremio
+          - [x] Only retrieve operations are needed
+          - [x] Add pagination support
+        - [x] Add tests
+          - [x] Add test_models.py
+          - [x] Add test_repository.py
+        - [x] Add CLI commands
+          - [x] Add product list command
+          - [x] Add product detail command
       - [ ] Add web interface
         - [ ] Extract base pages
         - [ ] Test local serving
