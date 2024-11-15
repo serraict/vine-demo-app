@@ -55,7 +55,7 @@ building an application that targets the Serra Vine platform.
         - [x] Extract base pages
         - [x] Test local serving
         - [x] start the web server on the docker image
-        - [ ] Add product pages
+        - [x] Add product pages
           - [x] Add shared components
             - [x] Add model card component for displaying product details
             - [x] Add styles for consistent UI elements
@@ -63,18 +63,18 @@ building an application that targets the Serra Vine platform.
             - [x] Add menu component for navigation
             - [x] Add theme component for layout
             - [x] Add tests for components
-          - [ ] Add products list page
-            - [ ] Create products table component with pagination
-            - [ ] Add search functionality
-            - [ ] Add sorting capabilities
-            - [ ] Add view action button
-            - [ ] Add tests for table functionality
-            - [ ] Add tests for search and filter
-          - [ ] Add product detail page
-            - [ ] Display product information using model card
-            - [ ] Add back navigation
-            - [ ] Add tests for detail view
-            - [ ] Add tests for invalid product handling
+          - [x] Add products list page
+            - [x] Create products table component with pagination
+            - [x] Add search functionality
+            - [x] Add sorting capabilities
+            - [x] Add view action button
+            - [x] Add tests for table functionality
+            - [x] Add tests for search and filter
+          - [x] Add product detail page
+            - [x] Display product information using model card
+            - [x] Add back navigation
+            - [x] Add tests for detail view
+            - [x] Add tests for invalid product handling
       - [x] Add Dremio integration
         - [x] env.example will have to be available in the generated project
         - [x] it is ok to request the user to change theirs after generating
