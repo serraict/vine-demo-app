@@ -1,6 +1,6 @@
-# Vine App Cookiecutter Template
+# Cookiecutter Vine App
 
-A cookiecutter template for creating data integration and visualization applications based on the Vine App architecture.
+A cookiecutter template for creating data integration and visualization applications based on the Serra Vine platform architecture.
 
 ## Features
 
@@ -18,13 +18,17 @@ A cookiecutter template for creating data integration and visualization applicat
 - Docker and Docker Compose (for development)
 - Access to Serra Vine's Dremio instance (if using Dremio integration)
 
-## Usage
-
-Generate a new Vine App project:
+## Installation
 
 ```bash
-cookiecutter gh:serraict/vine-app-template
+# Latest version
+cookiecutter gh:serraict/cookiecutter-vine-app
+
+# Specific version
+cookiecutter gh:serraict/cookiecutter-vine-app --checkout v1.0.0
 ```
+
+## Usage
 
 You will be prompted for various configuration options:
 
@@ -94,6 +98,8 @@ If you selected Dremio integration during project creation:
 
 ## Development
 
+### Generated Project Development
+
 1. Create and activate a virtual environment:
    ```bash
    python -m venv venv
@@ -126,6 +132,31 @@ If you selected Dremio integration during project creation:
 
 The application will be available at:
 - Web UI: http://localhost:8080 (if web interface is enabled)
+
+## Template Development
+
+To contribute to this template:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/serraict/cookiecutter-vine-app.git
+   cd cookiecutter-vine-app
+   ```
+
+2. Create a test project:
+   ```bash
+   ./scripts/generate_test_project_from_template.sh
+   ```
+
+3. Test Docker setup:
+   ```bash
+   ./scripts/test_generated_project_docker.sh
+   ```
+
+4. Test web interface:
+   ```bash
+   ./scripts/test_generated_project_web.sh
+   ```
 
 ## License
 
