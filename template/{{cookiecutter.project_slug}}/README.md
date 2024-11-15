@@ -4,16 +4,16 @@
 
 ## Features
 
-{% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" %}
+{% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" -%}
 - Web interface built with NiceGUI
-{% endif %}
-{% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" %}
+{% endif -%}
+{% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" -%}
 - Command-line interface
-{% endif %}
-{% if cookiecutter.use_dremio == "y" %}
+{% endif -%}
+{% if cookiecutter.use_dremio == "y" -%}
 - Dremio integration for data access
-{% endif %}
-{% if cookiecutter.use_fibery == "y" %}
+{% endif -%}
+{% if cookiecutter.use_fibery == "y" -%}
 - Fibery integration for knowledge base
 {% endif %}
 
@@ -39,7 +39,7 @@
 
 ## Usage
 
-{% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" %}
+{% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" -%}
 ### Web Interface
 
 Start the web server:
@@ -48,9 +48,9 @@ python -m {{cookiecutter.project_slug}}.__web__
 ```
 
 Visit http://localhost:8080 in your browser.
-{% endif %}
 
-{% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" %}
+{% endif -%}
+{% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" -%}
 ### Command Line
 
 Show version:
@@ -58,12 +58,12 @@ Show version:
 {{cookiecutter.project_slug}} version
 ```
 
-{% if cookiecutter.use_dremio == "y" %}
+{% if cookiecutter.use_dremio == "y" -%}
 List products:
 ```bash
 {{cookiecutter.project_slug}} products
 ```
-{% endif %}
+{% endif -%}
 {% endif %}
 
 ## Development
@@ -91,9 +91,9 @@ List products:
    ```
 
 2. Access the application:
-   {% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" %}
+   {% if cookiecutter.project_type == "web" or cookiecutter.project_type == "both" -%}
    - Web UI: http://localhost:8080
-   {% endif %}
-   {% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" %}
+   {% endif -%}
+   {% if cookiecutter.project_type == "console" or cookiecutter.project_type == "both" -%}
    - CLI: `docker-compose exec app {{cookiecutter.project_slug}} version`
-   {% endif %}
+   {% endif -%}
