@@ -100,17 +100,9 @@ building an application that targets the Serra Vine platform.
         - [x] CHANGELOG.md (Keep a Changelog format)
         - [x] CONTRIBUTING.md
         - [x] CONTRIBUTING_AI_PROMPT.md
-      - [ ] CI/CD
-        - [ ] GitHub Actions workflows (.github/workflows/)
-        - [ ] coverage reporting
-      - [ ] Environment
-        - [ ] .env.example
-        - [ ] .gitignore
-        - [ ] docker-compose.yml (with Dremio test instance)
-        - [ ] docker-entrypoint.sh
-      - [ ] Project Configuration
-        - [x] pyproject.toml (with all tool configs)
-        - [ ] setuptools_scm for versioning
+      - [x] CI/CD
+        - [x] GitHub Actions workflows (.github/workflows/)
+        - [x] coverage reporting
   - [ ] Setup conditional rendering
     - [ ] Implement component selection logic
     - [ ] Test different combinations
@@ -119,7 +111,7 @@ building an application that targets the Serra Vine platform.
     - [ ] Implement conditional file inclusion
     - [ ] Setup GitHub Actions workflows
   - [ ] Setup versioning strategy
-    - [ ] Add SCM versioning to the genereated project (not to the template)
+    - [ ] Add SCM versioning to the generated project (not to the template)
       - [ ] Add setuptools_scm configuration
       - [ ] Update documentation for git requirements
       - [ ] Test version detection
