@@ -96,10 +96,10 @@ building an application that targets the Serra Vine platform.
         - [x] makefile (with common commands)
         - [x] development scripts (in scripts/ directory)
         - [x] requirements-dev.txt
-      - [ ] Documentation
-        - [ ] CHANGELOG.md (Keep a Changelog format)
-        - [ ] CONTRIBUTING.md
-        - [ ] CONTRIBUTING_AI_PROMPT.md
+      - [x] Documentation
+        - [x] CHANGELOG.md (Keep a Changelog format)
+        - [x] CONTRIBUTING.md
+        - [x] CONTRIBUTING_AI_PROMPT.md
       - [ ] CI/CD
         - [ ] GitHub Actions workflows (.github/workflows/)
         - [ ] coverage reporting
