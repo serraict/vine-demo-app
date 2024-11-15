@@ -1,9 +1,5 @@
 """Tests for product models."""
 
-# flake8: noqa
-# pylint: disable=all
-# type: ignore
-
 import pytest
 from {{cookiecutter.project_slug}}.products.models import (
     Product,

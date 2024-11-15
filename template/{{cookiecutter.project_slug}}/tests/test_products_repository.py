@@ -1,9 +1,5 @@
 """Tests for product repository."""
 
-# flake8: noqa
-# pylint: disable=all
-# type: ignore
-
 import os
 from unittest.mock import patch, MagicMock
 import pytest

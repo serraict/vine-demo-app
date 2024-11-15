@@ -1,7 +1,3 @@
-# flake8: noqa
-# pylint: disable=all
-# type: ignore
-
 """Test configuration and fixtures."""
 
 from typing import Generator
