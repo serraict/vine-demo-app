@@ -12,6 +12,7 @@ dependencies = [
     "sqlalchemy",
     "sqlmodel",
     "sqlalchemy-dremio",
+    "nicegui",
 ]
 
 [build-system]
