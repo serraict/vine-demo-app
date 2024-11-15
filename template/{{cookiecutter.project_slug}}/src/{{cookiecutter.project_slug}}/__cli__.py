@@ -1,22 +1,50 @@
 """Command line interface for {{cookiecutter.project_name}}."""
 
 import typer
-from rich import print
+from rich.console import Console
+from rich.table import Table
 from . import __version__
+from .products.models import ProductRepository
+
+app = typer.Typer()
+console = Console()
 
 
-cli = typer.Typer()
-
-
-@cli.callback()
-def callback() -> None:
+@app.callback()
+def callback():
     """{{cookiecutter.project_description}}"""
 
 
-@cli.command()
+@app.command()
 def version():
     """Show the application version."""
-    print(f"[bold]{{cookiecutter.project_name}}[/bold] version: {__version__}")
+    typer.echo(f"{{cookiecutter.project_name}} version: {__version__}")
+
+
+@app.command()
+def products():
+    """Display a table of all products with their groups."""
+    repository = ProductRepository()
+    products_list = repository.get_all()
+
+    table = Table(title="Products")
+    table.add_column("ID", justify="right", style="cyan")
+    table.add_column("Name", style="green")
+    table.add_column("Product Group", style="blue")
+
+    for product in products_list:
+        table.add_row(
+            str(product.id),
+            product.name,
+            product.product_group_name,
+        )
+
+    console.print(table)
+
+
+def cli():
+    """Entry point for the CLI."""
+    app()
 
 
 if __name__ == "__main__":
