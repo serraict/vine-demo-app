@@ -23,14 +23,30 @@
       - [x] Add minimal pyproject.toml
       - [x] Add simple CLI entrypoint
       - [x] Test template generation
-    - [ ] Add Docker support
-      - [ ] Add Dockerfile
-      - [ ] Add docker-compose.yml
-      - [ ] Test Docker build and run
+    - [x] Add Docker support
+      - [x] Add Dockerfile
+      - [x] Add docker-compose.yml
+      - [x] Test Docker build and run
+      - [x] Improve template testing by separating Docker tests
     - [ ] Add core components incrementally
       - [ ] Add products module
-        - [ ] Extract base models
-        - [ ] Test with SQLite
+        - [ ] Create products package structure
+          - [ ] Add __init__.py
+          - [ ] Add models.py
+          - [ ] Add repository.py
+        - [ ] Implement base models
+          - [ ] Add Product SQLModel
+          - [ ] Add repository exceptions
+        - [ ] Implement repository pattern
+          - [ ] Add ProductRepository that connects to dremio
+          - [ ] Only retrieve operations are needed
+          - [ ] Add pagination support
+        - [ ] Add tests
+          - [ ] Add test_models.py
+          - [ ] Add test_repository.py
+        - [ ] Add CLI commands
+          - [ ] Add product list command
+          - [ ] Add product detail command
       - [ ] Add web interface
         - [ ] Extract base pages
         - [ ] Test local serving
