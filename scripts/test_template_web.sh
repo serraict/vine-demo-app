@@ -4,6 +4,9 @@ set -e  # Exit on error
 cd test-output/test_app
 
 echo "Testing web interface..."
+# Activate virtual environment
+source .venv/bin/activate
+
 # Start web server in background
 python -m test_app.__web__ &
 WEB_PID=$!
@@ -22,5 +25,8 @@ fi
 
 # Stop the web server
 kill $WEB_PID
+
+# Deactivate virtual environment
+deactivate
 
 echo "Web interface test completed successfully!"
