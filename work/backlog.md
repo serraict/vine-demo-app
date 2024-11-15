@@ -92,9 +92,9 @@ building an application that targets the Serra Vine platform.
         - [x] pytest-asyncio (pyproject.toml config)
       - [ ] Git Hooks
         - [x] Add pre-commit to requirements-dev.txt (config skipped as not in demo)
-      - [ ] Build & Development
-        - [ ] makefile (with common commands)
-        - [ ] development scripts (in scripts/ directory)
+      - [x] Build & Development
+        - [x] makefile (with common commands)
+        - [x] development scripts (in scripts/ directory)
         - [x] requirements-dev.txt
       - [ ] Documentation
         - [ ] CHANGELOG.md (Keep a Changelog format)
