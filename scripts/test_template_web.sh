@@ -4,53 +4,32 @@ set -e  # Exit on error
 cd test-output/test_app
 
 echo "Testing web interface..."
-# Activate virtual environment
-source .venv/bin/activate
+source venvg/bin/activate
 
-# Create a temporary file for the server output
-LOGFILE=$(mktemp)
-echo "Server logs will be written to: $LOGFILE"
-
-# Start web server in background with proper module resolution
-PYTHONPATH=src python -m test_app.__web__ > $LOGFILE 2>&1 &
+# Start the web server in the background
+python -m {{cookiecutter.project_slug}}.__web__ &
 WEB_PID=$!
 
-# Give the server more time to start
 echo "Waiting for server to start..."
-sleep 5
+sleep 2
 
-# Test if server is responding
-if curl -s http://localhost:8080 > /dev/null; then
-    echo "Web interface is running successfully!"
-    SUCCESS=true
+# Test that the server is responding
+if curl -s http://localhost:8080/ > /dev/null; then
+    echo "Web server is running at http://localhost:8080"
 else
-    echo "Failed to start web interface"
-    echo "Server output:"
-    cat $LOGFILE
-    SUCCESS=false
-fi
-
-# Stop the web server
-if [ -n "$WEB_PID" ]; then
-    echo "Stopping web server (PID: $WEB_PID)..."
-    kill $WEB_PID 2>/dev/null || true
-    wait $WEB_PID 2>/dev/null || true
-fi
-
-# Clean up only if successful
-if [ "$SUCCESS" = true ]; then
-    rm $LOGFILE
-else
-    echo "Log file preserved at: $LOGFILE"
-fi
-
-# Deactivate virtual environment
-deactivate
-
-# Exit with appropriate status
-if [ "$SUCCESS" = true ]; then
-    echo "Web interface test completed successfully!"
-    exit 0
-else
+    echo "Error: Web server is not responding"
+    kill $WEB_PID
     exit 1
 fi
+
+# Give user time to check the website
+echo "Website is available for testing at http://localhost:8080"
+echo "Press Enter to stop the server..."
+read
+
+# Cleanup
+kill $WEB_PID
+deactivate
+cd ../..
+
+echo "Web test completed successfully!"
