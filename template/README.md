@@ -34,7 +34,7 @@ You will be prompted for various configuration options:
 - `author_name`: Your name
 - `author_email`: Your email
 - `project_type`: Choose between:
-  - `web`: A web-based application using Reflex
+  - `web`: A web-based application using NiceGUI
   - `console`: A command-line application
   - `both`: Both web and console interfaces
 - `use_fibery`: Include Fibery integration (y/n)
@@ -94,10 +94,23 @@ If you selected Dremio integration during project creation:
 
 ## Development
 
-1. Create and activate a virtual environment
+1. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Unix
+   # or
+   .\venv\Scripts\activate  # On Windows
+   ```
 2. Install development dependencies: `pip install -r requirements-dev.txt`
 3. Run tests: `pytest`
-4. Start development server (web): `python -m your_project`
+
+### Running the Web Interface
+
+1. Start the development server:
+   ```bash
+   python -m your_project.__web__
+   ```
+   The web interface will be available at http://localhost:8080
 
 ### Docker Development
 
@@ -112,7 +125,7 @@ If you selected Dremio integration during project creation:
    ```
 
 The application will be available at:
-- Web UI: http://localhost:7901 (if web interface is enabled)
+- Web UI: http://localhost:8080 (if web interface is enabled)
 
 ## License
 
