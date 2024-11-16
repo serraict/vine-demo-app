@@ -2,59 +2,18 @@
 
 ## Doing
 
-### Project Template
+### Fibery Integration
 
-We will create a cookiecutter template based on this project,
-so that developers can get started quickly with
-building an application that targets the Serra Vine platform.
-
-- [x] Create cookiecutter template based on this project
-  - [x] Create template content
-    - [x] Publish the template
-      - [x] Create new GitHub repository 'cookiecutter-vine-app'
-      - [x] Copy files to new repository:
-        - [x] template/ directory
-        - [x] scripts/ directory
-        - [x] work/ directory
-        - [x] Move template/README.md to root README.md
-        - [x] Update installation instructions:
-          ```
-          # Install
-          cookiecutter gh:serraict/cookiecutter-vine-app
-
-          # Or for a specific version
-          cookiecutter gh:serraict/cookiecutter-vine-app --checkout v1.0.0
-          ```
-      - [x] Tag initial release v0.1.0
-    - [ ] Add core components incrementally
-      - [ ] Add Fibery module
-        - [ ] Create fibery package structure
-          - [ ] Add __init__.py
-          - [ ] Add models.py
-          - [ ] Add graphql.py
-        - [ ] Add tests
-          - [ ] Add test_fibery_models.py
-          - [ ] Add test_fibery_graphql.py
-        - [ ] Add requests to dependencies in pyproject.toml
-        - [ ] Add environment variables to .env.example
-  - [ ] Design cookiecutter variables and options
-    - [ ] Define optional features (cronjobs)
-  - [ ] Setup conditional rendering
-    - [ ] Implement component selection logic
-    - [ ] Test different combinations
-  - [ ] Setup versioning strategy
-    - [ ] Add SCM versioning to the generated project (not to the template)
-      - [ ] Add setuptools_scm configuration
-      - [ ] Update documentation for git requirements
-      - [ ] Test version detection
-    - [ ] Add template version tracking
-  - [ ] Create example outputs
-    - [ ] Generate basic console app example
-    - [ ] Generate web app with Dremio example
-    - [ ] Generate full integration example
-  - [ ] Write template documentation
-    - [ ] Include best practices
-    - [ ] Document how template relates to main project
+- [ ] Add Fibery module
+  - [ ] Create fibery package structure
+    - [ ] Add __init__.py
+    - [ ] Add models.py
+    - [ ] Add graphql.py
+  - [ ] Add tests
+    - [ ] Add test_fibery_models.py
+    - [ ] Add test_fibery_graphql.py
+  - [ ] Add requests to dependencies in pyproject.toml
+  - [ ] Add environment variables to .env.example
 
 ## Later
 
