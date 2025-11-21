@@ -1,6 +1,6 @@
 # Backlog
 
-## Doing
+## Later
 
 ### Fibery Integration
 
@@ -14,8 +14,6 @@
     - [ ] Add test_fibery_graphql.py
   - [ ] Add requests to dependencies in pyproject.toml
   - [ ] Add environment variables to .env.example
-
-## Later
 
 ### Data Visualization
 

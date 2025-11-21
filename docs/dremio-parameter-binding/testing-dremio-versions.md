@@ -6,9 +6,9 @@ This document describes how to test SQLModel parameter binding behavior with dif
 
 We're currently using Dremio version 24.3 in production, where we've identified limitations with parameter binding (see `dremio-parameter-binding-analysis.md`).
 
-## Testing with Dremio 25.1.0
+## Testing with Different Versions
 
-A Docker Compose configuration is provided to test with Dremio 25.1.0:
+A Docker Compose configuration is provided to test with different Dremio versions:
 
 ```bash
 # Start Dremio
@@ -128,10 +128,17 @@ To test with a different Dremio version:
 
 ## Version History
 
-| Version | Parameter Binding Status | Notes |
-|---------|-------------------------|-------|
-| 24.3    | Not supported          | Current production version |
-| 25.1.0  | Testing in progress    | Latest version we're testing |
+| Version | Parameter Binding Status | Error Messages | Notes |
+|---------|-------------------------|----------------|-------|
+| 24.3    | ❌ Not supported | RexDynamicParam / Illegal use | Production version |
+| 25.1.0  | ❌ Not supported | NullPointerException / Illegal use | Tested, no improvement |
+| 26.0    | ❌ Not supported | RexDynamicParam / Illegal use | **Latest tested 2025-11-21** - JDBC prepared statements feature does NOT work via Python Flight SQL |
+
+### Detailed Version Comparison
+
+See [testing-v26-results.md](testing-v26-results.md) for complete v26 test results and analysis.
+
+**Key Finding:** Dremio v26 introduced "parameterized prepared statements in Arrow Flight SQL JDBC" but this feature is **JDBC-only** and does not work with Python's PyArrow Flight SQL driver. All parameter binding limitations persist in v26 for Python users.
 
 ## References
 

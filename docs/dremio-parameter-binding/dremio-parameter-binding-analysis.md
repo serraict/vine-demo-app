@@ -100,39 +100,55 @@ This implementation in Calcite suggests that the framework itself supports param
 
 ## Version Analysis
 
-We're currently using Dremio version 24.3, and testing with version 25.1.0 reveals:
+We've tested Dremio versions 24.3, 25.1.0, and 26.0 for parameter binding support:
 
-1. **No Direct Parameter Binding Improvements**:
-   - Parameter binding limitations persist in 25.1.0
-   - Error messages have changed but core functionality remains unsupported
-   - No indication of planned support in release notes
+1. **No Parameter Binding Support Across All Versions**:
+   - Parameter binding limitations persist in all tested versions (24.3, 25.1.0, 26.0)
+   - Core functionality remains unsupported for Python Flight SQL users
+   - Error patterns vary slightly but failures are consistent
 
-2. **Error Message Changes**:
-   Version 24.3:
+2. **Error Message Changes by Version**:
+
+   **Version 24.3:**
    - Basic parameters: "Cannot convert RexNode to equivalent Dremio expression"
    - LIKE patterns: "Illegal use of dynamic parameter"
    - IN clauses: RexDynamicParam errors
+   - Dynamic sorting: Works
 
-   Version 25.1.0:
+   **Version 25.1.0:**
    - Basic parameters: NullPointerException
-   - LIKE patterns: Same "Illegal use of dynamic parameter" error
+   - LIKE patterns: "Illegal use of dynamic parameter"
    - IN clauses: NullPointerException
-   - Dynamic sorting: Works in both versions
+   - Dynamic sorting: Works
 
-3. **Query Planning & Execution Improvements**:
+   **Version 26.0 (Tested 2025-11-21):**
+   - Basic parameters: "Cannot convert RexNode to equivalent Dremio expression"
+   - LIKE patterns: "Illegal use of dynamic parameter"
+   - IN clauses: RexDynamicParam errors
+   - Dynamic sorting: Works
+   - **Error pattern reverted to v24.3 style**
+
+3. **Version 26.0 Prepared Statements Feature**:
+   - **Release notes claim**: "Parameterized prepared statements in Arrow Flight SQL JDBC"
+   - **Reality for Python users**: Feature is **JDBC-only**, does NOT work via PyArrow Flight SQL
+   - **Test results**: All parameter binding tests still fail with same errors as v24.3
+   - **Conclusion**: No improvement for Python/SQLModel users
+   - See [testing-v26-results.md](testing-v26-results.md) for detailed analysis
+
+4. **Query Planning & Execution Improvements**:
    - Memory arbiter enabled by default for monitoring key operators (25.0)
    - Improved handling of complex queries and joins
    - Better support for query planning with partition filters
    - Enhanced error handling for concurrent operations
    - Reduced memory usage for query execution
 
-4. **Database Connectivity**:
+5. **Database Connectivity**:
    - Updates to various database connectors
    - Improved handling of connection pooling
    - Better error handling for connection issues
    - Enhanced support for authentication methods
 
-5. **Implications for Our Use Case**:
+6. **Implications for Our Use Case**:
    - Parameter binding limitation remains a fundamental design choice
    - Error handling has changed but core limitations persist
    - Memory and performance improvements don't address parameter binding

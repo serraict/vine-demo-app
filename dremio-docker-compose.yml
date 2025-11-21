@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   dremio:
     # Using latest 25.x version to test parameter binding
-    image: dremio/dremio-oss:25.1.0
+    image: dremio/dremio-oss:26.0
     ports:
       # Web UI
       - "9047:9047"
@@ -34,11 +34,10 @@ services:
 volumes:
   dremio_data2:
   dremio_conf2:
-
 # After starting, Dremio will be available at:
 # - Web UI: http://localhost:9047
 # - Flight SQL: localhost:32010
-# 
+#
 # Initial setup:
 # 1. Visit http://localhost:9047
 # 2. Create initial admin user
